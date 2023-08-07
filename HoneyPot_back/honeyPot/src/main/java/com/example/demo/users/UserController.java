@@ -1,5 +1,5 @@
 package com.example.demo.users;
 
-public class test {
+public class UserController {
 
 }
