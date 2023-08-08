@@ -1,4 +1,4 @@
-package com.example.demo.users;
+package com.example.demo.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class User {
+public class Member {
 	
 	@Id
 	private String userNum;
@@ -40,7 +40,6 @@ public class User {
 	@Column(nullable=false)
 	private String phone;
 	
-	@ManyToOne
 	@Column(nullable=false)
 	private int snsType;	// 가입된 계정 타입: 허니팟 0 / 카카오 1 / 네이버 2
 	
