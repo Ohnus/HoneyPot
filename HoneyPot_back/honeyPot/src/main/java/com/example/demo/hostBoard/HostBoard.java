@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.ott.Ott;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +42,7 @@ public class HostBoard {
 	@ManyToOne
 	@JoinColumn(name="userNum", nullable=true)  
 	@OnDelete(action = OnDeleteAction.SET_NULL)
-	private String userNum; //작성자 
+	private Member userNum; //작성자 
 	
 	@ManyToOne
 	@JoinColumn(name="type", nullable=true)  

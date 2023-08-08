@@ -3,6 +3,7 @@ package com.example.demo.hostBoard;
 import java.time.LocalDate;
 
 import com.example.demo.ott.Ott;
+import com.example.demo.users.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.ToString;
 public class HostBoardDto {
 	
 	private int boardNum;
-	private String userNum; 
+	private User userNum; 
 	private Ott type; 
 	private int monthPrice;
 	private String ottAcct; 
