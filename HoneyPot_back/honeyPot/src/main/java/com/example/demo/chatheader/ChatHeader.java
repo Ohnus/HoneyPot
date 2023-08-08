@@ -1,5 +1,8 @@
 package com.example.demo.chatheader;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
@@ -7,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +37,9 @@ public class ChatHeader {
 	
 	private String subject; // 채팅방 이름
 	
+	@ManyToOne
+	@JoinColumn(name="host", nullable=true)  
+	@OnDelete(action = OnDeleteAction.SET_NULL) 
 	private Member host; // 채팅방 방장
 
 }
