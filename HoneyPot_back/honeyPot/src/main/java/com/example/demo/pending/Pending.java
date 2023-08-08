@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.hostBoard.HostBoard;
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +43,7 @@ public class Pending {
 	@ManyToOne
 	@JoinColumn(name="userNum", nullable=false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private User userNum;
+	private Member userNum;
 	
 	@Column(columnDefinition = "date")
 	private LocalDate payDate; // 결제일..

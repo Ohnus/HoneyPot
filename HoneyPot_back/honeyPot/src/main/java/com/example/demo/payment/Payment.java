@@ -7,7 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.hostBoard.HostBoard;
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +34,7 @@ public class Payment {
 	@ManyToOne
 	@JoinColumn(name="userNum", nullable=false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private User userNum; // 회원번호.. NOT NULL
+	private Member userNum; // 회원번호.. NOT NULL
 	
 	@ManyToOne
 	@JoinColumn(name="boardNum", nullable=true)

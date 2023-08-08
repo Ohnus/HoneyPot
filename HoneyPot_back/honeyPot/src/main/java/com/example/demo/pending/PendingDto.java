@@ -3,7 +3,7 @@ package com.example.demo.pending;
 import java.time.LocalDate;
 
 import com.example.demo.hostBoard.HostBoard;
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class PendingDto {
 
 	private int pendingNum;
 	private HostBoard boardNum;
-	private User userNum;
+	private Member userNum;
 	private LocalDate patDate;
 	private int amount;
 	private int msg;
