@@ -1,7 +1,7 @@
 package com.example.demo.chatheader;
 
-import com.example.demo.users.User;
 
+import com.example.demo.member.Member;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class ChatHeaderDto {
 	private int channelNum; 
 	private int boardNum; 
 	private String subject; 
-	private User host;
+	private Member host;
 }
