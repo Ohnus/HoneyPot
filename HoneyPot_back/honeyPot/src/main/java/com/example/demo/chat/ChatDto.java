@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class ChatDto {
 	
 	private int messageNum;
 	private int boardNum;
-	private User isFromSender;
+	private Member isFromSender;
 	private String content;
 	private LocalDate time;
 

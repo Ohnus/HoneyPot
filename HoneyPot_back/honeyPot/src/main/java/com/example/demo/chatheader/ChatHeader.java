@@ -1,6 +1,6 @@
 package com.example.demo.chatheader;
 
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +32,6 @@ public class ChatHeader {
 	
 	private String subject; // 채팅방 이름
 	
-	private User host; // 채팅방 방장
+	private Member host; // 채팅방 방장
 
 }

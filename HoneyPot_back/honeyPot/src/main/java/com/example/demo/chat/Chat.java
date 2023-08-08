@@ -1,6 +1,6 @@
 package com.example.demo.chat;
 
-import com.example.demo.users.User;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +30,7 @@ public class Chat {
 	
 	private int boardNum; // 메세지의 해당 채팅방 번호
 	
-	private User isFromSender; // 메세지 작성자
+	private Member isFromSender; // 메세지 작성자
 	
 	private String content; // 메세지 내용
 	
