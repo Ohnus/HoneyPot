@@ -1,13 +1,14 @@
 package com.example.demo.ott;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-//import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,20 +16,19 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
-@Component
+@Table(name = "ott")
 public class Ott {
-	private final OttProperties ottProperties;
-	
-	@Autowired
-    public Ott(OttProperties ottProperties) {
-        this.ottProperties = ottProperties;
-    }
-    
-	@Id
-	 private String type;
+    @Id
+    @SequenceGenerator(name="seq_ottNum", sequenceName="seq_ottNum", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_ottNum")
+    private int ottNum;
+    private String type;
     private int price;
     private int maxPpl;
+
+
+
         
 }

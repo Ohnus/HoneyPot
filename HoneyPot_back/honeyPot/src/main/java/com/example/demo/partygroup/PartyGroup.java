@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.hostBoard.HostBoard;
+import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,7 +40,10 @@ public class PartyGroup {
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private HostBoard boardNum;
 	
-	private String userNum;
+	@ManyToOne
+	@JoinColumn(name="userNum", nullable=true)  
+	@OnDelete(action = OnDeleteAction.SET_NULL)
+	private Member userNum;
 	
 	@ColumnDefault("0")
 	@Column(nullable = false)

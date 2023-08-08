@@ -11,12 +11,12 @@ public class OttProperties {
 	
 	private List<Ott> vo;
 
-    public List<Ott> getServices() {
+    public List<Ott> getVo() {
         return vo;
     }
 
-    public void setServices(List<Ott> services) {
-        this.vo = services;
+    public void setVo(List<Ott> vo) {
+        this.vo = vo;
     }
 
 }
