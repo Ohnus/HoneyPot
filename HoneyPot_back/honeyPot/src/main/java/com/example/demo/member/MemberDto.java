@@ -1,4 +1,4 @@
-package com.example.demo.users;
+package com.example.demo.member;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class UserDto {
+public class MemberDto {
 	
 	private String userNum;
 	private String email;
