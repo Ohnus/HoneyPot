@@ -23,7 +23,7 @@ public class PaymentDto {
 	private HostBoard boardNum;
 	private int payInstallment;
 	private long finalInstallment;
-	private LocalDate recurringDay;
+	private int recurringDay;
 	private LocalDate payDate;
 	private int totalPayment;
 	private int deposit;

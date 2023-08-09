@@ -45,9 +45,8 @@ public class Payment {
 	private int payInstallment; // 결제회차.. 
 	@ColumnDefault("0")
 	private long finalInstallment; // 마지막회차.. 게시글의 month 긁어오기
-	@Column(columnDefinition = "date")
 	@ColumnDefault("0")
-	private LocalDate recurringDay; // 정기결제일.. 게시글의 substart의 일자
+	private int recurringDay; // 정기결제일.. 게시글의 substart의 일자
 	@Column(columnDefinition = "date")
 	private LocalDate payDate; // 실제 결제일..
 	
@@ -59,8 +58,9 @@ public class Payment {
 	private int monthPrice; // 월구독료..
 	@ColumnDefault("0")
 	private int commission; // 수수료.. 20%, 10%
-	@ColumnDefault("None")
-	private String history; // 결제내역..
-	@ColumnDefault("None")
+	@ColumnDefault("'None'")
+	private String history;// 결제내역..
+//	@Column(nullable=false, columnDefinition="varchar2(255 char) default 'None'")
+	@ColumnDefault("'None'")
 	private String ottType; // ott 타입.. 게시글에서 긁어오기
 }
