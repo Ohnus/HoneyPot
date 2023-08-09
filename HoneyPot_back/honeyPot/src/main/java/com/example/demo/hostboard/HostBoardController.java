@@ -1,4 +1,4 @@
-package com.example.demo.hostBoard;
+package com.example.demo.hostboard;
 
 import java.util.HashMap;
 import java.util.Map;
