@@ -1,5 +1,6 @@
 package com.example.demo.member;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,16 @@ public class MemberService {
 	
 	
 	// 회원가입
-	public String save(MemberDto dto) {
-		Member entity = dao.save(new Member(dto.getUserNum(), dto.getEmail(), dto.getPwd(), dto.getName(), dto.getNickname(),
-				dto.getPhone(), dto.getSnsType(), dto.getBankCode(), dto.getBankAcc(), dto.getProfile(), dto.getBillingKey()));
-		
-		return entity.getUserNum();		
-	}
+//	public String save(MemberDto dto) {
+//		Member entity = dao.save(new Member(dto.getUserNum(), dto.getEmail(), dto.getPwd(), dto.getName(), dto.getNickname(),
+//				dto.getPhone(), dto.getSnsType(), dto.getBankCode(), dto.getBankAcc(), dto.getProfile(), dto.getBillingKey()));
+//		
+//		return entity.getUserNum();		
+//	}
 	
 	
-	// 수정
-	public MemberDto edit(MemberDto dto) {
+	// 회원가입 및 수정
+	public MemberDto save(MemberDto dto) {
 		Member entity = dao.save(new Member(dto.getUserNum(), dto.getEmail(), dto.getPwd(), dto.getName(), dto.getNickname(),
 				dto.getPhone(), dto.getSnsType(), dto.getBankCode(), dto.getBankAcc(), dto.getProfile(), dto.getBillingKey()));
 		
@@ -56,7 +57,7 @@ public class MemberService {
 	}
 	
 	
-	// 내 정보 확인
+	// 로그인, 내 정보 확인
 	public MemberDto getUser(String email) {
 		Member entity = dao.findById(email).orElse(null);
 		MemberDto dto = null;
@@ -70,8 +71,7 @@ public class MemberService {
 		}
 	}
 	
-	
-	// 탈퇴
+		
 	public void delUser(String email) {
 		dao.deleteById(email);
 	}
