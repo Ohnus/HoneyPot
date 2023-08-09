@@ -1,5 +1,7 @@
 package com.example.demo.chat;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -41,6 +43,11 @@ public class Chat {
 	private Member isFromSender; // 메세지 작성자
 	
 	private String content; // 메세지 내용
+	
+	private LocalDate time;
+	
+	
+
 	
 }
 

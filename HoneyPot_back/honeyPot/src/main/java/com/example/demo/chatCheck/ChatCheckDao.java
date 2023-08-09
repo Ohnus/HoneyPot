@@ -1,9 +1,9 @@
-package com.example.demo.cash;
+package com.example.demo.chatCheck;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CashDao extends JpaRepository<Cash, Integer> {
+public interface ChatCheckDao extends JpaRepository<ChatCheck, Integer> {
 
 }
