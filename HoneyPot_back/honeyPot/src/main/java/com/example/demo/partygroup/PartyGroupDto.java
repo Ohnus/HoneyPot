@@ -1,6 +1,6 @@
 package com.example.demo.partygroup;
 
-import com.example.demo.hostBoard.HostBoard;
+import com.example.demo.hostboard.HostBoard;
 import com.example.demo.member.Member;
 
 import lombok.AllArgsConstructor;

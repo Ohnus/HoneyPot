@@ -1,4 +1,4 @@
-package com.example.demo.hostBoard;
+package com.example.demo.hostboard;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import com.example.demo.ott.Ott;
 public interface HostBoardDao extends JpaRepository<HostBoard, Integer> {
 
 	//ott 종류로 찾기 
-	 ArrayList<HostBoard> findByTypeOrderByBordNumAsc(Ott type);
+	 ArrayList<HostBoard> findByTypeOrderByBoardNumAsc(Ott type);
 	 
 	 //시작 날짜 빠른 순으로 찾기
 	 

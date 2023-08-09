@@ -1,4 +1,4 @@
-package com.example.demo.hostBoard;
+package com.example.demo.hostboard;
 
 import java.util.ArrayList;
 
@@ -52,7 +52,7 @@ public class HostBoardService {
 
 	// ott별로 글 목록 뽑기 
 	public ArrayList<HostBoardDto> getottAll(Ott type){
-		ArrayList<HostBoard> list = (ArrayList<HostBoard>) dao.findByTypeOrderByBordNumAsc(type);
+		ArrayList<HostBoard> list = (ArrayList<HostBoard>) dao.findByTypeOrderByBoardNumAsc(type);
 		ArrayList<HostBoardDto> list2 = new ArrayList<HostBoardDto>();
 		for(HostBoard vo : list) {
 			list2.add(new HostBoardDto(vo.getBoardNum(), vo.getUserNum(), vo.getType(), vo.getMonthPrice(),

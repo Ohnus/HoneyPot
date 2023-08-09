@@ -1,4 +1,4 @@
-package com.example.demo.hostBoard;
+package com.example.demo.hostboard;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
