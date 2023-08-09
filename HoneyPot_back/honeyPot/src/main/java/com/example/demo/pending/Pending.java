@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.example.demo.hostBoard.HostBoard;
+import com.example.demo.hostboard.HostBoard;
 import com.example.demo.member.Member;
 
 import jakarta.persistence.Column;
