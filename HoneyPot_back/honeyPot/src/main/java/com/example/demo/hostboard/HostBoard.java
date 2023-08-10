@@ -59,7 +59,7 @@ public class HostBoard {
 	
 	private LocalDate subStart; //구독 시작일 
 	private LocalDate subEnd; //구독 끝날짜 
-	private long month; //몇개월인지 (subEnd -  subStart) /30 해서 넣기 
+	private long month; //몇개월인지 (subEnd - subStart) /30 해서 넣기 
 	
 	 @ColumnDefault("0")
 	 @Column(nullable = false)
