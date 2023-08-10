@@ -30,10 +30,10 @@ import lombok.ToString;
 public class Chat {
 
 	@Id
-	@SequenceGenerator(name="messageNum", sequenceName="messageNum", allocationSize=1, initialValue=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="messageNum")
-	@Column(name = "messageNum")
-	private int messageNum; // 각 메세지 한줄에 대한 번호
+	@SequenceGenerator(name="chatNum", sequenceName="chatNum", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="chatNum")
+	@Column(name = "chatNum")
+	private int chatNum; // 각 메세지 한줄에 대한 번호
 	
 	private int boardNum; // 메세지의 해당 채팅방 번호
 	

@@ -26,7 +26,7 @@ public class ChatCheck {
 	@Column(name = "checkNum")
 	private int checkNum; // 각 메세지별 수신자별 메세지 읽음 여부 확인
 	
-	private int messageNum; // 해당 메세지 번호
+	private int chatNum; // 해당 메세지 번호
 	
 	private int boardNum; // 해당 메세지의 채팅방 번호
 	
