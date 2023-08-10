@@ -20,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ChatDto {
 	
-	private int messageNum;
+	private int chatNum;
 	private int boardNum;
 	private Member isFromSender;
 	private String content;
