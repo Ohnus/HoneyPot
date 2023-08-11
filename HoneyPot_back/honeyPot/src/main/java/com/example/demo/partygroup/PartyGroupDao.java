@@ -20,8 +20,7 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	ArrayList<PartyGroup> findByUserNum(Member userNum);
 	
 	//몇개의 boardNum이 존재하는가 확인 
-	ArrayList<PartyGroup> fintByBoardNum(HostBoard boardNum);
-	
+	ArrayList<PartyGroup> findByBoardNum(HostBoard boardNum);
 
 	//0 이었던 startcheck 를 시작인 1(파티시작)로 변경 해야 함. 
 	@Transactional
@@ -30,8 +29,8 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	void updateStartCheckTo1(@Param("board_num") int board_num);
 	
 	//1 이었던 startcheck 를 종료인 2(파티종료)로 변경 해야 함. 
-	@Query(value = "update party_group set start_check=2 where board_num=:board_num", nativeQuery = true)
-	void updateStartCheckTo2(@Param("board_num") int board_num);
+	@Query(value = "update party_group set start_check=2 where board_num=:board_num and start_check =:start_check", nativeQuery = true)
+	void updateStartCheckTo2(@Param("board_num") int board_num,@Param("start_check") int start_check);
 	
 	//1 이었던 사람의 startcheck 를 탈주인 3으로 변경 해야 함. 
 	@Query(value = "update party_group set start_check=3 where board_num=:board_num",  nativeQuery = true)
@@ -39,5 +38,8 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	
 	@Query(value = "delete from PartyGroup where board_Num = :board_num", nativeQuery = true)
 	void deleteByBoardNum(@Param("board_num") int board_num);
+	
+	@Query(value = "select * from party_group where start_check=:start_check", nativeQuery = true)
+	ArrayList<PartyGroup> selectStartCheck (@Param("start_check") int start_check);
 
 }

@@ -51,7 +51,7 @@ public class HostBoardController {
 		return map;
 	}
 
-	// 글 삭제
+	// 글 삭제 : 참가자 있나 확인하고 있으면 취소 못함! 
 	@DeleteMapping("/{boardNum}")
 	public Map del(@PathVariable("boardNum") int boardNum) {
 		Map map = new HashMap();

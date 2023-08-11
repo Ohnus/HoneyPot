@@ -44,8 +44,8 @@ public class PartyGroupService {
 		dao.updateStartCheckTo1(boardNum);
 	}
 	
-	public void editStartTo2(int boardNum) {
-		dao.updateStartCheckTo2(boardNum);
+	public void editStartTo2(int boardNum, int startCheck) {
+		dao.updateStartCheckTo2(boardNum,startCheck);
 	}
 	
 	public void editStartTo3(int boardNum) {
@@ -58,7 +58,7 @@ public class PartyGroupService {
 	
 	//게시판 글 몇개인가 검색해서 숫자로 리턴  
 	public int findByBoardNum(HostBoard boardNum) {
-		ArrayList<PartyGroup> list = dao.fintByBoardNum(boardNum);
+		ArrayList<PartyGroup> list = dao.findByBoardNum(boardNum);
 		 return list.size();
 	}
 	
@@ -70,4 +70,14 @@ public class PartyGroupService {
 		}
 		return new PartyGroupDto(vo.getGroupNum(),vo.getBoardNum(),vo.getUserNum(),vo.getStartCheck());
 	}
+	
+	//startcheck 로 검색 
+	public ArrayList<PartyGroupDto> findByStartCheck(int startCheck) {
+		ArrayList<PartyGroup> list = dao.selectStartCheck(startCheck);
+		ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
+		for(PartyGroup vo : list) {
+			list2.add(new PartyGroupDto(vo.getGroupNum(),vo.getBoardNum(),vo.getUserNum(),vo.getStartCheck()));
+		}
+		return list2;
+		}
 }
