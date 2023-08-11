@@ -37,7 +37,8 @@ public class PartyGroupScheduler {
 					HBService.changIngToOne(vo.getBoardNum()); //리스트에 안보이게 1로 바꿔줘 
 					PGService.editStartTo1(vo.getBoardNum()); // StartCheck를 1로 바꿔
 				} else { // 최소 인원을 채우지 못했다면
-					PGService.delByBoardNum(vo.getBoardNum()); //삭제 된다. 
+					PGService.delByBoardNum(vo.getBoardNum()); 
+					HBService.delete(vo.getBoardNum()); //글과 삭제 된다. 
 				}
 			} else if(dto.getSubEnd().isEqual(today)) { //종료일이 오늘 날짜라면
 				PGService.editStartTo2(vo.getBoardNum());
