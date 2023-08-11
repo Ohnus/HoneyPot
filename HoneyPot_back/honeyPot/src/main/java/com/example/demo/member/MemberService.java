@@ -58,8 +58,8 @@ public class MemberService {
 	
 	
 	// 로그인, 내 정보 확인
-	public MemberDto getUser(String email) {
-		Member entity = dao.findById(email).orElse(null);
+	public MemberDto getUser(String userNum) {
+		Member entity = dao.findById(userNum).orElse(null);
 		MemberDto dto = null;
 		
 		if(entity == null) {
