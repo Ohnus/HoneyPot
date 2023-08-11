@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.ott.Ott;
+import com.example.demo.partygroup.PartyGroupDao;
 
 @Service
 public class HostBoardService {
@@ -60,5 +61,15 @@ public class HostBoardService {
 					vo.getSubEnd(), vo.getMonth(), vo.getIng()));
 		}
 		 return list2;
+	}
+	
+	//탈주범으로 인해 인원이 비어서 ing 를 0으로 바꾸는 메서드 
+	public void changIngToZero(int boardNum) {
+		dao.updateIngTo0(boardNum);
+	}
+	
+	//인원과 시작날짜 모두 충족하여 완벽한 구독시작이 되었을 시 실행 될 메서드 
+	public void changIngToOne(int boardNum) {
+		dao.updateIngTo1(boardNum);
 	}
 }

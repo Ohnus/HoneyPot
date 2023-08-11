@@ -68,7 +68,8 @@ public class HostBoard {
 	 @PrePersist
 	    public void calculate() {
 		 //monthPrice 계산 
-		 monthPrice = type.getPrice() / maxPpl;
+		 double price = type.getPrice() / maxPpl;
+		 monthPrice = (int) Math.ceil(price); // 정수로 올림
 		 
 		 //subEnd 계산
 		 subEnd = subStart.plusMonths(month);
