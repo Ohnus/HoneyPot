@@ -30,7 +30,7 @@ public class ChatCheck {
 	
 	private int boardNum; // 해당 메세지의 채팅방 번호
 	
-	private String toReciever; // 메세지를 확인하는 수신자
+	private String toReceiver; // 메세지를 확인하는 수신자
 	
 	private int read; // 읽음 여부 확인 0 : 안읽음, 1: 읽음
 	

@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 
 
 
-
-
 @Service
 public class ChatService {
+	
 	@Autowired
 	private ChatDao dao;
 	
-	// 채팅 작성
+	//채팅 작성
 	public ChatDto save(ChatDto dto) {
 		Chat entity = dao.save(new Chat(dto.getChatNum(),dto.getBoardNum(), dto.getIsFromSender(),dto.getContent(),dto.getTime()));
 		
