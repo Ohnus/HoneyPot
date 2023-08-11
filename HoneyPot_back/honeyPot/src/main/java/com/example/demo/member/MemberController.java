@@ -34,12 +34,17 @@ public class MemberController {
 		
 		String checkName = dto.getName();
 		String checkPhone = dto.getPhone();
+		
+		System.out.println(checkName + checkPhone);
 
 		MemberDto joinCheck = service.getUser(checkPhone);	// 핸드폰 번호로 유저 정보 검색
 		
 		String checkName2 = joinCheck.getName();
 		String checkPhone2 = joinCheck.getPhone();
 		String id = joinCheck.getEmail();
+		
+		System.out.println(checkName2 + checkPhone2 + id);
+		
 		
 		if (checkPhone2 != null && checkName.equals(checkName2)) {	// 핸드폰번호 존재 여부 + 해당 핸드폰번호의 소유주와 이름이 일치하는지 확인
 			map.put("msg", "해당 정보로 이미 가입된 상태입니다. \n" + id + "로 로그인해주세요.");
@@ -52,6 +57,7 @@ public class MemberController {
 			dto.setUserNum(userNum);									// 생성된 난수 dto에 저장
 					
 			MemberDto dto2 = service.save(dto);
+			System.out.println(dto2);
 			map.put("dto", dto2);
 		}
 		
