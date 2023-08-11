@@ -34,14 +34,14 @@ public class PaymentController {
 
 	// 결제수단 등록 or 변경
 	@PostMapping("/registerCards")
-	public Map saveBillingKey(String cardNum, String cardExpiry, String birth, String cardPwd, String billingKey, String email) {
+	public Map saveBillingKey(String cardNum, String cardExpiry, String birth, String cardPwd, String billingKey, String userNum) {
 		// 클라이언트 사이드에서 카드정보 + 유저빌링키 서버사이드로 전송
 		System.out.println("카드번호: " + cardNum);
 		System.out.println("유효기간: " + cardExpiry);
 		System.out.println("생년월일: " + birth);
 		System.out.println("비밀번호: " + cardPwd);
 		System.out.println("유저빌링키: " + billingKey);
-		System.out.println("유저email: " + email);
+		System.out.println("회원번호: " + userNum);
 
 		Map map = new HashMap<>();
 
@@ -56,7 +56,7 @@ public class PaymentController {
 			String pgBillingKey = billingKeyAPI.getBillingKey(accessToken, customerUid, cardNum, cardExpiry, birth, cardPwd);
 
 			// 유저빌링키 유저정보에 저장.. 유경누나랑 얘기해보고 서비스 불러와야지..
-			MemberDto mdto = mservice.getUser(email);
+			MemberDto mdto = mservice.getUser(userNum);
 			System.out.println("before mdto: " + mdto);
 			mdto.setBillingKey(billingKey);
 			mdto = mservice.save(mdto);
