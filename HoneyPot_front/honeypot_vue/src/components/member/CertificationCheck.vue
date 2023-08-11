@@ -21,14 +21,14 @@ export default {
         certification() {
             const self = this;
             const IMP = window.IMP;
-            IMP.init("imp24063873}");
+            IMP.init("imp24063873");
 
             console.log("왔나?")
 
             IMP.certification({
                 pg: 'MIIiasTest',
                 merchant_uid: 'merchant_' + new Date().getTime(),
-                m_redirect_url: "http://localhost:8988/member/HoneypotJoin", // 어디로 보내지..?
+                m_redirect_url: "http://localhost:8989/member/HoneypotJoin", // 어디로 보내지..?
                 popup: false
                 }, function (rsp) {
                     if (rsp.success) {
