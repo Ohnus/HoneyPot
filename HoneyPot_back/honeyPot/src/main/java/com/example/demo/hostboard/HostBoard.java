@@ -1,14 +1,13 @@
 package com.example.demo.hostboard;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.example.demo.ott.Ott;
 import com.example.demo.member.Member;
+import com.example.demo.ott.Ott;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
@@ -59,7 +59,7 @@ public class HostBoard {
 	
 	private LocalDate subStart; //구독 시작일 
 	private LocalDate subEnd; //구독 끝날짜 
-	private long month; //몇개월인지 (subEnd - subStart) /30 해서 넣기 
+	private int month; //몇개월인지를 클릭해서 subEnd에 넣기 
 	
 	 @ColumnDefault("0")
 	 @Column(nullable = false)
@@ -70,9 +70,9 @@ public class HostBoard {
 		 //monthPrice 계산 
 		 monthPrice = type.getPrice() / maxPpl;
 		 
-		 //month 계산 
-		 long day = ChronoUnit.DAYS.between(subStart,subEnd);
-		 month = day/30;
+		 //subEnd 계산
+		 subEnd = subStart.plusMonths(month);
+		
 	 }
 			
 	 

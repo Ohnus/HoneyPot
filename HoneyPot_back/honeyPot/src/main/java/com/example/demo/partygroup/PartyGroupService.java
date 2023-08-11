@@ -1,7 +1,12 @@
 package com.example.demo.partygroup;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.hostboard.HostBoard;
+import com.example.demo.member.Member;
 
 @Service
 public class PartyGroupService {
@@ -24,4 +29,45 @@ public class PartyGroupService {
 		dao.deleteById(groupNum);
 	}
 
+	//인당 리스트 
+	public ArrayList<PartyGroupDto> getUserList(Member userNum){
+	ArrayList<PartyGroup> list = dao.findByUserNum(userNum);
+	ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
+	for(PartyGroup vo : list) {
+		list2.add(new PartyGroupDto(vo.getGroupNum(),vo.getBoardNum(),vo.getUserNum(),vo.getStartCheck()));
+	}
+	return list2;
+	}
+	
+	
+	public void editStartTo1(int boardNum) {
+		dao.updateStartCheckTo1(boardNum);
+	}
+	
+	public void editStartTo2(int boardNum) {
+		dao.updateStartCheckTo2(boardNum);
+	}
+	
+	public void editStartTo3(int boardNum) {
+		dao.updateStartCheckTo3(boardNum);
+	}
+	
+	public void delByBoardNum(int boardNum) {
+		dao.deleteByBoardNum(boardNum);
+	}
+	
+	//게시판 글 몇개인가 검색해서 숫자로 리턴  
+	public int findByBoardNum(HostBoard boardNum) {
+		ArrayList<PartyGroup> list = dao.fintByBoardNum(boardNum);
+		 return list.size();
+	}
+	
+	//PK 아이디로 찾기 
+	public PartyGroupDto finByGroupNum(int groupNum) {
+		PartyGroup vo = dao.findById(groupNum).orElse(null);
+		if (vo ==null) {
+			return null;
+		}
+		return new PartyGroupDto(vo.getGroupNum(),vo.getBoardNum(),vo.getUserNum(),vo.getStartCheck());
+	}
 }
