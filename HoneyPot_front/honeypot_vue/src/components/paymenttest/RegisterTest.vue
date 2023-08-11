@@ -10,6 +10,7 @@
         카드 비밀번호 앞 두자리:
         <input v-model="pwdDigit2" type="text" size="2"><br>
         <input v-model="billingKey" type="hidden"><br>
+        <input v-model="email" type="hidden"><br>
         <button v-on:click="registerCard">카드등록</button>
     </div>
 </template>
@@ -29,6 +30,7 @@ export default {
             birth: '930502',
             pwdDigit2: '13',
             billingKey: 'sunho0502',
+            email: 'sh525293@gmail.com',
             token: ''
         }
     },
@@ -46,6 +48,7 @@ export default {
             formdata.append('birth', self.birth);
             formdata.append('cardPwd', self.pwdDigit2);
             formdata.append('billingKey', self.billingKey);
+            formdata.append('email', self.email);
             self.$axios.post('http://localhost:8988/payments/registerCards', formdata)
             .then(function(res) {
                 if(res.status == 200) {
