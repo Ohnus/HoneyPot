@@ -1,5 +1,6 @@
 package com.example.demo.ott;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Table(name = "ott")
 @Entity
 @Getter
 @Setter
@@ -19,6 +19,7 @@ import lombok.ToString;
 public class Ott {
 	
 	@Id
+	@Column(name = "type")
 	private String type;
 	private int price;
 	private int maxppl;

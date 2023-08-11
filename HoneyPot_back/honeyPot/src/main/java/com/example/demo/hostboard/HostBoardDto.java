@@ -2,8 +2,8 @@ package com.example.demo.hostboard;
 
 import java.time.LocalDate;
 
-import com.example.demo.ott.Ott;
 import com.example.demo.member.Member;
+import com.example.demo.ott.Ott;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public class HostBoardDto {
 	private int maxPpl;
 	private LocalDate subStart; 
 	private LocalDate subEnd; 
-	private long month;
+	private int month;
 	private int ing;
 
 }
