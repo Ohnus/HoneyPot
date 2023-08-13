@@ -21,9 +21,10 @@ public class AutoMatchingDto {
 	private int matchingNum;
 	private Member userNum;
 	private Ott type;
-	private LocalDate subStart;
-	private int exDate;
+	private LocalDate startDate;
+	private LocalDate exDate;
 	private int monthMin;
 	private int monthMax;
+	private int isMatching;
 
 }

@@ -87,10 +87,10 @@ public class PartyGroupController {
 	}
 
 	// 중간 탈퇴를 하고 싶어요
-	@GetMapping("/{boardNum}")
-	public Map middleOut(@PathVariable("boardNum") int boardNum) {
+	@GetMapping("/out/{boardNum}/{userNum}")
+	public Map middleOut(@PathVariable("boardNum") int boardNum, @PathVariable("userNum") String userNum) {
 		Map map = new HashMap();
-		Map Result = PGService.editStartTo4(boardNum); //결과를 받아서 넣고 
+		Map Result = PGService.editStartTo4(boardNum,userNum); //결과를 받아서 넣고 
 		boolean flag = (boolean) Result.get("flag");
 		if (flag) { //flag가 true 여서 중간 탈퇴가 진행 되었다면 
 			HBService.changIngToZero(boardNum); //ing 를 0 으로 바꿔서 리스트에 보이게 해줘 

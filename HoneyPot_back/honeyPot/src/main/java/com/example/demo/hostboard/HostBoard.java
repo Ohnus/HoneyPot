@@ -41,12 +41,12 @@ public class HostBoard {
 	
 	@ManyToOne
 	@JoinColumn(name="userNum", nullable=true)  
-	@OnDelete(action = OnDeleteAction.SET_NULL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Member userNum; //작성자 
 	
 	@ManyToOne
 	@JoinColumn(name="type", nullable=true)  
-	@OnDelete(action = OnDeleteAction.SET_NULL) 
+	@OnDelete(action = OnDeleteAction.CASCADE) 
 	private Ott type; //ott 이름
 	
 	private int monthPrice; //인당 월결제비용 : ott.price / maxpeople

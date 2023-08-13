@@ -2,6 +2,7 @@ package com.example.demo.automatching;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -46,8 +47,14 @@ public class AutoMatching {
 	@OnDelete(action = OnDeleteAction.SET_NULL) 
 	private Ott type; 
 	
-	private LocalDate subStart;
-	private int exDate;
+	private LocalDate startDate;
+	private LocalDate exDate;
 	private int monthMin;
 	private int monthMax;
+	
+	 @ColumnDefault("0")
+	 @Column(nullable = false)
+	private int isMatching;
+	
+	
 }

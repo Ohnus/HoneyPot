@@ -4,6 +4,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.example.demo.automatching.AutoMatching;
 import com.example.demo.hostboard.HostBoard;
 import com.example.demo.member.Member;
 
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,5 +50,10 @@ public class PartyGroup {
 	@ColumnDefault("0")
 	@Column(nullable = false)
 	private int startCheck;
+	
+	@OneToOne
+	@JoinColumn(name="matchingNum", nullable=true)  
+	@OnDelete(action = OnDeleteAction.SET_NULL)
+	private AutoMatching matchingNum;
 
 }

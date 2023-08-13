@@ -72,4 +72,16 @@ public class HostBoardService {
 	public void changIngToOne(int boardNum) {
 		dao.updateIngTo1(boardNum);
 	}
+	
+	//ing가 0 인 것만 리스트를 뽑아 
+	public ArrayList<HostBoardDto> getIngZero() {
+		ArrayList<HostBoard> list = dao.getIng0();
+		ArrayList<HostBoardDto> list2 = new ArrayList<HostBoardDto>();
+		for(HostBoard vo : list) {
+			list2.add(new HostBoardDto(vo.getBoardNum(), vo.getUserNum(), vo.getType(), vo.getMonthPrice(),
+					vo.getOttAcct(), vo.getOttPwd(), vo.getMinPpl(), vo.getMaxPpl(), vo.getSubStart(),
+					vo.getSubEnd(), vo.getMonth(), vo.getIng()));
+		}
+		 return list2;
+	}
 }

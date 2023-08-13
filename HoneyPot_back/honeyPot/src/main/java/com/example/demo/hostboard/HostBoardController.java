@@ -97,7 +97,7 @@ public class HostBoardController {
 	}
 
 	// 사이트별로 리스트
-	@GetMapping("/{ott}")
+	@GetMapping("site/{ott}")
 	public Map getBySite(@PathVariable("ott") Ott ott) {
 		ArrayList<HostBoardDto> list = HBService.getottAll(ott);
 		Map map = new HashMap();

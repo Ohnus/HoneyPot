@@ -32,13 +32,13 @@ public class AutoMatchingController {
 		return map;
 	}
 	
-	//삭제
+	//자진 삭제
 	@DeleteMapping("/{matchingNum}")
 	public void del(@PathVariable("matchingNum") int matchigNum) {
 	AMService.del(matchigNum);	
 	}
 	
-	//사용자별 매칭 
+	//사용자별 매칭 기록 보기 
 	@GetMapping("/{userNum}")
 	public Map getUser(@PathVariable("userNum") Member userNum) {
 		Map map = new HashMap();
@@ -46,6 +46,8 @@ public class AutoMatchingController {
 		map.put("list", list);
 		return map;
 	}
+	
+	
 		
 
 }
