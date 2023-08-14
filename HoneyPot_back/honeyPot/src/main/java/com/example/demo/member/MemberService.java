@@ -1,6 +1,6 @@
 package com.example.demo.member;
 
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +57,20 @@ public class MemberService {
 	}
 	
 	
+	// 전체 검색
+	public ArrayList<MemberDto> getAllUser() {
+		ArrayList<Member> list = (ArrayList<Member>) dao.findAll();
+		ArrayList<MemberDto> list2 = new ArrayList<MemberDto>();
+		for(Member entity : list) {
+			list2.add((new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
+					entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null)));
+		}
+		return list2;
+	}
+	
+	
 	// 로그인, 내 정보 확인
-	public MemberDto getUser(String userNum) {
+	public MemberDto getByUserNum(String userNum) {
 		Member entity = dao.findById(userNum).orElse(null);
 		MemberDto dto = null;
 		
@@ -71,6 +83,21 @@ public class MemberService {
 		}
 	}
 	
+	// 로그인, 내 정보 확인
+	public MemberDto getByEmail(String email) {
+		Member entity = dao.findById(email).orElse(null);
+		MemberDto dto = null;
+		
+		if(entity == null) {
+			return dto;
+		} else {
+			dto = new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
+					entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null);
+			return dto;
+		}
+	}
+
+
 		
 	public void delUser(String email) {
 		dao.deleteById(email);

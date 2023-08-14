@@ -102,12 +102,13 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
-		
-		
-		
-		
-		
-		
+
+    	<dependency>
+        	<groupId>org.json</groupId>
+       		<artifactId>json</artifactId>
+       		<version>20210307</version> <!-- 적절한 버전으로 변경하세요 -->
+    	</dependency>
+
 	</dependencies>
 
 	<build>
