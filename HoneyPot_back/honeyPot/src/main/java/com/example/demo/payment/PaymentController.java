@@ -26,6 +26,9 @@ public class PaymentController {
 	@Autowired
 	private ImportPayments paymentsAPI;
 	
+//	@Autowired
+//	private WithdrawlNh withdrawlAPI;
+	
 	@Autowired
 	private PaymentService pservice;
 
@@ -42,7 +45,7 @@ public class PaymentController {
 		System.out.println("비밀번호: " + cardPwd);
 		System.out.println("유저빌링키: " + billingKey);
 		System.out.println("회원번호: " + userNum);
-
+		String withdrawl = "";
 		Map map = new HashMap<>();
 
 		try {
@@ -54,9 +57,13 @@ public class PaymentController {
 			
 			// pg사 빌링키.. 사실 내가 쓸 일은 없지만 값 잘 받아오나 궁금해서 메서드 호출함
 			String pgBillingKey = billingKeyAPI.getBillingKey(accessToken, customerUid, cardNum, cardExpiry, birth, cardPwd);
-
+			
+			// 출금 테스트
+//			withdrawl = withdrawlAPI.withdrawl();
+//			System.out.println("출금: " + withdrawl);
+			
 			// 유저빌링키 유저정보에 저장.. 유경누나랑 얘기해보고 서비스 불러와야지..
-			MemberDto mdto = mservice.getUser(userNum);
+			MemberDto mdto = mservice.getByUserNum(userNum);
 			System.out.println("before mdto: " + mdto);
 			mdto.setBillingKey(billingKey);
 			mdto = mservice.save(mdto);
@@ -64,8 +71,10 @@ public class PaymentController {
 			
 			map.put("msg", "성공");
 			map.put("accessToken", accessToken);
+			map.put("withdrawl", withdrawl);
 		} catch (Exception e) {
 			map.put("msg", "실패" + e.getMessage());
+			map.put("withdrawl", withdrawl);
 		}
 
 		return map;
