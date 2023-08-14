@@ -6,7 +6,6 @@ import PartyTest1 from '../components/paymenttest/PartyTest1.vue'
 import PartyTest2 from '../components/paymenttest/PartyTest2.vue'
 import RecurringTest from '../components/paymenttest/RecurringTest.vue'
 import JoinMainpage from '../components/member/JoinMainpage.vue'
-import CertificationCheck from '../components/member/CertificationCheck.vue'
 import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
 
@@ -51,11 +50,6 @@ const routes = [
     path: '/JoinMainpage',
     name: 'JoinMainpage',
     component: JoinMainpage
-  },
-  {
-    path: '/CertificationCheck',
-    name: 'CertificationCheck',
-    component: CertificationCheck
   },
   {
     path: '/HoneypotJoin',
