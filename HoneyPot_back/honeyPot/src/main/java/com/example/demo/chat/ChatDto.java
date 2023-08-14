@@ -1,11 +1,8 @@
 package com.example.demo.chat;
 
-import java.time.LocalDate;
-
-import org.hibernate.annotations.ColumnDefault;
+import java.time.LocalDateTime;
 
 import com.example.demo.member.Member;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +21,6 @@ public class ChatDto {
 	private int boardNum;
 	private Member isFromSender;
 	private String content;
-	private LocalDate time;
+	private LocalDateTime time;
 
 }

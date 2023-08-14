@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChatCheckService {
@@ -13,19 +14,29 @@ public class ChatCheckService {
 	
 	
 	//한 개의 채팅을 채팅방 멤버별 튜플 생성
-	public ArrayList<String> add(int boardNum, int chatNum, String loginId){
+	@Transactional
+	public ArrayList<ChatCheckDto> add(int boardNum, int chatNum, String loginId){
+		System.out.println("ccservice 요청옴");
+		System.out.println("boardNum : " + boardNum);
+		System.out.println("loginId : " + loginId);
+		System.out.println("chatNum : " + chatNum);
 		ArrayList<String> list = (ArrayList<String>) dao.findUsersByChatroom(boardNum);
+		System.out.println("ccservice : " + list);
 		
-		
+		ArrayList<ChatCheckDto> list2 = new ArrayList<ChatCheckDto>();
 		for(String userNum: list) {
 			int read = 0;
 			if(loginId.equals(userNum)) {
 				read = 1;
 			}
-			dao.save(new ChatCheck(0,chatNum,boardNum, userNum,read));
+			
+			ChatCheck entity = dao.save(new ChatCheck(0,chatNum,boardNum, userNum,read));
+			list2.add(new ChatCheckDto(entity.getCheckNum(), entity.getChatNum(),entity.getBoardNum(), entity.getToReceiver(),entity.getRead()));
 		}
-		return list;
+	
+		return list2;
 	}
+	
 	
 	// 각 채팅별 안읽은 인원 확인
 	public long getCountbychatNum(int chatNum) {

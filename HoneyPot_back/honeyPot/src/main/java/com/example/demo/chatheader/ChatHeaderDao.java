@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.demo.ott.Ott;
+
 public interface ChatHeaderDao extends JpaRepository<ChatHeader, Integer> {
 
 	//본인이 파티에 속한 채팅방 baordNum(파티중, 정상 종료된 채팅 방)
@@ -13,4 +15,8 @@ public interface ChatHeaderDao extends JpaRepository<ChatHeader, Integer> {
 	
 	//boarNum에 대한 채팅방
 	ChatHeaderDto findByBoardNum(int boardNum);
+	
+	
+	//채팅방 생성
+//	select userNum, boardnum, automatchin.Ott.type where  select min groupNum where boardnum=boardnum
 }

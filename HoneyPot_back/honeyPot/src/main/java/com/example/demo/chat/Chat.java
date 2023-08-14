@@ -1,6 +1,7 @@
 package com.example.demo.chat;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -34,7 +35,7 @@ public class Chat {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="chatNum")
 	@Column(name = "chatNum")
 	private int chatNum; // 각 메세지 한줄에 대한 번호
-	
+
 	private int boardNum; // 메세지의 해당 채팅방 번호
 	
 	@ManyToOne
@@ -44,7 +45,11 @@ public class Chat {
 	
 	private String content; // 메세지 내용
 	
-	private LocalDate time;
+	private LocalDateTime time;	
+	
+	public void preprosess() {
+		time = LocalDateTime.now();
+	}
 	
 	
 

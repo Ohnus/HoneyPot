@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 public interface ChatCheckDao extends JpaRepository<ChatCheck, Integer> {
 	
 	//한개의 채팅을 채팅방 멤버별 튜플 생성할 멤버들 목록
-	@Query("SELECT pg.userNum.userNum FROM PartyGroup pg WHERE pg.boardNum = :boardNum AND pg.startCheck = 1 AND pg.userNum IS NOT NULL")
+//	@Query("SELECT pg.userNum.userNum FROM PartyGroup pg WHERE pg.boardNum.boardNum = :boardNum AND pg.startCheck = 1 AND pg.userNum IS NOT NULL")
+	@Query("SELECT pg.userNum FROM PartyGroup pg WHERE pg.boardNum = :boardNum AND pg.startCheck = 1 AND pg.userNum IS NOT NULL")
     ArrayList<String> findUsersByChatroom(@Param("boardNum") int boardNum);
+
 
 	
 	
