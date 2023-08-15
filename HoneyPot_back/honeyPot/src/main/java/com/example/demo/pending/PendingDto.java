@@ -21,7 +21,7 @@ public class PendingDto {
 	private int pendingNum;
 	private HostBoard boardNum;
 	private Member userNum;
-	private LocalDate patDate;
+	private LocalDate payDate;
 	private int amount;
 	private int msg;
 }
