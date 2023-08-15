@@ -14,7 +14,6 @@ public class ChatCheckService {
 	
 	
 	//한 개의 채팅을 채팅방 멤버별 튜플 생성
-	@Transactional
 	public ArrayList<ChatCheckDto> add(int boardNum, int chatNum, String loginId){
 		System.out.println("ccservice 요청옴");
 		System.out.println("boardNum : " + boardNum);
@@ -49,4 +48,11 @@ public class ChatCheckService {
 		long count = dao.countUnreadByBoardNum(loginId, boardNum);
 		return count;
 	}
+	
+	// 채팅방 클릭 했을 때 모두 읽음 처리
+	public void changeRead(int boardNum, String loginId) {
+		dao.updateRead(loginId, boardNum);
+	}
+	
+
 }

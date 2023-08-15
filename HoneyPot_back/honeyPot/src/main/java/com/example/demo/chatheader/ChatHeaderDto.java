@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ChatHeaderDto {
 
-	private int channelNum; 
+	private int chatroomNum; 
 	private int boardNum; 
 	private String subject; 
 	private Member host;

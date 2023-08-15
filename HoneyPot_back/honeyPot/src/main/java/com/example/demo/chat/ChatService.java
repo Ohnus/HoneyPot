@@ -14,10 +14,10 @@ public class ChatService {
 	private ChatDao dao;
 	
 	//채팅 작성
-	public ChatDto save(ChatDto dto) {
+	public ChatDto add(ChatDto dto) {
 		Chat entity = dao.save(new Chat(dto.getChatNum(),dto.getBoardNum(), dto.getIsFromSender(),dto.getContent(),dto.getTime()));
 		
-		return new ChatDto(entity.getChatNum(),dto.getBoardNum(),dto.getIsFromSender(), dto.getContent(),dto.getTime());
+		return new ChatDto(entity.getChatNum(),entity.getBoardNum(),entity.getIsFromSender(), entity.getContent(),entity.getTime());
 	}
 	
 	//각 채팅방 별 대화 내용 보여주기

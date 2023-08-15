@@ -26,7 +26,7 @@ public class ChatController {
 	@Autowired
 	private ChatCheckService CCservice;
 	
-	//채팅 작성
+	//채팅 작성 ( 테스트 완 )
 	@PostMapping("/{loginId}")
 	public Map add(ChatDto dto, @PathVariable("loginId") String loginId) {
 		System.out.println("요청옴");
@@ -37,12 +37,13 @@ public class ChatController {
 		try{
 		
 		// 채팅 한 개 chat테이블에 추가
-		dto2 = service.save(dto); 
+		dto2 = service.add(dto); 
 		System.out.println("getIsFromSender : " + dto.getIsFromSender());
 		System.out.println("getIsFromSender.getUserNum() : " + dto.getIsFromSender().getUserNum());
+		System.out.println("dto2.getChatNum : " + dto2.getChatNum());
 		
 		//채팅 한 개에 대해서 각 채팅방 멤버 별 인원수만큼 chatcheck(읽음 여부 확인하기 위한)테이블에 튜플 추가
-		ArrayList<ChatCheckDto> list2 = CCservice.add(dto.getBoardNum(),dto.getChatNum(),dto.getIsFromSender().getUserNum()); 
+		ArrayList<ChatCheckDto> list2 = CCservice.add(dto.getBoardNum(),dto2.getChatNum(),dto.getIsFromSender().getUserNum()); 
 		System.out.println("list2 : " + list2);
 		}catch(Exception e) {
 			flag = false;
@@ -54,13 +55,18 @@ public class ChatController {
 		return map;
 	}
 	
-	//각 채팅방 별 대화 내용 보여주기
-	@GetMapping("/{boardNum}")
-	public Map getchat(@PathVariable("boardNum") int boardNum) {
+	//각 채팅방 별 대화 내용 보여주기 ( 테스트 완 )
+	@GetMapping("/{loginId}/{boardNum}")
+	public Map getchat(@PathVariable("loginId") String loginId, @PathVariable("boardNum") int boardNum) {
+		
+		// 채팅방 클릭 했을 때 모두 읽음 처리
+		CCservice.changeRead(boardNum, loginId);
+		
 		ArrayList<ChatDto> list = service.getChat(boardNum);
 		Map map = new HashMap();
 		map.put("chat", list);
 		System.out.println("대화 내용 보여주기");
+		
 		
 		return map;
 	}

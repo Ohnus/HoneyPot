@@ -28,10 +28,10 @@ import lombok.ToString;
 public class ChatHeader {
 	
 	@Id
-	@SequenceGenerator(name="channelNum", sequenceName="channelNum", allocationSize=1, initialValue=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="channelNum")
-	@Column(name = "channelNum")
-	private int channelNum; // 각 채팅방 번호
+	@SequenceGenerator(name="seq_chatroomNum", sequenceName="seq_chatroomNum", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_chatroomNum")
+	@Column(name = "chatroomNum")
+	private int chatroomNum; // 각 채팅방 번호
 	
 	private int boardNum; // 각 채팅방의 고유번호
 	

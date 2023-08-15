@@ -31,8 +31,8 @@ import lombok.ToString;
 public class Chat {
 
 	@Id
-	@SequenceGenerator(name="chatNum", sequenceName="chatNum", allocationSize=1, initialValue=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="chatNum")
+	@SequenceGenerator(name="seq_chatNum", sequenceName="seq_chatNum", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_chatNum")
 	@Column(name = "chatNum")
 	private int chatNum; // 각 메세지 한줄에 대한 번호
 

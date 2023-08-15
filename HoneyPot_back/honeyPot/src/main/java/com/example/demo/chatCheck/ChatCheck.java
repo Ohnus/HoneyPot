@@ -21,8 +21,8 @@ import lombok.ToString;
 public class ChatCheck {
 
 	@Id
-	@SequenceGenerator(name="checkNum", sequenceName="checkNum", allocationSize=1, initialValue=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="checkNum")
+	@SequenceGenerator(name="seq_checkNum", sequenceName="seq_checkNum", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_checkNum")
 	@Column(name = "checkNum")
 	private int checkNum; // 각 메세지별 수신자별 메세지 읽음 여부 확인
 	
