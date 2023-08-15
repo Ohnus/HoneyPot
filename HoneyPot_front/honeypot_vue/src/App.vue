@@ -6,8 +6,9 @@
     <router-link to="/RegisterTest">RegisterTest</router-link> |
     <router-link to="/PartyTest1">PartyTest1</router-link> |
     <router-link to="/PartyTest2">PartyTest2</router-link> |
-    <router-link to="/RecurringTest">RecurringTest</router-link> |
-    <router-link to="/JoinMainpage">회원가입</router-link>
+    <router-link to="/RecurringTest">RecurringTest</router-link><br>
+    <router-link to="/JoinMainpage">회원가입</router-link> |
+    <router-link to="/LoginPage">로그인</router-link>
   </nav>
   <router-view/>
 </template>

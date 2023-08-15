@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,4 +49,28 @@ public class ImportBillingKey {
 		}
 	}
 	
+	// 빌링키 PG사 데이터에서 삭제
+	public String delBillingKey(String accessToken, String customerUid, String userNum) {
+		
+		RestTemplate restTemplate = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(accessToken);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("customerUid", customerUid);
+		map.put("reason", "회원 결제수단 삭제");
+		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+		
+		ResponseEntity<String> response = restTemplate.exchange("https://api.iamport.kr/subscribe/customers/" + customerUid, HttpMethod.DELETE, requestEntity, String.class);
+		
+		if(response.getStatusCode().is2xxSuccessful()) {
+			String responseBody = response.getBody();
+			System.out.println("빌링키 삭제 responseBody: " + responseBody);
+			return responseBody;
+		} else {
+			String msg = "빌링키 삭제 실패";
+			return msg;
+		}
+	}
 }

@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class ImportPayments {
 	
 	// /payments/again api.. 빌링키 존재할 경우 해당 빌링키로 (재)결제 하는 api
-	public String doPayment(String accessToken, String customerUid, String merchantUid, int amount, String name) {
+	public int doPayment(String accessToken, String customerUid, String merchantUid, int amount, String name) {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -31,18 +31,19 @@ public class ImportPayments {
 		
 		ResponseEntity<String> response = restTemplate.postForEntity("https://api.iamport.kr/subscribe/payments/again", requestEntity, String.class);
 		
+		int msg = 0;
 		if(response.getStatusCode().is2xxSuccessful()) {
 			String responseBody = response.getBody();
 			System.out.println("결제 responseBody: " + responseBody);
-			return responseBody;
+			return msg;
 		} else {
-			String msg = "결제 실패";
+			msg = 1;
 			return msg;
 		}
 	}
 	
 	// /payments/cancel api.. 결제취소 api.. but 테스트 모드라서 부분취소 불가능, 전액취소 후 결제api로 일할계산 부분만큼 재결제 유도
-	public String cancelPayment(String accessToken, String merchantUid, int amount, int checksum) {
+	public int cancelPayment(String accessToken, String merchantUid, int amount, int checksum) {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -58,12 +59,13 @@ public class ImportPayments {
 		
 		ResponseEntity<String> response = restTemplate.postForEntity("https://api.iamport.kr/payments/cancel", requestEntity, String.class);
 		
+		int msg = 2;
 		if(response.getStatusCode().is2xxSuccessful()) {
 			String responseBody = response.getBody();
 			System.out.println("결제취소 response: " + responseBody);
-			return responseBody;
+			return msg;
 		} else {
-			String msg = "결제취소 실패";
+			msg = 3;
 			return msg;
 		}
 		

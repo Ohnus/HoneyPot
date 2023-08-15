@@ -8,6 +8,9 @@ import RecurringTest from '../components/paymenttest/RecurringTest.vue'
 import JoinMainpage from '../components/member/JoinMainpage.vue'
 import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
+import JoinComplete from '../components/member/JoinComplete.vue'
+import LoginPage from '../components/member/LoginPage.vue'
+
 
 
 const routes = [
@@ -60,7 +63,18 @@ const routes = [
     path: '/NaverJoin',
     name: 'NaverJoin',
     component: NaverJoin
+  },
+  {
+    path: '/JoinComplete',
+    name: 'JoinComplete',
+    component: JoinComplete
+  },
+  {
+    path: '/LoginPage',
+    name: 'LoginPage',
+    component: LoginPage
   }
+
 ]
 
 const router = createRouter({

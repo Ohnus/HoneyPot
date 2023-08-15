@@ -9,9 +9,12 @@
         <input v-model="birth" type="text" size="6"><br>
         카드 비밀번호 앞 두자리:
         <input v-model="pwdDigit2" type="text" size="2"><br>
-        <input v-model="billingKey" type="hidden"><br>
-        <input v-model="email" type="hidden"><br>
-        <button v-on:click="registerCard">카드등록</button>
+        <button v-on:click="registerCard">결제수단 등록</button>
+    </div>
+    <br><br><br>
+    <div class="test2">
+        결제수단 삭제(PG사 DB에서 빌링키 삭제 & 회원정보 빌링키 삭제)<br>
+        <button v-on:click="deleteCard">결제수단 삭제</button>
     </div>
 </template>
 
@@ -29,8 +32,7 @@ export default {
             cardExpiry2: '12',
             birth: '930502',
             pwdDigit2: '13',
-            billingKey: 'sunho0502',
-            email: 'sh525293@gmail.com',
+            userNum: 'HNP1234567', // 로그인 후 불러왔다고 가정
             token: ''
         }
     },
@@ -42,24 +44,41 @@ export default {
             const self = this;
             let cardNum = self.cardNum1 + '-' + self.cardNum2 + '-' + self.cardNum3 + '-' + self.cardNum4;
             let cardExpiry = self.cardExpiry1 + '-' + self.cardExpiry2;
+            let billingKey = self.userNum + '_' + self.cardNum4
             let formdata = new FormData();
             formdata.append('cardNum', cardNum);
             formdata.append('cardExpiry', cardExpiry);
             formdata.append('birth', self.birth);
             formdata.append('cardPwd', self.pwdDigit2);
-            formdata.append('billingKey', self.billingKey);
-            formdata.append('email', self.email);
+            formdata.append('billingKey', billingKey);
+            formdata.append('userNum', self.userNum);
             self.$axios.post('http://localhost:8988/payments/registerCards', formdata)
             .then(function(res) {
                 if(res.status == 200) {
                     let msg = res.data.msg;
                     let accessToken = res.data.accessToken;
+                    // let withdrawl = res.data.withdrawl;
                     alert(msg);
                     alert(accessToken);
                 } else {
-                    alert("에러코드: " + res.status)
+                    alert("에러코드: " + res.status);
                 }
             });
+        },
+        deleteCard(){
+            const self = this;
+            let formdata = new FormData();
+            formdata.append("userNum", self.userNum);
+            self.$axios.post('http://localhost:8988/payments/deleteCards', formdata)
+            .then(function(res) {
+                if(res.status == 200) {
+                    let msg = res.data.msg;
+                    alert(msg);
+                } else {
+                    alert("에러코드: " + res.status);
+                }
+            })
+            
         }
     }
 }

@@ -29,7 +29,7 @@ import lombok.ToString;
 public class Payment {
 	
 	@Id
-	private String orderNum; // 주문번호.. HP2308080334
+	private String orderNum; // 주문번호.. HNP230808033412
 	
 	@ManyToOne
 	@JoinColumn(name="userNum", nullable=false)
