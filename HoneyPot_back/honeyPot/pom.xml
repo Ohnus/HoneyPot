@@ -109,6 +109,10 @@
        		<version>20210307</version> <!-- 적절한 버전으로 변경하세요 -->
     	</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

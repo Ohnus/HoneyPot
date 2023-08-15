@@ -48,6 +48,6 @@ public class Member {
 	private String profile;	// 프로필 사진
 	
 	@Column(nullable=false)
-	private String billingKey = "0";	// 빌링키: 계정 당 하나만 발급되며(여러 개 카드 등록 불가) 디폴트 값은 0으로 둠
+	private String billingKey;	// 빌링키: 계정 당 하나만 발급되며(여러 개 카드 등록 불가) 디폴트 값 0으로 저장 예정
 	
 }

@@ -85,7 +85,7 @@ public class MemberService {
 	
 	// 로그인, 내 정보 확인
 	public MemberDto getByEmail(String email) {
-		Member entity = dao.findById(email).orElse(null);
+		Member entity = dao.findByEmail (email);
 		MemberDto dto = null;
 		
 		if(entity == null) {
