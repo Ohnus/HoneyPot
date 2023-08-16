@@ -81,10 +81,11 @@ public class PartyGroupController {
 				PartyGroupDto savedDto = PGService.save(dto);
 				map.put("dto", savedDto);
 				map.put("flag", flag);
-				PGService.findByStartCheck(boardNum.getBoardNum(), 4);
-				if 
+				ArrayList<PartyGroupDto> PGoutDto = PGService.findByStartCheck(boardNum.getBoardNum(), 4);
+				if(PGoutDto !=null) {
 				PGService.editStartTo3(boardNum.getBoardNum(), userNum.getUserNum()); 
 				//중간탈주자가 나가고 들어간 자리니까 중간탈주자는 탈주 번호는 3으로 변경 
+				}
 			} else {
 				flag = false;
 				map.put("flag", flag);
