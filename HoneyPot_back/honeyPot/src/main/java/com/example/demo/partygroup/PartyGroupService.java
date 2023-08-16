@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.automatching.AutoMatching;
 import com.example.demo.hostboard.HostBoard;
 import com.example.demo.hostboard.HostBoardDto;
 import com.example.demo.hostboard.HostBoardService;
@@ -75,9 +75,9 @@ public class PartyGroupService {
 		dao.updateStartCheckTo2(boardNum);
 	}
 
-	// 걍 탈주자를 위한 메서드
-	public void editStartTo3(int boardNum) {
-		dao.updateStartCheckTo3(boardNum);
+	// 탈주자를 위한 메서드
+	public void editStartTo3(int boardNum,String userNum) {
+		dao.updateStartCheckTo3(boardNum, userNum);
 	}
 
 	// 중간 탈주자를 위한 메서드
@@ -105,6 +105,7 @@ public class PartyGroupService {
 		HBService.delete(boardNum);
 		System.out.println("###$%안뇽하세요? 자바에요? 저두 성공~~");
 	}
+
 
 	// 게시판 글 몇개인가 검색해서 숫자로 리턴
 	public int findByBoardNum(HostBoard boardNum) {
@@ -137,11 +138,21 @@ public class PartyGroupService {
 		return list2;
 	}
 	
+	// startcheck 로 검색
+		public int findUsingStartCheck(int boardNum, int startCheck) {
+			ArrayList<PartyGroup> list = dao.selectStartCheck(boardNum, startCheck);
+			
+			return list.size();
+		}
 	//추가 된게 있나 확인 
 	public boolean findByMatchingNum(int matchingNum) {
-		boolean flag = dao.findByMatchingNum(matchingNum);
-		System.out.println("&&&boolean 값" + flag);
-		return flag;
+		
+		    List<PartyGroup> partyGroups = dao.findByMatchingNum(matchingNum);
+		    
+		    return partyGroups.isEmpty();
+	//비어있어야 partyGroup에 추가 할 수 있음으로 비어있는거이 true 여야함 
+		    //매칭 넘이 있으면 false 를 반환 -> 추가하지못함으로 
+	
 	}
 
 	
