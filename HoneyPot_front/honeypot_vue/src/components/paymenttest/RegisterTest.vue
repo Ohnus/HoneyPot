@@ -24,6 +24,13 @@ export default {
     name: 'RegisterTest',
     data() {
         return {
+            // cardNum1: '5327',
+            // cardNum2: '5010',
+            // cardNum3: '2536',
+            // cardNum4: '6131',
+            // cardExpiry1: '2027',
+            // cardExpiry2: '04',
+            // birth: '930502',
             cardNum1: '5118',
             cardNum2: '4500',
             cardNum3: '0791',
@@ -32,7 +39,8 @@ export default {
             cardExpiry2: '12',
             birth: '930502',
             pwdDigit2: '13',
-            userNum: 'HNP1234567', // 로그인 후 불러왔다고 가정
+            // userNum: 'HNP1234567', // 로그인 후 불러왔다고 가정
+            userNum: 'HNP76554321', // 로그인 후 불러왔다고 가정
             token: ''
         }
     },

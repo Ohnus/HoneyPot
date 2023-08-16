@@ -3,6 +3,11 @@
         파티 생성/찾기(100원 결제/환불)<br>
         <button v-on:click="add100">결제수단 유효성 확인</button>
     </div>
+    <br><br><br>
+    <div class="test2">
+        정기결제 테스트<br>
+        <button v-on:click="recurring">정기결제</button>
+    </div>
 </template>
 
 
@@ -11,7 +16,8 @@ export default {
     name: 'PartyTest1',
     data() {
         return {
-            userNum: 'HNP1234567' // 로그인 후 불러왔다고 가정
+            // userNum: 'HNP76554321', // 로그인 후 불러왔다고 가정
+            userNum: 'HNP1234567'
         }
     },
     created: function() {
@@ -33,7 +39,7 @@ export default {
             alert(orderNum);
             let payDate = fullyear + '-' + month + '-' + date;
             alert(payDate);
-            let totalPayment = 50;
+            let totalPayment = 100;
             let history = '결제수단 유효성 확인';
 
             let formdata = new FormData();
@@ -47,8 +53,8 @@ export default {
             .then(function(res) {
                 if(res.status == 200) {
                     let checkMsg = res.data.checkMsg;
-                    let nextStep = res.data.nextStep; 
                     let newDto = res.data.newDto;
+                    let nextStep = res.data.nextStep; 
                     alert(checkMsg);
                     alert(newDto);
                     alert(nextStep);
@@ -58,9 +64,9 @@ export default {
                     if(nextStep == 0) {
                         let formdata2 = new FormData();
                         formdata2.append("orderNum", orderNum);
-                        formdata2.append("boardNum", 1111);
+                        formdata2.append("boardNum", 2222);
                         formdata2.append("finalInstallment", 6);
-                        formdata2.append("recurringDay", 23); 
+                        formdata2.append("recurringDay", 15); 
                         self.$axios.post('http://localhost:8988/payments/update100', formdata2)
                         .then(function(res) {
                             if(res.status == 200) {
@@ -72,6 +78,20 @@ export default {
                         })
                     }
                     
+                } else {
+                    alert("에러코드: " + res.status);
+                }
+            })
+        },
+        recurring() {
+            const self = this;
+            self.$axios.post('http://localhost:8988/payments/recurringPayments')
+            .then(function(res) {
+                if(res.status == 200) {
+                    let msg = res.data.msg;
+                    let who = res.data.who;
+                    alert(msg);
+                    alert(who);
                 } else {
                     alert("에러코드: " + res.status);
                 }
