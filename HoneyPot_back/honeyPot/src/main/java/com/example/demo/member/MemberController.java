@@ -117,7 +117,7 @@ public class MemberController {
 		
 	}
 	
-	
+	;
 	// 닉네임 중복 체크
 	@GetMapping("/nicknameConfirm")
 	public Map nicknameConfirm(@RequestParam("nickname") String nickname) {

@@ -94,7 +94,7 @@ export default {
         IMP.certification({
             pg: 'MIIiasTest',
             merchant_uid: 'merchant_' + new Date().getTime(),
-            m_redirect_url: "http://localhost:8081/member/HoneypotJoin", 
+            m_redirect_url: "http://localhost:8989/member/HoneypotJoin", 
             popup: false
             }, function (rsp) {
                 if (rsp.success) {

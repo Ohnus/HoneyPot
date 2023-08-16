@@ -45,7 +45,7 @@ export default {
         IMP.certification({
             pg: 'MIIiasTest',
             merchant_uid: 'merchant_' + new Date().getTime(),
-            m_redirect_url: "http://localhost:8081/member/HoneypotJoin", 
+            m_redirect_url: "http://localhost:8989/member/NaverJoin", 
             popup: false
             }, function (rsp) {
                 if (rsp.success) {
@@ -90,7 +90,7 @@ export default {
 
         naverLogin() {
             let client_id = "uW8BXEv6IHbwQSCwO9jn";
-            let redirect_uri = encodeURIComponent("redirct_url", "UTF-8");
+            let redirect_uri = encodeURIComponent("http://localhost:8989/LoginPage", "UTF-8");
             const state = this.generateRandomState();
             const apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
              + "&client_id=" + client_id
