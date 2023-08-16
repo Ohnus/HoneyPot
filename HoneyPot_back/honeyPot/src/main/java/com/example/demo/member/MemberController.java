@@ -94,16 +94,54 @@ public class MemberController {
 	@ResponseBody
 	@PostMapping("/emailConfirm") 
 	public Map emailConfirm(@RequestParam("email") String email) {
+		boolean flag = false; // 중복된 메일 있음
+		String authCode = null;
 		
 		Map map = new HashMap<>();
 		
-		String authCode = emailService.joinEmail(email);
+		System.out.println(email);
+		MemberDto dto = service.getByEmail(email);
 		
+		if (dto != null && email.equals(dto.getEmail())) {
+			System.out.println("중복 된 메일 존재");
+			flag = true;			
+		} else {
+			authCode = emailService.joinEmail(email);
+			flag = false;			
+		}
+		
+		map.put("flag", flag);
 		map.put("authCode", authCode);
+		
 		return map;
+		
 	}
 	
-			
+	
+	// 닉네임 중복 체크
+	@GetMapping("/nicknameConfirm")
+	public Map nicknameConfirm(@RequestParam("nickname") String nickname) {
+		boolean flag = false; // 중복된 닉네임 있음
+		
+		Map map = new HashMap<>();
+		
+		System.out.println(nickname);
+		MemberDto dto = service.getByNickname(nickname);
+		System.out.println(dto);
+		
+		if (dto != null && nickname.equals(dto.getName())) {
+			flag = false;
+		} else {
+			flag = true;
+		}
+		
+		map.put("flag", flag);
+		System.out.println(flag);
+		return map;
+
+	}
+	
+	
 	
 	// 회원가입
 	@PostMapping("/join")		
