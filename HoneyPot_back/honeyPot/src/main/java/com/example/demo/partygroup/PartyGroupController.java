@@ -26,7 +26,7 @@ public class PartyGroupController {
 
 	@Autowired
 	private PartyGroupService PGService;
-	
+
 	@Autowired
 	private HostBoardService HBService;
 
@@ -69,19 +69,41 @@ public class PartyGroupController {
 	public Map addParty(@PathVariable("boardNum") HostBoard boardNum, @PathVariable("userNum") Member userNum) {
 		Map map = new HashMap<>();
 		boolean flag = true;
-		int count = PGService.findByBoardNum(boardNum); // 1. 몇개의 글이 있나 확인한다
-		if (count >= boardNum.getMaxPpl()) { // 2. 글이 Maxppl 보다 크거나 같으면
-			flag = false;
-			map.put("flag", flag);
-			map.put("message", "정원이 찬 파티로 등록 할 수 없습니다."); // 등록을 막아
-		} else { // 아니라면 등록 해줌
-			PartyGroupDto dto = new PartyGroupDto();
-			dto.setBoardNum(boardNum);
-			dto.setUserNum(userNum);
-//			dto.setStartCheck(0);
-			PartyGroupDto savedDto = PGService.save(dto);
-			map.put("dto", savedDto);
-			map.put("flag", flag);
+		LocalDate today = LocalDate.now();
+
+		if (boardNum.getSubStart().isBefore(today)) { // 만약에 구독의 시작날짜가 오늘기준으로 전이라면 -> 탈주자가 발생 했다는 뜻임
+			int countStartNum = PGService.findUsingStartCheck(boardNum.getBoardNum(), 1); // 진행 중인 사람들 수를 세어봐
+			if (countStartNum < boardNum.getMaxPpl()) { // 그 숫자가 boardNum의 최대인원보다 작다면
+				PartyGroupDto dto = new PartyGroupDto();
+				dto.setBoardNum(boardNum);
+				dto.setUserNum(userNum);
+				dto.setStartCheck(1);
+				PartyGroupDto savedDto = PGService.save(dto);
+				map.put("dto", savedDto);
+				map.put("flag", flag);
+				PGService.findByStartCheck(boardNum.getBoardNum(), 4);
+				if 
+				PGService.editStartTo3(boardNum.getBoardNum(), userNum.getUserNum()); 
+				//중간탈주자가 나가고 들어간 자리니까 중간탈주자는 탈주 번호는 3으로 변경 
+			} else {
+				flag = false;
+				map.put("flag", flag);
+				map.put("msg", "정원이 꽉차 버렸다리");
+			}
+		} else {
+			int count = PGService.findByBoardNum(boardNum); // 1. 몇개의 글이 있나 확인한다
+			if (count >= boardNum.getMaxPpl()) { // 2. 글이 Maxppl 보다 크거나 같으면
+				flag = false;
+				map.put("flag", flag);
+				map.put("message", "정원이 찬 파티로 등록 할 수 없습니다."); // 등록을 막아
+			} else { // 아니라면 등록 해줌
+				PartyGroupDto dto = new PartyGroupDto();
+				dto.setBoardNum(boardNum);
+				dto.setUserNum(userNum);
+				PartyGroupDto savedDto = PGService.save(dto);
+				map.put("dto", savedDto);
+				map.put("flag", flag);
+			}
 		}
 		return map;
 	}
@@ -90,13 +112,13 @@ public class PartyGroupController {
 	@GetMapping("/out/{boardNum}/{userNum}")
 	public Map middleOut(@PathVariable("boardNum") int boardNum, @PathVariable("userNum") String userNum) {
 		Map map = new HashMap();
-		Map Result = PGService.editStartTo4(boardNum,userNum); //결과를 받아서 넣고 
+		Map Result = PGService.editStartTo4(boardNum, userNum); // 결과를 받아서 넣고
 		boolean flag = (boolean) Result.get("flag");
-		if (flag) { //flag가 true 여서 중간 탈퇴가 진행 되었다면 
-			HBService.changIngToZero(boardNum); //ing 를 0 으로 바꿔서 리스트에 보이게 해줘 
+		if (flag) { // flag가 true 여서 중간 탈퇴가 진행 되었다면
+			HBService.changIngToZero(boardNum); // ing 를 0 으로 바꿔서 리스트에 보이게 해줘
 		}
 		map.put("flag", flag);
 		return map;
-	} 
+	}
 
 }

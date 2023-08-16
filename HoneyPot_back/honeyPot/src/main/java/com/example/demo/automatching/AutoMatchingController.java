@@ -17,7 +17,7 @@ import com.example.demo.member.Member;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/AutoMatching")
+@RequestMapping("/automatching")
 public class AutoMatchingController {
 	
 	@Autowired

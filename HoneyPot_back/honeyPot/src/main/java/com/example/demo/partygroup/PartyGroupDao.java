@@ -1,6 +1,7 @@
 package com.example.demo.partygroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,14 +33,14 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	//1 이었던 startcheck 를 종료인 2(파티종료)로 변경 해야 함. 
 	@Transactional
 	@Modifying
-	@Query(value = "update party_group set start_check=2 where board_num=:board_num and (start_check = 1 or start_check = 4)", nativeQuery = true)
+	@Query(value = "update party_group set start_check=2 where board_num=:board_num and start_check = 1 ", nativeQuery = true)
 	void updateStartCheckTo2(@Param("board_num") int board_num);
 	
 	//1 이었던 사람의 startcheck 를 탈주인 3으로 변경 해야 함. 
 	@Transactional
 	@Modifying
-	@Query(value = "update party_group set start_check=3 where board_num=:board_num",  nativeQuery = true)
-	void updateStartCheckTo3(@Param("board_num") int board_num);
+	@Query(value = "update party_group set start_check=3 where board_num=:board_num and user_num=:user_num ",  nativeQuery = true)
+	void updateStartCheckTo3(@Param("board_num") int board_num,@Param("user_num") String user_num);
 	
 	//1 이었던 사람의 startcheck를 중간 탈주인 4로 변경 해야 함 
 	@Transactional
@@ -67,6 +68,8 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	@Transactional
 	@Modifying
 	@Query(value = "select * from party_group where matching_num=:matching_num", nativeQuery = true)
-	boolean findByMatchingNum(@Param("matching_num") int matching_num);
+	List<PartyGroup> findByMatchingNum(@Param("matching_num") int matching_num);
 
+
+	
 }

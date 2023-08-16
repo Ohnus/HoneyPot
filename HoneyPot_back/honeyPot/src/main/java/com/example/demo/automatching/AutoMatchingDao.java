@@ -26,7 +26,7 @@ public interface AutoMatchingDao extends JpaRepository<AutoMatching, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query (value = "select * from auto_matching where is_mathcing=0",  nativeQuery = true)
+	@Query (value = "select * from auto_matching where is_matching=0",  nativeQuery = true)
 	ArrayList<AutoMatching> getUnMatched();
 
 }
