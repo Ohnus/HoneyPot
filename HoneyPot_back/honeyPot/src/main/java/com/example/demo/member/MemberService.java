@@ -69,7 +69,7 @@ public class MemberService {
 	}
 	
 	
-	// 로그인, 내 정보 확인
+	// 유저번호로 검색
 	public MemberDto getByUserNum(String userNum) {
 		Member entity = dao.findById(userNum).orElse(null);
 		MemberDto dto = null;
@@ -96,9 +96,23 @@ public class MemberService {
 			return dto;
 		}
 	}
-
-
+	
+	// 닉네임 검색
+	public MemberDto getByNickname(String nickname) {
+		Member entity = dao.findByNickname (nickname);
+		MemberDto dto = null;
 		
+		if(entity == null) {
+			return dto;
+		} else {
+			dto = new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
+					entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null);
+			return dto;
+		}
+	}
+
+
+
 	public void delUser(String email) {
 		dao.deleteById(email);
 	}

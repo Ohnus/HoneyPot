@@ -17,8 +17,7 @@
 
         <input v-model="email" type="email" placeholder="이메일 입력(email@email.com)">
         <button @click="sendEmail">메일 인증</button><br>
-        <span v-if="!emailCheck" style="color:red">올바른 형태의 이메일을 입력해주세요</span>
-     
+
         <input v-model="enterCode" type="text" placeholder="인증번호 입력">
         <button @click="authCodeCheck">확인</button><br>
         <span v-if="!authCodeValid" style="color:red">인증코드를 재확인해주세요.</span>
@@ -29,14 +28,16 @@
         <span v-if="!pwdValid" style="color:red">대문자, 특수문자 포함 8자리 이상으로 설정해주세요.</span>
         </div>
 
-        <!-- 비번 일치여부 담을 수 있는 변수 추가 필요 -->
         <div>
-        <input v-model="pwdCheck" type="password" placeholder="비밀번호 재입력">
-        <span v-if="pwd !== pwdCheck" style="color:#FF0000">비밀번호가 불일치합니다.</span> 
+        <input v-model="pwdCheck" type="password" placeholder="비밀번호 재입력" @input="samePwdCheck">
+        <span v-if="!pwdCheckValid" style="color:#FF0000">비밀번호가 일치하지 않습니다.</span> 
+        <span v-else-if="pwdCheckValid" style="color:blue">비밀번호가 일치합니다.</span>
         </div>
 
+        <!-- @input으로 처리하면 검색을 못하고 @blur로 처리하니까 검색은 잘 되는데 필드를 벗어나야 검사를 하는듯..? 그리고 한 번 검사 끝나면 중복값 다시 넣어도 메서드 재실행 안됨.. -->
         <div>
-        <input v-model="nickname" type="text" placeholder="닉네임 입력" @input="checkNickname"><br>
+        <input v-model="nickname" type="text" placeholder="닉네임 입력" @blur="checkNickname"><br> 
+        <span v-if="!nickNameRexegValid" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정해주세요.</span>
         <span v-if="!nicknameValid" style="color:#FF0000">중복된 닉네임입니다.</span>
         </div>
 
@@ -60,13 +61,15 @@ export default {
     name: 'HoneypotJoin',
     data() {
         return {
-            duplicated1: false,     // 핸드폰 + 이름 중복, true일 경우 회원가입 불가
-            duplicated2: false,     // 핸드폰 중복, true일 경우 회원가입 불가
-            certified: false,       // 중복 값 없는 상태, true일 경우 회원가입 가능
-            emailCheck: false,      // 이메일 유효성 체크 
-            authCodeValid: false,   // 이메일 인증번호 유효성 체크 
-            pwdValid: false,        // 비밀번호 정규식 체크
-
+            duplicated1: false,         // 핸드폰 + 이름 중복, true일 경우 회원가입 불가
+            duplicated2: false,         // 핸드폰 중복, true일 경우 회원가입 불가
+            certified: false,           // 중복 값 없는 상태, true일 경우 회원가입 가능
+            authCodeValid: false,       // 이메일 인증번호 유효성 체크 
+            pwdValid: false,            // 비밀번호 정규식 체크
+            pwdCheckValid: false,       // 비밀번호 일치 여부 체크
+            nickNameRexegValid: false,  // 닉네임 정규식 체크
+            nickNameValid: false,       // 닉네임 중복 체크
+            
             name: self.name,    // 본인인증한 이름 정보
             phone: self.phone,  // 본인인증한 핸드폰 번호 정보
             email: '',
@@ -133,12 +136,14 @@ export default {
                 }
             });
         },
-      
+
+
+        // 인증 메일 발송      
         sendEmail() {
             const self = this;
 
             if (this.email == '') {
-                alert('이메일 입력 필요');
+                alert('이메일을 입력해주세요.');
             } else {
                 const formdata = new FormData();
                 formdata.append('email', self.email);
@@ -148,9 +153,13 @@ export default {
                 self.$axios.post("http://localhost:8988/members/emailConfirm", formdata)
                 .then(function (res) {
                     if(res.status == 200) {
-                        self.authCode = res.data.authCode;
-                        alert("메일 전송 완료");
-                        console.log(self.authCode);
+                        if (res.data.flag) {
+                            alert("중복된 메일이 존재합니다. 다시 확인해주세요.")
+                        } else {
+                            self.authCode = res.data.authCode;
+                            alert("인증 메일이 전송되었습니다.");
+                            console.log(self.authCode);
+                        }
                     } else {
                         alert('에러코드: ' + res.status);
                     }
@@ -161,15 +170,15 @@ export default {
             }
         },
 
+
+        // 인증번호 유효 여부 체크
         authCodeCheck() { // 
-            if (this.enterCode === '') {
+            if (this.enterCode == '') {
                 alert('인증번호를 입력해주세요');
             } else {
-                if (this.enterCode === this.authCode) {
-                    alert('인증이 완료되었습니다');
+                if (this.enterCode == this.authCode) {
                     this.authCodeValid = true;
                 } else {
-                    alert('인증번호가 일치하지 않습니다.');
                     this.authCodeValid = false;
                 }
             }
@@ -179,6 +188,53 @@ export default {
         checkPwd() {
             const pwdRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;   // 8자리 + 대문자 및 특수문자 포함
             this.pwdValid = pwdRegex.test(this.pwd);
+        },
+
+
+        // 비밀번호 일치 여부 체크
+        samePwdCheck() {
+            if (this.pwd == this.pwdCheck) {
+            this.pwdCheckValid = true;
+            } else {
+                this.pwdCheckValid = false;
+            }
+        },
+
+
+        // 닉네임 유효성 체크: 정규식 + 중복 체크
+        checkNickname() {
+            const self = this;
+
+            // 닉네임 띄어쓰기, 8자 이하
+            const nickNameRexeg = /^(?!.*\s).{1,8}$/;
+            this.nickNameRexegValid = nickNameRexeg.test(this.nickname);
+
+            // 닉네임 중복 체크
+            if (this.nickNameRexegValid) {
+
+                console.log("왔나?")
+                console.log(this.nickname);
+
+                const data = {
+                    nickname: self.nickname
+                };
+
+                self.$axios.get("http://localhost:8988/members/nicknameConfirm", { params: data } )
+                .then(function (res) {
+                    if (res.status == 200) {
+                        if (res.data.flag) {
+                            self.nicknameValid = true;
+                        } else {
+                            self.nicknameValid = false;
+                        }
+                    } else {
+                        alert('에러코드' + res.status);
+                    }
+                })
+                .catch(function (error) {
+                    console.error(error);
+                });
+           }
         },
 
 
@@ -196,10 +252,9 @@ export default {
         join() {
             const self = this;
 
-            // 값이 모두 입력되어있고, 유효성 검사를 모두 통과한 경우(추가 예정)만 회원가입 진행
-
+            // 값이 모두 입력되어있고, 유효성 검사를 모두 통과한 경우만 회원가입 진행
             if (this.checkEmpty(self.email) && this.checkEmpty(self.pwd) && this.checkEmpty(self.pwdCheck) && this.checkEmpty(self.nickname)
-                && self.pwdValid && self.pwdCheck) {
+                && self.pwdValid && self.pwdCheckValid && self.nicknameValid) {
                 const formdata = new FormData();
 
                 formdata.append('name', self.name);
@@ -220,7 +275,7 @@ export default {
                     }
                 });
             } else {
-                alert('입력되지 않은 값 혹은 유효성을 체크하지 않은 값이 존재합니다. 다시 확인해주세요.')
+                alert('입력되지 않은 값 혹은 유효성을 체크하지 않은 값이 존재합니다 \n다시 확인해주세요.')
             }
         }
     }
