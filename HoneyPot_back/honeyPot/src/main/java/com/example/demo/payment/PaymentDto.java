@@ -25,6 +25,7 @@ public class PaymentDto {
 	private long finalInstallment;
 	private int recurringDay;
 	private LocalDate payDate;
+	private LocalDate nextDate;
 	private int totalPayment;
 	private int deposit;
 	private int monthPrice;

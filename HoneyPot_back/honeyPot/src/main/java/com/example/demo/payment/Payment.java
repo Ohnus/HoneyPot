@@ -49,6 +49,8 @@ public class Payment {
 	private int recurringDay; // 정기결제일.. 게시글의 substart의 일자
 	@Column(columnDefinition = "date")
 	private LocalDate payDate; // 실제 결제일..
+	@Column(columnDefinition = "date")
+	private LocalDate nextDate; // 다음 결제일..
 	
 	@ColumnDefault("0")
 	private int totalPayment; // 총 결제금액..
