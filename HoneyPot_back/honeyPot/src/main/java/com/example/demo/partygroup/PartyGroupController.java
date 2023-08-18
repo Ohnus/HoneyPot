@@ -64,14 +64,15 @@ public class PartyGroupController {
 		return map;
 	}
 
-	// 파티원들 등록
+	// 파티원들 직접 등록
 	@PostMapping("/{boardNum}/{userNum}")
 	public Map addParty(@PathVariable("boardNum") HostBoard boardNum, @PathVariable("userNum") Member userNum) {
 		Map map = new HashMap<>();
 		boolean flag = true;
 		LocalDate today = LocalDate.now();
 
-		if (boardNum.getSubStart().isBefore(today)) { // 만약에 구독의 시작날짜가 오늘기준으로 전이라면 -> 탈주자가 발생 했다는 뜻임
+		if (boardNum.getSubStart().isBefore(today)) { // 만약에 구독의 시작날짜가 오늘기준으로 전이라면 
+			// -> 탈주자가 발생 하거나 날짜가 지났는데 maxppl을 채우지 못했다는 뜻이다. 
 			int countStartNum = PGService.findUsingStartCheck(boardNum.getBoardNum(), 1); // 진행 중인 사람들 수를 세어봐
 			if (countStartNum < boardNum.getMaxPpl()) { // 그 숫자가 boardNum의 최대인원보다 작다면
 				PartyGroupDto dto = new PartyGroupDto();
@@ -81,8 +82,17 @@ public class PartyGroupController {
 				PartyGroupDto savedDto = PGService.save(dto);
 				map.put("dto", savedDto);
 				map.put("flag", flag);
+				
+				ArrayList<PartyGroupDto> remainPpl = PGService.findByStartCheck(boardNum.getBoardNum(), 1);
+				
+				if (remainPpl.size()==boardNum.getMaxPpl()) { //리스트의 사이즈가 게시판의 maxPpl 이랑 같으면 
+					//ing 를 1로 바꿔 
+					HBService.changIngToOne(boardNum.getBoardNum());					
+				}
+				
+				//만약에 이걸로 인해 maxppl이 다 채워 졌으면 보드ing 를 1로 바꿔 
 				ArrayList<PartyGroupDto> PGoutDto = PGService.findByStartCheck(boardNum.getBoardNum(), 4);
-				if(PGoutDto !=null) {
+				if(PGoutDto !=null) { //4인 사람이 있으면 
 				PGService.editStartTo3(boardNum.getBoardNum(), userNum.getUserNum()); 
 				//중간탈주자가 나가고 들어간 자리니까 중간탈주자는 탈주 번호는 3으로 변경 
 				}
@@ -96,7 +106,7 @@ public class PartyGroupController {
 			if (count >= boardNum.getMaxPpl()) { // 2. 글이 Maxppl 보다 크거나 같으면
 				flag = false;
 				map.put("flag", flag);
-				map.put("message", "정원이 찬 파티로 등록 할 수 없습니다."); // 등록을 막아
+				map.put("msg", "정원이 찬 파티로 등록 할 수 없습니다."); // 등록을 막아
 			} else { // 아니라면 등록 해줌
 				PartyGroupDto dto = new PartyGroupDto();
 				dto.setBoardNum(boardNum);

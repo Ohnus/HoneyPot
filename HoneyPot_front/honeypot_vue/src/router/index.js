@@ -10,6 +10,9 @@ import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
+import HostBoardList from '../components/hostboard/HostBoardList.vue'
+import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
+
 
 
 
@@ -28,6 +31,16 @@ const routes = [
     path : '/HostBoardAdd',
     name : 'HostBoardAdd',
     component: HostBoardAdd
+  },
+  {
+    path : '/HostBoardList',
+    name : 'HostBoardList',
+    component: HostBoardList
+  },
+  {
+    path : '/HostBoardDetail',
+    name : 'HostBoardDetail',
+    component: HostBoardDetail
   },
   {
     path: '/RegisterTest',

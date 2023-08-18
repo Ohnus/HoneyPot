@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/HostBoardAdd">HostBoardAdd</router-link><br>
+    <router-link to="/HostBoardAdd">HostBoardAdd</router-link>|
+    <router-link to="/HostBoardList">HostBoardList</router-link><br>
     <router-link to="/RegisterTest">RegisterTest</router-link> |
     <router-link to="/PartyTest1">PartyTest1</router-link> |
     <router-link to="/PartyTest2">PartyTest2</router-link> |

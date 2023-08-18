@@ -83,7 +83,7 @@ public class PartyGroupService {
 	// 중간 탈주자를 위한 메서드
 	public Map editStartTo4(int boardNum, String userNum) {
 		Map map = new HashMap();
-		boolean flag = true; // treu면 중간탈주가능합니다
+		boolean flag = true; // true면 중간탈주가능합니다
 		HostBoardDto dto = HBService.getBoard(boardNum);// 글 번호로 찾아
 		LocalDate today = LocalDate.now();
 		LocalDate endDate = dto.getSubEnd();

@@ -45,7 +45,7 @@ public class HostBoardController {
 			flag = false;
 		}
 		map.put("flag", flag);
-		map.put("dto2", dto2);
+		map.put("dto", dto2);
 		System.out.println("@@@추가!!! " + dto2);
 		
 		HostBoard hostBoard = new HostBoard();

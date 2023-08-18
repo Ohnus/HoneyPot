@@ -75,7 +75,7 @@ public class AutoMatchingService {
 	// -> 파티가 성사 되었다고 하는거니까 partygroup에 추가 하기
 	public void changeIsMatching(AutoMatchingDto autoMatching, HostBoardDto hostBoard) {
 		System.out.println("서비스까지들어옴");
-		dao.isMatching(autoMatching.getMatchingNum()); // 0->1 로 바꾸고
+		dao.isMatchingChangeTo1(autoMatching.getMatchingNum()); // 0->1 로 바꾸고
 		AutoMatching vo = dao.findById(autoMatching.getMatchingNum()).orElse(null);
 
 		HostBoard hbvo = new HostBoard();
@@ -112,5 +112,9 @@ public class AutoMatchingService {
 		}
 		return list2;
 	}
+	
+	public void isMatchingChangeTo2(int matchingNum) {
+		dao.isMatchingChangeTo2(matchingNum);
+	} 
 
 }

@@ -22,8 +22,15 @@ public interface AutoMatchingDao extends JpaRepository<AutoMatching, Integer> {
 	@Transactional
 	@Modifying
 	@Query (value = "update auto_matching set is_matching=1 where matching_num=:matching_num",  nativeQuery = true)
-	void isMatching(@Param ("matching_num") int matching_num);
+	void isMatchingChangeTo1(@Param ("matching_num") int matching_num);
 
+	//날짜가 지나서 이제 더 이상 matching이 안되었다면 2로 바꿔줘 
+	@Transactional
+	@Modifying
+	@Query (value = "update auto_matching set is_matching=2 where matching_num=:matching_num",  nativeQuery = true)
+	void isMatchingChangeTo2(@Param ("matching_num") int matching_num);
+
+	
 	@Transactional
 	@Modifying
 	@Query (value = "select * from auto_matching where is_matching=0",  nativeQuery = true)

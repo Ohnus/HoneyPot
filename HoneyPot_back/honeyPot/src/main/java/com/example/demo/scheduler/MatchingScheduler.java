@@ -59,7 +59,9 @@ public class MatchingScheduler {
 
 		for (AutoMatchingDto dto : autoMatchingList) {
 			if (dto.getExDate().isEqual(yesterday) && dto.getIsMatching() == 0) {
-				AMService.del(dto.getMatchingNum());
+				// matchingNum을 2로 바꿔 
+				AMService.isMatchingChangeTo2(dto.getMatchingNum());
+				
 			}
 		}
 	}
@@ -80,10 +82,6 @@ public class MatchingScheduler {
 						hostBoard.getSubStart().compareTo(autoMatching.getExDate()) <= 0 && // 끝날짜 사이
 						hostBoard.getMonth() >= autoMatching.getMonthMin() && // 미니멈 먼스
 						hostBoard.getMonth() <= autoMatching.getMonthMax()) { // 맥스 먼스
-					System.out.println("오토매칭!!!!!!" + autoMatching);
-					
-					System.out.println("호스트보드" +hostBoard);
-					System.out.println(PGService.findByMatchingNum(autoMatching.getMatchingNum()));
 					// PartyGroup Service 에 add 하는데 partyGroup에 해당 automatching Num 이 있나 확인 해야 해
 					if (PGService.findByMatchingNum(autoMatching.getMatchingNum()) && 
 							count < hostBoard.getMaxPpl()) {
