@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.example.demo.chatCheck.ChatCheckService;
 
 @RestController
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping("/chat")
 public class ChatController {
 
@@ -27,8 +29,8 @@ public class ChatController {
 	private ChatCheckService CCservice;
 	
 	//채팅 작성 ( 테스트 완 )
-	@PostMapping("/{loginId}")
-	public Map add(ChatDto dto, @PathVariable("loginId") String loginId) {
+	@PostMapping("")
+	public Map add(ChatDto dto) {
 		System.out.println("요청옴");
 		Map map = new HashMap();
 		boolean flag = true;

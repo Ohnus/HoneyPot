@@ -9,7 +9,8 @@
     <router-link to="/PartyTest2">PartyTest2</router-link> |
     <router-link to="/RecurringTest">RecurringTest</router-link><br>
     <router-link to="/JoinMainpage">회원가입</router-link> |
-    <router-link to="/LoginPage">로그인</router-link>
+    <router-link to="/LoginPage">로그인</router-link> |
+    <router-link to="/ChattingRoom">채팅하기</router-link>
   </nav>
   <router-view/>
 </template>

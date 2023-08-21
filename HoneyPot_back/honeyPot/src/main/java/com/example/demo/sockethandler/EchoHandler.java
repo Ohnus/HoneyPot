@@ -12,6 +12,7 @@ public class EchoHandler extends TextWebSocketHandler{
 
 List<WebSocketSession> sessions = new ArrayList<>();
 	
+	//소켓 연결 확인
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
 		System.out.println("afterConnectionEstablished:" + session);
@@ -27,6 +28,7 @@ List<WebSocketSession> sessions = new ArrayList<>();
 		}
 	}	
 
+	// 소켓 종료 확인
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		System.out.println("afterConnectionEstablished:" + session + ":" + status);

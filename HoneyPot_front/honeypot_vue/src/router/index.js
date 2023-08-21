@@ -12,6 +12,7 @@ import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
+import ChattingRoom from '../components/chat/ChattingRoom.vue'
 
 
 
@@ -86,6 +87,11 @@ const routes = [
     path: '/LoginPage',
     name: 'LoginPage',
     component: LoginPage
+  },
+  {
+    path: '/ChattingRoom',
+    name: 'ChattingRoom',
+    component: ChattingRoom
   }
 
 ]

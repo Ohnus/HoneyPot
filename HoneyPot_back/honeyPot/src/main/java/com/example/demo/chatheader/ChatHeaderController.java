@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping("/chatheader")
 public class ChatHeaderController {
 	
@@ -32,6 +34,8 @@ public class ChatHeaderController {
 		}catch(Exception e) {
 			flag = false;
 		}
+		
+		System.out.println("list : " + list);
 		map.put("list", list);
 		map.put("flag", flag);
 		

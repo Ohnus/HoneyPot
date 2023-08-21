@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +48,7 @@ public class Chat {
 	
 	private LocalDateTime time;	
 	
+	@PrePersist
 	public void preprosess() {
 		time = LocalDateTime.now();
 	}

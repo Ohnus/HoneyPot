@@ -18,8 +18,6 @@ public class WebSocketConfig implements WebSocketConfigurer{
 //			registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("*"); //pure websocket
 			
 			// sockJS 방식
-			registry.addHandler(new EchoHandler(), "/replyEcho").setAllowedOrigins("*").withSockJS();
+			registry.addHandler(new EchoHandler(), "/replyEcho").setAllowedOrigins("*").withSockJS(); //setAllowedOrigins("*") : 모든 cors요청을 허용하는 것
 	}
-	
-
 }
