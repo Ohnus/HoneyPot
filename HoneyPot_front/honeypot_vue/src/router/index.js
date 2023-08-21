@@ -12,6 +12,10 @@ import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
+import MyPartyList from '../components/partygroup/MyPartyList.vue'
+import PartyDetail from '../components/partygroup/PartyDetail.vue'
+
+
 
 
 
@@ -41,6 +45,16 @@ const routes = [
     path : '/HostBoardDetail',
     name : 'HostBoardDetail',
     component: HostBoardDetail
+  },
+  {
+    path : '/MyPartyList',
+    name : 'MyPartyList',
+    component: MyPartyList
+  },
+  {
+    path: '/PartyDetail',
+    name: 'PartyDetail',
+    component: PartyDetail
   },
   {
     path: '/RegisterTest',

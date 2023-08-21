@@ -2,14 +2,37 @@
     <div>
 
         <div class="ott" v-show="firstStep">
-            <input type="radio" v-model="type" value="Netflix">넷플릭스
-            <input type="radio" v-model="type" value="Tving"> 티빙
-            <input type="radio" v-model="type" value="Wave"> 웨이브
-            <input type="radio" v-model="type" value="Disney+"> 디즈니플러스
-            <input type="radio" v-model="type" value="Watcha"> 와차
-            <input type="radio" v-model="type" value="Apple"> 애플
+            <div class="firstline">
+            <input type="radio" class="radiobtn" v-model="type" value="Netflix" id="img_Neflix">
+            <label for="img_Neflix">
+                <img :src="require('@/assets/images/netflix.png')" /> 넷플릭스
+            </label>
+            <input type="radio" class="radiobtn" v-model="type" value="Tving" id="img_Tving">
+            <label for="img_Tving">
+                <img :src="require('@/assets/images/tving.png')" /> 티빙
+            </label>
+            <input type="radio" class="radiobtn"  v-model="type" value="Wave" id="img_Wave">
+            <label for="img_Wave">
+                <img :src="require('@/assets/images/wave1.png')" /> 웨이브
+            </label>
+
+            <input type="radio" class="radiobtn" v-model="type" value="Disney+" id="img_Disney">
+            <label for="img_Disney">
+                <img :src="require('@/assets/images/disney.png')" /> 디즈니플러스
+            </label>
+            <input type="radio" class="radiobtn" v-model="type" value="Watcha" id="img_Watcha">
+            <label for="img_Watcha">
+                <img :src="require('@/assets/images/watcha.png')" /> 왓챠
+            </label>
+            <input type="radio" class="radiobtn" v-model="type" value="Apple" id="img_Apple">
+            <label for="img_Apple">
+                <img :src="require('@/assets/images/apple.png')" /> 애플티비
+            </label>
+        </div>
+        
             <button @click="oneStep">다음</button>
- </div>
+    
+        </div>
 
 
 
@@ -84,7 +107,7 @@ export default {
             }
         },
         fourStep() {
-            
+
             if (this.subStart && this.month) {
                 this.fourthStep = false;
                 this.save();
@@ -115,4 +138,53 @@ export default {
     }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.radiobtn{
+    opacity:0;
+    padding : 2%;
+}
+img {
+    height: 120px;
+    width: 120px;
+    border-radius: 23px;
+    cursor : pointer;
+    display: block;
+}
+input[type=radio]:checked + label{
+    border: 2px solid #Fdd000; 
+    border-radius: 23px;
+}
+.firstline{
+    padding-top: 5%;
+    display: grid;
+    gap: 50px;
+    grid-template-columns: repeat(6, auto);
+    align-content: stretch;
+    justify-content: center;
+}
+
+button {
+    padding: 12px 28px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: #Fdd000;
+    color: #444444;
+    border: 2px solid #Fdd000;
+    border-radius: 10px;
+
+    
+    margin: 30px 0 0 70px; /*위치조정*/
+    font-weight: 900; /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */ 
+    font-size: 16px; /* 지금 버튼 사이즈에는 이게 딱임 */
+    
+}
+button:hover {
+  background-color: white;
+  color: #444444;
+}
+
+</style>

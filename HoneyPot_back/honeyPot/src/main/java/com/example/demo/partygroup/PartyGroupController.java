@@ -70,6 +70,13 @@ public class PartyGroupController {
 		Map map = new HashMap<>();
 		boolean flag = true;
 		LocalDate today = LocalDate.now();
+		
+		int checkParty = PGService.checkPartyGroup(boardNum.getBoardNum(), userNum.getUserNum());
+		if(checkParty == 1) {
+			flag = false;
+			map.put("flag", flag);
+			map.put("msg", "이미 가입 된 파티 입니다");
+		} else {
 
 		if (boardNum.getSubStart().isBefore(today)) { // 만약에 구독의 시작날짜가 오늘기준으로 전이라면 
 			// -> 탈주자가 발생 하거나 날짜가 지났는데 maxppl을 채우지 못했다는 뜻이다. 
@@ -79,29 +86,30 @@ public class PartyGroupController {
 				dto.setBoardNum(boardNum);
 				dto.setUserNum(userNum);
 				dto.setStartCheck(1);
-				PartyGroupDto savedDto = PGService.save(dto);
-				map.put("dto", savedDto);
-				map.put("flag", flag);
+				PartyGroupDto savedDto = PGService.save(dto); //자리가 있다는 뜻으로 startCheck를 1로 해서 넣어줘 -> 바로 구독 가능
+				map.put("dto", savedDto); //저장된 Dto와 
+				map.put("flag", flag);  // 성공했다는 flag 함께 전달 
 				
+				
+				//그 후 1인 사람이 몇명인지 확인해 
 				ArrayList<PartyGroupDto> remainPpl = PGService.findByStartCheck(boardNum.getBoardNum(), 1);
-				
 				if (remainPpl.size()==boardNum.getMaxPpl()) { //리스트의 사이즈가 게시판의 maxPpl 이랑 같으면 
-					//ing 를 1로 바꿔 
+					//게시판의 ing 를 1로 바꿔서 더 이상 글이 안보이도록 해  
 					HBService.changIngToOne(boardNum.getBoardNum());					
 				}
-				
-				//만약에 이걸로 인해 maxppl이 다 채워 졌으면 보드ing 를 1로 바꿔 
+
+				//4인 사람이 있으는 지 확인 해서 
 				ArrayList<PartyGroupDto> PGoutDto = PGService.findByStartCheck(boardNum.getBoardNum(), 4);
-				if(PGoutDto !=null) { //4인 사람이 있으면 
+				if(PGoutDto !=null) {  //있다면 
 				PGService.editStartTo3(boardNum.getBoardNum(), userNum.getUserNum()); 
 				//중간탈주자가 나가고 들어간 자리니까 중간탈주자는 탈주 번호는 3으로 변경 
 				}
-			} else {
+			} else { //진행 중인 보드만큼 사람이 있으면 
 				flag = false;
 				map.put("flag", flag);
-				map.put("msg", "정원이 꽉차 버렸다리");
+				map.put("msg", "정원이 차서 파티등록이 불가능합니다");
 			}
-		} else {
+		} else { //구독 날짜가 오늘 이후라면 
 			int count = PGService.findByBoardNum(boardNum); // 1. 몇개의 글이 있나 확인한다
 			if (count >= boardNum.getMaxPpl()) { // 2. 글이 Maxppl 보다 크거나 같으면
 				flag = false;
@@ -115,6 +123,7 @@ public class PartyGroupController {
 				map.put("dto", savedDto);
 				map.put("flag", flag);
 			}
+		}
 		}
 		return map;
 	}
