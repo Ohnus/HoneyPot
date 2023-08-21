@@ -67,7 +67,7 @@ public class MatchingScheduler {
 	}
 
 	// 1시간에 한번씩 돌아야 할듯! -> 고객한테는 다음날 부터 시작한다고 말해놓기
-	@Scheduled(cron = "0 30 * * * ?")
+	@Scheduled(cron = "0 0 * * * ?")
 	public void autoMatch() {
 		ArrayList<AutoMatchingDto> autoMatchingList = AMService.getUnmatched(); // 매칭 안된 0 인 애들만 가져와
 		System.out.println("###1번 : " + autoMatchingList);

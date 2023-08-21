@@ -47,6 +47,17 @@ public class PartyGroupService {
 		}
 		return list2;
 	}
+	
+	//구독 중복 있나 보려고 하는 메서드 
+	public int checkPartyGroup(int boardNum, String userNum) {
+		 ArrayList<PartyGroup> list = (ArrayList<PartyGroup>) dao.checkPartyGroup(boardNum, userNum);
+			ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
+			for (PartyGroup vo : list) {
+				list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),vo.getMatchingNum()));
+			}
+		 int isparticipant = list2.size(); //사이즈가 1 아님 0일 것임 
+		 return isparticipant;
+	}
 
 	// 구독이 시작되면 1로 바꿔줄 메서드
 	public void editStartTo1(int boardNum) {
