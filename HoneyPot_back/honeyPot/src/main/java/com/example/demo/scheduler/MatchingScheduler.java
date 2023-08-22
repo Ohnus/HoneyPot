@@ -85,7 +85,7 @@ public class MatchingScheduler {
 		System.out.println("###2번 : " + HBlist);
 		for (AutoMatchingDto autoMatching : autoMatchingList) { //오토매칭 이 한바퀴씩 돌면서 
 			for (HostBoardDto hostBoard : HBlist) { //게시판도 한바퀴 돌아 
-				//그러면서 
+				//그러면서 HostBoard의 게시글을 가지고 있는 데이터가 몇개인지 세아려봐 
 				int count = PGService.findByBoardNumUsingInt(hostBoard.getBoardNum());
 				
 				if (hostBoard.getType().getType().equals(autoMatching.getType().getType()) && // ott 타입이 같고
@@ -93,7 +93,10 @@ public class MatchingScheduler {
 						hostBoard.getSubStart().compareTo(autoMatching.getExDate()) <= 0 && // 끝날짜 사이
 						hostBoard.getMonth() >= autoMatching.getMonthMin() && // 미니멈 먼스
 						hostBoard.getMonth() <= autoMatching.getMonthMax()) { // 맥스 먼스
+					
 					// PartyGroup Service 에 add 하는데 partyGroup에 해당 automatching Num 이 있나 확인 해야 해
+					
+					//그래서 findByMatchingNum이 true 를 반환하고 아까 위에서 숫자를 센 count가 최대인원보다 작으면 
 					if (PGService.findByMatchingNum(autoMatching.getMatchingNum()) && 
 							count < hostBoard.getMaxPpl()) {
 						System.out.println("###3번 : " + autoMatching);
