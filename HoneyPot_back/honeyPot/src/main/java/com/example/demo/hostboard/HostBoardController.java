@@ -39,6 +39,7 @@ public class HostBoardController {
 		HostBoardDto dto2 = null;
 		boolean flag = true;
 		try {
+			//글 등록 
 			int boardnum = HBService.save(dto);
 			dto2 = HBService.getBoard(boardnum);
 		} catch (Exception e) {
@@ -48,14 +49,16 @@ public class HostBoardController {
 		map.put("dto", dto2);
 		System.out.println("@@@추가!!! " + dto2);
 		
+		//해당 글 번호의 게시글을 
 		HostBoard hostBoard = new HostBoard();
 		hostBoard.setBoardNum(dto2.getBoardNum());
 		
+		//바로 PartyGroup에 등록 
 		PartyGroupDto partyGroupDto = new PartyGroupDto();
 
 		partyGroupDto.setBoardNum(hostBoard); 
 		partyGroupDto.setUserNum(dto2.getUserNum());
-		partyGroupDto.setStartCheck(0); // 또는 1
+		partyGroupDto.setStartCheck(0); 
 
 		PartyGroupDto savPG = PGService.save(partyGroupDto);
 		System.out.println("PartyGroupDto savPG : " + savPG);
@@ -67,9 +70,11 @@ public class HostBoardController {
 	public Map del(@PathVariable("boardNum") int boardNum) {
 		Map map = new HashMap();
 		boolean flag = true;
+		
 		ArrayList<PartyGroupDto> list = PGService.findByStartCheck(boardNum, 0); // startcheck가 0인 것들 골라와
 		if (list != null) { // 0 이라면
 			HBService.delete(boardNum); // 취소 가능
+			PGService.delbyboardNum(boardNum); // partygroup에서도 삭제 시킴 
 		} else { // 아니라면 취소 불가능
 			flag = false;
 			map.put("msg", "삭제가 불가능합니다. 고객센터에 문의 해주세요");

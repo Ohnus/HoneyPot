@@ -30,51 +30,62 @@ public class MatchingScheduler {
 	@Autowired
 	private HostBoardService HBService;
 
+	
+	//매일 자정에 실행 됨 
 	@Scheduled(cron = "0 0 * * * ?")
 	public void combinedMethod() {
 		LocalDate today = LocalDate.now();
 		LocalDate yesterday = today.minusDays(1);
 
-		ArrayList<HostBoardDto> hostBoards = HBService.getAll();
-		ArrayList<AutoMatchingDto> autoMatchingList = AMService.getAll();
+		ArrayList<HostBoardDto> hostBoards = HBService.getAll(); //게사판 전체리스트 뽑아
+		ArrayList<AutoMatchingDto> autoMatchingList = AMService.getAll(); //자동매칭 전체리스트 뽑아
 
 		for (HostBoardDto dto : hostBoards) {
 			HostBoard vo = new HostBoard();
-			vo.setBoardNum(dto.getBoardNum());
+			vo.setBoardNum(dto.getBoardNum()); //글번호 배치하고 
 
-			if (dto.getSubStart().isEqual(today)) {
-				int currentParticipants = PGService.findByBoardNum(vo);
+			if (dto.getSubStart().isEqual(today)) { //글 중에 시작 날자가 오늘이라면 
+				//파티그룹에서 해당 글번호를 찾아서 몇명인지 숫자를 세어봐 
+				int currentParticipants = PGService.findByBoardNum(vo); 
+				
+				//숫자 카운트 한게 미니먼 사람보다 크거나 같으면 
 				if (currentParticipants >= dto.getMinPpl()) {
+					//파티그룹의 시작유무를 시작했다는 뜻인 1로 바꾸고 
 					PGService.editStartTo1(vo.getBoardNum());
 					System.out.println("@@@@@@ editStartTo1 완료 되었다구요~ ");
 				} else {
+					//아니라면 미안한데 오늘시작인데 인원 안차서 시작 못해~ 그래서 글 자동 삭제 
 					PGService.delByBoardNum(vo.getBoardNum());
 					System.out.println("@안@녕@하@세@요@ delByBoardNum 완료되었다구요");
 				}
-			} else if (dto.getSubEnd().isEqual(today)) {
-				PGService.editStartTo2(vo.getBoardNum());
-				System.out.println("마지막 else if 까지 왔음!!!!!");
+			} else if (dto.getSubEnd().isEqual(today)) { //글의 종료일이 오늘 날짜라면 
+				PGService.editStartTo2(vo.getBoardNum()); //종료 되었다고 파티그룹을 수정해줘 
+				HBService.changIngToZero(0); //보드가 1일 수도 있으니까 0으로 바꿔서 안보이게 해 
 			}
 		}
 
-		for (AutoMatchingDto dto : autoMatchingList) {
+		//오토매칭 
+		//예시 오늘이 8월 23일 
+		for (AutoMatchingDto dto : autoMatchingList) { 
+			//오토매칭의 마감 날짜가 어제(22일)고 IsMatching 컬럼이 0 (매칭안됌) 이라면  
 			if (dto.getExDate().isEqual(yesterday) && dto.getIsMatching() == 0) {
-				// matchingNum을 2로 바꿔 
+				// matchingNum을 2로 바꿔 -> 추후에 뷰에서 매칭관련한 리스트를 보여줄 예정 
 				AMService.isMatchingChangeTo2(dto.getMatchingNum());
 				
 			}
 		}
 	}
 
-	// 1시간에 한번씩 돌아야 할듯! -> 고객한테는 다음날 부터 시작한다고 말해놓기
+	// 1시간에 한번씩 돌아야 할듯! 
 	@Scheduled(cron = "0 0 * * * ?")
 	public void autoMatch() {
 		ArrayList<AutoMatchingDto> autoMatchingList = AMService.getUnmatched(); // 매칭 안된 0 인 애들만 가져와
 		System.out.println("###1번 : " + autoMatchingList);
 		ArrayList<HostBoardDto> HBlist = HBService.getIngZero(); // 게시판에 사람 구하고 있는 글들만 가져와
 		System.out.println("###2번 : " + HBlist);
-		for (AutoMatchingDto autoMatching : autoMatchingList) {
-			for (HostBoardDto hostBoard : HBlist) {
+		for (AutoMatchingDto autoMatching : autoMatchingList) { //오토매칭 이 한바퀴씩 돌면서 
+			for (HostBoardDto hostBoard : HBlist) { //게시판도 한바퀴 돌아 
+				//그러면서 
 				int count = PGService.findByBoardNumUsingInt(hostBoard.getBoardNum());
 				
 				if (hostBoard.getType().getType().equals(autoMatching.getType().getType()) && // ott 타입이 같고

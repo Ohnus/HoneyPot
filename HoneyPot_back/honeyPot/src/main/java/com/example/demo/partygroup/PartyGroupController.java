@@ -30,7 +30,7 @@ public class PartyGroupController {
 	@Autowired
 	private HostBoardService HBService;
 
-	// 추가 : 파티장이 글 등록하자마자 여기로 감
+	// 추가 : 파티장이 글 등록하자마자 여기로 감 -> 근데 어차피 서비스에서 끝나서 이거 필요 없긴함 
 	@PostMapping("")
 	public Map add(PartyGroupDto dto) {
 		System.out.println(dto);
@@ -48,14 +48,15 @@ public class PartyGroupController {
 		LocalDate today = LocalDate.now();
 		if (dto.getBoardNum().getSubStart().minusDays(3).isBefore(today)) {
 			PGService.delete(groupNum);
-			map.put("msg", "삭제가 완료 되었습니다.");
+			map.put("msg", "구독 탈퇴가 완료 되었습니다.");
 		} else {
 			map.put("msg", "곧 구독이 시작되어 취소가 불가능합니다");
 		}
 		return map;
 	}
 
-	// 한명 당 뭐뭐에 파티 있나 보여주기 -> 마이페이지에서 띄울 것임 (Startcheck로 확인해서 분류별로)
+	// 한명 당 뭐뭐에 파티 있나 보여주기 -> 
+	//마이페이지에서 띄울 것임 (Startcheck로 확인해서 분류별로)
 	@GetMapping("/{userNum}")
 	public Map getUserList(@PathVariable("userNum") Member userNum) {
 		Map map = new HashMap();
@@ -64,13 +65,14 @@ public class PartyGroupController {
 		return map;
 	}
 
-	// 파티원들 직접 등록
+	// 파티원이 직접 참여하기 누르거나 AutoMatching으로 돌려
 	@PostMapping("/{boardNum}/{userNum}")
 	public Map addParty(@PathVariable("boardNum") HostBoard boardNum, @PathVariable("userNum") Member userNum) {
 		Map map = new HashMap<>();
 		boolean flag = true;
 		LocalDate today = LocalDate.now();
 		
+		//해당 유저가 해당 게시글에 참여한 내역이 있는지 1 과 0 으로 확인 
 		int checkParty = PGService.checkPartyGroup(boardNum.getBoardNum(), userNum.getUserNum());
 		if(checkParty == 1) {
 			flag = false;
@@ -78,7 +80,8 @@ public class PartyGroupController {
 			map.put("msg", "이미 가입 된 파티 입니다");
 		} else {
 
-		if (boardNum.getSubStart().isBefore(today)) { // 만약에 구독의 시작날짜가 오늘기준으로 전이라면 
+		if (boardNum.getSubStart().isBefore(today)) { 
+			// 만약에 구독의 시작날짜가 오늘기준으로 전이라면 
 			// -> 탈주자가 발생 하거나 날짜가 지났는데 maxppl을 채우지 못했다는 뜻이다. 
 			int countStartNum = PGService.findUsingStartCheck(boardNum.getBoardNum(), 1); // 진행 중인 사람들 수를 세어봐
 			if (countStartNum < boardNum.getMaxPpl()) { // 그 숫자가 boardNum의 최대인원보다 작다면
@@ -88,6 +91,7 @@ public class PartyGroupController {
 				dto.setStartCheck(1);
 				PartyGroupDto savedDto = PGService.save(dto); //자리가 있다는 뜻으로 startCheck를 1로 해서 넣어줘 -> 바로 구독 가능
 				map.put("dto", savedDto); //저장된 Dto와 
+				flag = true;
 				map.put("flag", flag);  // 성공했다는 flag 함께 전달 
 				
 				

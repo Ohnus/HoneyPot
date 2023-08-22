@@ -23,6 +23,8 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 
 	// 몇개의 boardNum이 존재하는가 확인
 	ArrayList<PartyGroup> findByBoardNum(HostBoard boardNum);
+	
+	ArrayList<PartyGroup> deleteByBoardNum(HostBoard boardNum); 
 
 	// 중복으로 파티에 들어 가는 것을 막기 위한 쿼리문
 	@Transactional

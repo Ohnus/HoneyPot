@@ -27,15 +27,19 @@ public class PartyGroupService {
 	// 추가
 	// 1. 참여하기 버튼 누를 때 들어와있음
 	public PartyGroupDto save(PartyGroupDto dto) {
-		PartyGroup pg = dao
-				.save(new PartyGroup(dto.getGroupNum(), dto.getBoardNum(), dto.getUserNum(), dto.getStartCheck(),dto.getMatchingNum()));
-		return new PartyGroupDto(pg.getGroupNum(), pg.getBoardNum(), pg.getUserNum(), pg.getStartCheck(),pg.getMatchingNum());
+		PartyGroup pg = dao.save(new PartyGroup(dto.getGroupNum(), dto.getBoardNum(), dto.getUserNum(),
+				dto.getStartCheck(), dto.getMatchingNum()));
+		return new PartyGroupDto(pg.getGroupNum(), pg.getBoardNum(), pg.getUserNum(), pg.getStartCheck(),
+				pg.getMatchingNum());
 	}
-	
-	
+
 	// 삭제
 	public void delete(int groupNum) {
 		dao.deleteById(groupNum);
+	}
+
+	public void delbyboardNum(int boardNum) {
+		dao.deleteByBoardNum(boardNum);
 	}
 
 	// 인당 리스트 -> 마이페이지에서 볼 것임
@@ -43,20 +47,21 @@ public class PartyGroupService {
 		ArrayList<PartyGroup> list = dao.findByUserNum(userNum);
 		ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
 		for (PartyGroup vo : list) {
-			list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),vo.getMatchingNum()));
+			list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),
+					vo.getMatchingNum()));
 		}
 		return list2;
 	}
-	
-	//구독 중복 있나 보려고 하는 메서드 
+
+	// 구독 중복 있나 보려고 하는 메서드
 	public int checkPartyGroup(int boardNum, String userNum) {
-		 ArrayList<PartyGroup> list = (ArrayList<PartyGroup>) dao.checkPartyGroup(boardNum, userNum);
-			ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
-			for (PartyGroup vo : list) {
-				list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),vo.getMatchingNum()));
-			}
-		 int isparticipant = list2.size(); //사이즈가 1 아님 0일 것임 
-		 return isparticipant;
+		ArrayList<PartyGroup> list = (ArrayList<PartyGroup>) dao.checkPartyGroup(boardNum, userNum);
+		ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
+		for (PartyGroup vo : list) {
+			list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),
+					vo.getMatchingNum()));
+		}
+		return list2.isEmpty() ? 0 : list2.size();
 	}
 
 	// 구독이 시작되면 1로 바꿔줄 메서드
@@ -72,11 +77,11 @@ public class PartyGroupService {
 		// partygroup에 몇명있는지는
 		int partyGroupCount = findByBoardNumUsingInt(dto.getBoardNum());
 		System.out.println("!!!!몇명이냐면!!! " + partyGroupCount);
-		
+
 		if (dto.getMaxPpl() == partyGroupCount) {
 			// 최대인원까지 꽉참 -> 리스트에서 보여줄 필요 없음
 			HBService.changIngToOne(boardNum);
-		System.out.println("~~~~~~~~~~~~~~~~~성공일껄");
+			System.out.println("~~~~~~~~~~~~~~~~~성공일껄");
 		}
 
 	}
@@ -87,7 +92,7 @@ public class PartyGroupService {
 	}
 
 	// 탈주자를 위한 메서드
-	public void editStartTo3(int boardNum,String userNum) {
+	public void editStartTo3(int boardNum, String userNum) {
 		dao.updateStartCheckTo3(boardNum, userNum);
 	}
 
@@ -104,8 +109,7 @@ public class PartyGroupService {
 			map.put("flag", flag);
 		} else { // 30일 초과로 남아 있으면 중간 탈주 가능합니다
 			map.put("flag", flag);
-			dao.updateStartCheckTo4(boardNum,userNum);
-			
+			dao.updateStartCheckTo4(boardNum, userNum); // 1에서 4으로 변경
 		}
 		return map;
 	}
@@ -117,14 +121,13 @@ public class PartyGroupService {
 		System.out.println("###$%안뇽하세요? 자바에요? 저두 성공~~");
 	}
 
-
 	// 게시판 글 몇개인가 검색해서 숫자로 리턴
 	public int findByBoardNum(HostBoard boardNum) {
 		ArrayList<PartyGroup> list = dao.findByBoardNum(boardNum);
 		return list.size();
 	}
 
-	// int 글 번호로 찾기 
+	// int 글 번호로 찾기
 	public int findByBoardNumUsingInt(int boardNum) {
 		ArrayList<PartyGroup> list = dao.findByBoardNumUsingInt(boardNum);
 		return list.size();
@@ -136,7 +139,8 @@ public class PartyGroupService {
 		if (vo == null) {
 			return null;
 		}
-		return new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),vo.getMatchingNum());
+		return new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),
+				vo.getMatchingNum());
 	}
 
 	// startcheck 로 검색
@@ -144,27 +148,29 @@ public class PartyGroupService {
 		ArrayList<PartyGroup> list = dao.selectStartCheck(boardNum, startCheck);
 		ArrayList<PartyGroupDto> list2 = new ArrayList<PartyGroupDto>();
 		for (PartyGroup vo : list) {
-			list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),vo.getMatchingNum()));
+			list2.add(new PartyGroupDto(vo.getGroupNum(), vo.getBoardNum(), vo.getUserNum(), vo.getStartCheck(),
+					vo.getMatchingNum()));
 		}
 		return list2;
 	}
-	
+
 	// startcheck 로 검색
-		public int findUsingStartCheck(int boardNum, int startCheck) {
-			ArrayList<PartyGroup> list = dao.selectStartCheck(boardNum, startCheck);
-			
-			return list.size();
-		}
-	//추가 된게 있나 확인 
-	public boolean findByMatchingNum(int matchingNum) {
-		
-		    List<PartyGroup> partyGroups = dao.findByMatchingNum(matchingNum);
-		    
-		    return partyGroups.isEmpty();
-	//비어있어야 partyGroup에 추가 할 수 있음으로 비어있는거이 true 여야함 
-		    //매칭 넘이 있으면 false 를 반환 -> 추가하지못함으로 
-	
+	public int findUsingStartCheck(int boardNum, int startCheck) {
+		ArrayList<PartyGroup> list = dao.selectStartCheck(boardNum, startCheck);
+
+		return list.size();
 	}
 
-	
+	// 추가 된게 있나 확인
+	public boolean findByMatchingNum(int matchingNum) {
+
+		// MatchingNum으로 찾았서 리스트를 뽑았는데
+		List<PartyGroup> partyGroups = dao.findByMatchingNum(matchingNum);
+
+		return partyGroups.isEmpty();
+		// 비어있어야 partyGroup에 추가 할 수 있음으로 비어있는거것이 true 를 반환
+		// 매칭 넘이 있으면 false 를 반환 -> 추가 하지 못함
+
+	}
+
 }

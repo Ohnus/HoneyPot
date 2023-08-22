@@ -23,7 +23,7 @@ public class AutoMatchingController {
 	@Autowired
 	private AutoMatchingService AMService;
 	
-	//추가 
+	//글 등록 해서 추가함 
 	@PostMapping("")
 	public Map add(AutoMatchingDto dto) {
 		Map map = new HashMap(); 
@@ -32,7 +32,7 @@ public class AutoMatchingController {
 		return map;
 	}
 	
-	//자진 삭제
+	//자진 삭제 -> 파티 그냥 내가 찾을게~ 
 	@DeleteMapping("/{matchingNum}")
 	public void del(@PathVariable("matchingNum") int matchigNum) {
 	AMService.del(matchigNum);	
