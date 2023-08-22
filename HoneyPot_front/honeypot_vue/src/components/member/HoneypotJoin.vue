@@ -145,7 +145,7 @@ export default {
             if (this.email == '') {
                 alert('이메일을 입력해주세요.');
             } else {
-                const formdata = new FormData();
+                let formdata = new FormData();
                 formdata.append('email', self.email);
                 
                 console.log(this.email);

@@ -35,9 +35,13 @@ export default {
                 if (res.status == 200) {
                     if (res.data.flag) {
                         sessionStorage.setItem('token', res.data.token);    // 세션에 뭐뭐 넣어야하지..?
-                        sessionStorage.setItem('loginId', self.email);
+                        sessionStorage.setItem('loginId', res.data.email);
+                        sessionStorage.setItem('userNum', res.data.userNum);
 
+                        console.log(sessionStorage.getItem("loginId") + "/" + sessionStorage.getItem("userNum"));
+                        
                         window.location.href = "/";
+                        
                     } else {
                         alert ('로그인에 실패하였습니다. 로그인 정보를 다시 확인해주세요.')
                     }

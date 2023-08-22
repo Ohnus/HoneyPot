@@ -37,16 +37,7 @@ public class MemberService {
 		return key;
 	}
 	
-	
-	// 회원가입
-//	public String save(MemberDto dto) {
-//		Member entity = dao.save(new Member(dto.getUserNum(), dto.getEmail(), dto.getPwd(), dto.getName(), dto.getNickname(),
-//				dto.getPhone(), dto.getSnsType(), dto.getBankCode(), dto.getBankAcc(), dto.getProfile(), dto.getBillingKey()));
-//		
-//		return entity.getUserNum();		
-//	}
-	
-	
+
 	// 회원가입 및 수정
 	public MemberDto save(MemberDto dto) {
 		Member entity = dao.save(new Member(dto.getUserNum(), dto.getEmail(), dto.getPwd(), dto.getName(), dto.getNickname(),
@@ -55,7 +46,7 @@ public class MemberService {
 		return new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
 				entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null);
 	}
-	
+		
 	
 	// 전체 검색
 	public ArrayList<MemberDto> getAllUser() {
@@ -83,9 +74,10 @@ public class MemberService {
 		}
 	}
 	
+	
 	// 로그인, 내 정보 확인
 	public MemberDto getByEmail(String email) {
-		Member entity = dao.findByEmail (email);
+		Member entity = dao.findByEmail(email);
 		MemberDto dto = null;
 		
 		if(entity == null) {
@@ -96,6 +88,7 @@ public class MemberService {
 			return dto;
 		}
 	}
+	
 	
 	// 닉네임 검색
 	public MemberDto getByNickname(String nickname) {
@@ -110,8 +103,8 @@ public class MemberService {
 			return dto;
 		}
 	}
-
-
+	
+	
 
 	public void delUser(String email) {
 		dao.deleteById(email);

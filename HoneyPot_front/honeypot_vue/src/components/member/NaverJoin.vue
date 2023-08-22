@@ -1,23 +1,32 @@
 <template>
 
-    <div v-if="duplicated1" class="duplicateNotice1">
-        <div>본인 인증된 정보로 이미 가입된 이력이 존재합니다.</div>
-        <router-link to="/메인페이지링크"><button>메인으로</button></router-link>
-    </div>
+<div class="NaverJoinForm">
+        <input v-model="name" type="text" readonly><br>
 
-    <div v-else-if="duplicated2" class="duplicateNotice2">
-        <div>해당 핸드폰번호로 가입된 이력이 존재합니다. 고객센터에 문의해주세요.</div>
-        <router-link to="/메인페이지링크"><button>메인으로</button></router-link>
-    </div>
+        <input v-model="phone" type="text" readonly><br>
 
-    <div v-else-if="certified" class="NaverJoin">
-        <button @click="naverLogin">네이버로그인</button>
-    </div>
+        <input v-model="email" type="email" readonly><br>
 
-    <div v-else class="certificationNotice">
-        <div>허니팟은 100% 인증을 통해 믿을 수 있는 구독 환경을 제공합니다.</div>
-        <div>실명 인증을 진행해주세요.</div>
-        <button @click="certification">확인</button>
+        <div>
+        <input v-model="pwd" type="password" placeholder="비밀번호 입력" @input="checkPwd">
+        <span v-if="!pwdValid" style="color:red">대문자, 특수문자 포함 8자리 이상으로 설정해주세요.</span>
+        </div>
+
+        <div>
+        <input v-model="pwdCheck" type="password" placeholder="비밀번호 재입력" @input="samePwdCheck">
+
+        </div>
+
+        <!-- @input으로 처리하면 검색을 못하고 @blur로 처리하니까 검색은 잘 되는데 필드를 벗어나야 검사를 하는듯..? 그리고 한 번 검사 끝나면 중복값 다시 넣어도 메서드 재실행 안됨.. -->
+        <div>
+        <input v-model="nickname" type="text" placeholder="닉네임 입력" @blur="checkNickname"><br> 
+
+        </div>
+
+        <div> 약관 추가 예정.. ㅎ </div>
+
+        <button @click="join">가입</button>
+
     </div>
 
 </template>
@@ -27,81 +36,92 @@ export default {
     name: 'NaverJoin',
     data() {
         return {
-        certified: false,
-        duplicated1: false,
-        duplicated2: false
+            duplicated1: false,         // 핸드폰 + 이름 중복, true일 경우 회원가입 불가
+            duplicated2: false,         // 핸드폰 중복, true일 경우 회원가입 불가
+            certified: false,           // 중복 값 없는 상태, true일 경우 회원가입 가능
+            pwdValid: false,            // 비밀번호 정규식 체크
+            pwdCheckValid: false,       // 비밀번호 일치 여부 체크
+            nickNameRexegValid: false,  // 닉네임 정규식 체크
+            nickNameValid: false,       // 닉네임 중복 체크
+            
+            code: this.$route.query.code,
+            state: this.$route.query.state,
+            name: self.name,    // 본인인증한 이름 정보
+            phone: self.phone,  // 본인인증한 핸드폰 번호 정보
+            email: self.email,   
+            pwd: self.pwd,      
+            nickname: '',       // 네이버 회원과 허니팟 회원 간 닉네임 중복될 수 있어 새로 입력하는 것으로 설정
+            snsType: '',
         }
     },
-    methods: {
+    created() {
+        this.code = this.$route.query.code;
+        this.state = this.$route.query.state;
         
-        // 본인인증
-        certification() {
-        const self = this;
+        console.log("code: " + this.code + " / " + "state: " + this.state);
 
-        const IMP = window.IMP;
+        this.getToken(this.code, this.state);        
+    },
 
-        IMP.init("imp24063873");
+    methods: {
 
-        IMP.certification({
-            pg: 'MIIiasTest',
-            merchant_uid: 'merchant_' + new Date().getTime(),
-            m_redirect_url: "http://localhost:8989/member/NaverJoin", 
-            popup: false
-            }, function (rsp) {
-                if (rsp.success) {
-                    console.log(rsp.imp_uid);
-                    console.log(rsp.merchant_uid);
+        getToken() {
+            const self = this;
 
-                const data = {
-                    imp_uid: rsp.imp_uid,
-                };
+            self.$axios.post('http://localhost:8988/naver/login' + self.code + '/' + self.state)
+            .then(function (res) {
+                if (res.status == 200) {
+                    if (res.data.userinfo.message) {
+                        alert(res.data.userinfo.message);
+                        location.href = "/";
+                    } else {
+                        console.log(res.data);
 
-                self.$axios.get("http://localhost:8988/members/certifications/redirect", { params: data })
+                        self.form.email = res.data.userinfo.naverResponse.email;
+                        self.form.pwd = res.data.userinfo.naverResponse.pwd;
+                        self.form.navertoken = res.data.access_token;
+                    }
+                    self.$axios.get('http://localhost:8988/members/emailCheck/' + self.form.email)
                     .then(function (res) {
                         if (res.status == 200) {
-                            console.log("name: " + res.data.name);
-                            console.log("phone: " + res.data.phone);
-                            console.log("회원가입 진행해도 되니: " + res.data.certified);
-                            console.log("핸드폰번호 + 이름 중복이니: " + res.data.duplicated1);
-                            console.log("핸드폰번호 중복이니: " + res.data.duplicated2);
-
-                            self.name = res.data.name;
-                            self.phone = res.data.phone;
-
-                            if (res.data.certified) {   // 이 경우에만 회원가입 진행됨
-                                self.certified = true;
-                            } else if (res.data.duplicated1) {  // 핸드폰 + 이름 중복
-                                self.duplicated1 = true;
-                            } else if (res.data.duplicated2) {  // 핸드폰 중복
-                                self.duplicated2 = true;
+                            if (res.data.flag) {    // 중복된 이메일이 있을 때
+                                console.log(res.data.flag);
+                            } else {
+                                self.Nlogin(); // Nlogin() 뭐지?
                             }
-
-                        } else {
-                            alert('에러코드: ' + res.status)
                         }
-                    }) 
-                    .catch(function (error) {
-                        console.error(error);
                     });
-
                 }
             });
         },
 
-        naverLogin() {
-            let client_id = "uW8BXEv6IHbwQSCwO9jn";
-            let redirect_uri = encodeURIComponent("http://localhost:8989/LoginPage", "UTF-8");
-            const state = this.generateRandomState();
-            const apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
-             + "&client_id=" + client_id
-             + "&redirect_uri=" + redirect_uri
-                + "&state=" + state
-            window.location.href = apiURL;
-        }
-        ,
-
-        // state 난수 생성
-        generateRandomState() {
+        Nlogin() {
+      const self = this;
+      const loginform = new FormData();
+      loginform.append('email', self.form.email)
+      loginform.append('pwd', self.form.pwd)
+      self.$axios.post('http://localhost:8181/members/login', loginform)
+        .then(function (res) { //결과 
+          if (res.status == 200) {
+            sessionStorage.setItem('token', res.data.token)
+            sessionStorage.setItem('loginId', res.data.loginId)
+            const addform = new FormData();
+            addform.append('email', self.form.email)
+            addform.append('token', self.form.navertoken)
+            console.log(self.form.navertoken)
+            self.$axios.post('http://localhost:8988/naver/token', addform)
+              .then(function (rep) {
+                if (rep.status == 200) {
+                  location.href = "/"
+                } else {
+                  alert('여기서 오류다~ ')
+                }
+              });
+          }
+        })
+    },
+      // state 난수 생성
+      generateRandomState() {
             const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             let state = "";
       
@@ -109,12 +129,25 @@ export default {
                 const randomIndex = Math.floor(Math.random() * characters.length);
                 state += characters.charAt(randomIndex);
             }
-
             return state;
+        },
+
+        naverLogin() {
+            let client_id = "uW8BXEv6IHbwQSCwO9jn";
+            let redirect_uri = encodeURIComponent("http://localhost:8989/NaverJoin", "UTF-8");
+            const state = this.generateRandomState();
+            const apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
+             + "&client_id=" + client_id
+             + "&redirect_uri=" + redirect_uri
+                + "&state=" + state
+            window.location.href = apiURL;
         }
   
     }
-}
+        }
+    
+
+
 
 
 </script>

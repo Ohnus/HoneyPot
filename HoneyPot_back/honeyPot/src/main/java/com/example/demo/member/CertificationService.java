@@ -28,7 +28,7 @@ public class CertificationService {
 		String access_token = "";
 		String name = "";
 		String phone = "";
-		
+//		String unique_key ="";
 
 		try {
 			URL url = new URL(strUrl);	// api 주소로 URL 객체 생성
@@ -78,7 +78,7 @@ public class CertificationService {
 				getConn.setRequestProperty("Authorization", "Bearer " + access_token);
 
 				int getResponseCode = getConn.getResponseCode();
-				System.out.println("GET 응답코드 =============" + getResponseCode);
+				System.out.println("GET 응답코드 ============= " + getResponseCode);
 
 				if (getResponseCode == 200) { // 성공
 					BufferedReader getBr = new BufferedReader(new InputStreamReader(getConn.getInputStream()));
@@ -93,16 +93,21 @@ public class CertificationService {
 					System.out.println("GET 응답 결과: " + getResponse);
 					JsonParser parser1 = new JsonParser();
 					JsonObject phoneJson1 = parser1.parse(getResponse).getAsJsonObject();
-
-					// 전화번호 값 빼기
-					phone = phoneJson1.getAsJsonObject("response").get("phone").getAsString();
-					System.out.println("phone: " + phone);
-
-					map.put("phone", phone);
+					
 					// 이름 값 빼기
 					name = phoneJson1.getAsJsonObject("response").get("name").getAsString();
 					System.out.println("이름>>>>>" + name);
 					map.put("name", name);
+
+					// 전화번호 값 빼기
+					phone = phoneJson1.getAsJsonObject("response").get("phone").getAsString();
+					System.out.println("phone: " + phone);
+					map.put("phone", phone);
+					
+//					// 유니크키 값 빼기: 테스트 버전이라 response 데이터에 없는 듯
+//					unique_key = phoneJson1.getAsJsonObject("response").get("unique_key").getAsString();
+//					System.out.println("unique_key: " + unique_key);
+//					map.put("unique_key", unique_key);
 
 				} else {
 					System.out.println("GET 에러 응답 메시지: " + getConn.getResponseMessage());

@@ -39,7 +39,7 @@ public class JwtTokenProvider {
 
    private Map<String, Object> createClaims(MemberDto member) {
        Map<String, Object> claims = new HashMap<>();
-       claims.put("username", member.getEmail());
+       claims.put("id", member.getEmail());
        return claims;
    }
 
@@ -47,12 +47,7 @@ public class JwtTokenProvider {
        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
    }
 
-   public String getUsernameFromToken(String token) {
-       return (String) getClaims(token).get("username");
+   public String getIdFromToken(String token) {
+       return (String) getClaims(token).get("id");
    }
-
-   public int getRoleFromToken(String token) {
-       return (int) getClaims(token).get("roles");
-   }
-
 }

@@ -10,6 +10,7 @@ import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
+import MyInfo from '../components/member/MyInfo.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
 import ChattingRoom from '../components/chat/ChattingRoom.vue'
@@ -99,6 +100,11 @@ const routes = [
     path: '/LoginPage',
     name: 'LoginPage',
     component: LoginPage
+  },
+  {
+    path: '/MyInfo',
+    name: 'MyInfo',
+    component: MyInfo
   },
   {
     path: '/ChattingRoom',
