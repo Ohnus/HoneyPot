@@ -23,7 +23,11 @@ public interface PaymentDao extends JpaRepository<Payment, String> {
 	// 스케쥴링 결제일(오늘)이 nextDate(다음결제일)이면서 결제회차가 마지막회차가보다 작은 애들 리스트
 	@Transactional
 	@Modifying
-	@Query(value="select * from payment where next_date=:payDate and pay_installment < final_installment order by order_num asc", nativeQuery = true)
+	@Query(value="select * from payment where next_date=:payDate and pay_installment < final_installment and paymentStatus=0 order by order_num asc", nativeQuery = true)
 	ArrayList<Payment> findByNextDate(@Param("payDate") LocalDate paydate);
 	
+	@Transactional
+	@Modifying
+	@Query(value="select * from payment where again_date=:againDate and payment_status=-1 order by order_num asc", nativeQuery = true)
+	ArrayList<Payment> findByAgainDate(@Param("againDate") LocalDate againDate);
 }

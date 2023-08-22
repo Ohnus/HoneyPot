@@ -1,23 +1,24 @@
 package com.example.demo.payment;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.member.Member;
+import com.example.demo.cash.CashDto;
+import com.example.demo.cash.CashService;
 import com.example.demo.member.MemberDto;
 import com.example.demo.member.MemberService;
+import com.example.demo.partygroup.PartyGroupService;
+import com.example.demo.pending.PendingDto;
+import com.example.demo.pending.PendingService;
 
 @EnableScheduling
 @RestController
@@ -34,6 +35,9 @@ public class PaymentController {
 	@Autowired
 	private ImportPayments paymentsAPI;
 
+	@Autowired
+	private LocalDateService localDateService;
+
 //	@Autowired
 //	private WithdrawlNh withdrawlAPI;
 
@@ -41,7 +45,16 @@ public class PaymentController {
 	private PaymentService pservice;
 
 	@Autowired
+	private PendingService pdservice;
+
+	@Autowired
+	private CashService cashservcie;
+
+	@Autowired
 	private MemberService mservice;
+	
+	@Autowired
+	private PartyGroupService PGservice;
 
 	// 결제수단 등록 or 변경
 	@PostMapping("/registerCards")
@@ -117,10 +130,11 @@ public class PaymentController {
 		return map;
 	}
 
-	// 파티 생성, 찾기 마무리 단계에서 100원 결제/환불
+	// 파티 생성 직전 단계에서 보증금+수수료 결제
+	// 파티장 보증금 = 앞단에서 불러온 ott 구독료
 	// again api + 유저빌링키 이용하기
-	@PostMapping("/add100")
-	public Map add100(PaymentDto dto) {
+	@PostMapping("/leaderDeposits")
+	public Map leaderDeposit(PaymentDto dto) {
 
 		Map map = new HashMap<>();
 		PaymentDto newDto;
@@ -128,43 +142,33 @@ public class PaymentController {
 		String accessToken = accessTokenAPI.getAccessToken();
 		String customerUid = dto.getUserNum().getBillingKey();
 		String merchantUid = dto.getOrderNum();
-		int amount = dto.getTotalPayment();
+		int deposit = dto.getDeposit();
+		int commission = dto.getCommission();
+		int totalPayment = dto.getTotalPayment();
+		int amount = totalPayment;
 		String name = dto.getHistory();
 
-		int pay100 = 1;
-		// 클라이언트 사이드에서 결제금액 조작하는 지 검증하기
-		if (amount == 100) {
-			// 결제금액 맞으면 결제/환불 진행
-			pay100 = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
-			if (pay100 == 0) {
-				int checksum = amount;
-				int cancel100 = paymentsAPI.cancelPayment(accessToken, merchantUid, amount, checksum);
-				newDto = pservice.save(dto);
-				map.put("checkMsg", "결제수단 유효성이 확인되었습니다.");
-				if (cancel100 == 2) {
-					newDto.setHistory("결제수단 유효성 - 환불완료");
-					newDto = pservice.save(newDto);
-				} else {
-					newDto.setHistory("결제수단 유효성 - 환불실패");
-					newDto = pservice.save(newDto);
-				}
-				map.put("nextStep", pay100);
-				map.put("newDto", newDto);
-			} else {
-				map.put("checkMsg", "결제수단 유효성 확인에 실패하였습니다.");
-				map.put("nextStep", pay100);
-			}
+		String paymentStatus = "";
+		// 결제금액 맞으면 결제/환불 진행
+		paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+		System.out.println("결제여부: " + paymentStatus);
+		if (paymentStatus.equals("paid")) {
+			System.out.println("paid 인식함");
+			map.put("checkMsg", "보증금 및 수수료가 결제되었습니다.");
+			newDto = pservice.save(dto);
+			map.put("paymentStatus", paymentStatus); // paid
 		} else {
-			map.put("checkMsg", "결제수단 유효성 확인에 실패하였습니다.");
-			map.put("nextStep", pay100);
+			System.out.println("paid 인식못함");
+			map.put("checkMsg", "보증금 및 수수료 결제에 실패했습니다.");
+			map.put("paymentStatus", paymentStatus); // ready, failed, canceled
 		}
-
 		return map;
 	}
 
-	// 100원 결제 내역 게시글번호, 마지막회차, 정기결제일 부분 수정
-	@PostMapping("/update100")
-	public Map update100(PaymentDto dto) {
+	// 파티장 보증금 및 수수료 결제 후 게시글번호, 마지막회차, 정기결제일 부분 업데이트
+	// + pending table에 파티장 보증금 저장
+	@PostMapping("/updateLeaderDeposits")
+	public Map updateLeaderDeposit(PaymentDto dto) {
 
 		Map map = new HashMap<>();
 		PaymentDto newDto = pservice.getPayment(dto.getOrderNum());
@@ -180,6 +184,46 @@ public class PaymentController {
 
 		map.put("newDto", newDto);
 
+		// 파티장 보증금
+		int amount = dto.getBoardNum().getType().getPrice();
+		PendingDto depositDto = new PendingDto(0, dto.getBoardNum(), dto.getUserNum(), null,
+				dto.getBoardNum().getSubEnd(), amount, 1);
+
+		return map;
+	}
+
+	// 파티원 보증금 결제/저장 + pending table에 파티원 보증금 저장
+	// 앞단에서 dto 정보 다 보내기
+	@PostMapping("/memberDeposits")
+	public Map memberDeposit(PaymentDto dto) {
+		Map map = new HashMap<>();
+		PaymentDto newDto;
+
+		String accessToken = accessTokenAPI.getAccessToken();
+		String customerUid = dto.getUserNum().getBillingKey();
+		String merchantUid = dto.getOrderNum();
+		int amount = dto.getDeposit();
+		String name = dto.getHistory();
+
+		String paymentStatus = "";
+		paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+		System.out.println("결제여부: " + paymentStatus);
+		if (paymentStatus.equals("paid")) {
+			System.out.println("paid 인식함");
+			map.put("checkMsg", "보증금이 결제되었습니다.");
+			newDto = pservice.save(dto);
+
+			// 파티원 보증금
+			PendingDto depositDto = new PendingDto(0, dto.getBoardNum(), dto.getUserNum(), null,
+					dto.getBoardNum().getSubEnd(), amount, 1);
+
+			map.put("paymentStatus", paymentStatus); // paid
+		} else {
+			System.out.println("paid 인식못함");
+			map.put("checkMsg", "보증금 결제에 실패했습니다.");
+			map.put("paymentStatus", paymentStatus); // ready, failed, canceled
+		}
+
 		return map;
 	}
 
@@ -189,22 +233,168 @@ public class PaymentController {
 //	@Scheduled(cron = "0 0 0 * * ?")
 	@PostMapping("/recurringPayments")
 	public void recurring() {
-		LocalDateTime today = LocalDateTime.now();
-		int year = today.getYear();
-		int month = today.getMonthValue();
-		int nextMonth = today.getMonthValue() + 1;
-		int recurringDay = today.getDayOfMonth();
-		int hh = today.getHour();
-		int mm = today.getMinute();
-		int ss = today.getSecond();
-		String date = String.format("%02d/%02d/%02d", year % 100, month, recurringDay);
-		String next = String.format("%02d/%02d/%02d", year % 100, nextMonth, recurringDay);
-		DateTimeFormatter changePattern = DateTimeFormatter.ofPattern("yy/MM/dd");
-		LocalDate payDate = LocalDate.parse(date, changePattern);
-		LocalDate nextDate = LocalDate.parse(next, changePattern);
+//		LocalDateTime today = LocalDateTime.now();
+//		int year = today.getYear();
+//		int month = today.getMonthValue();
+//		int nextMonth = today.getMonthValue() + 1;
+//		int recurringDay = today.getDayOfMonth();
+//		int hh = today.getHour();
+//		int mm = today.getMinute();
+//		int ss = today.getSecond();
+//		String date = String.format("%02d/%02d/%02d", year % 100, month, recurringDay);
+//		String next = String.format("%02d/%02d/%02d", year % 100, nextMonth, recurringDay);
+//		DateTimeFormatter changePattern = DateTimeFormatter.ofPattern("yy/MM/dd");
+//		LocalDate payDate = LocalDate.parse(date, changePattern);
+//		LocalDate nextDate = LocalDate.parse(next, changePattern);
+//		LocalDate againDate = payDate.plusWeeks(1);
+
+		LocalDate payDate = localDateService.getPayDate();
+		LocalDate nextDate = localDateService.getNextDate();
+		LocalDate againDate = localDateService.getAgainDate();
+		LocalDate earningDate = localDateService.getEarningDate(payDate);
+		int recurringDay = localDateService.getRecurringDay();
 
 		// recurringday & pay_installment(결제회차)=0인 애들 리스트 뽑아
 		ArrayList<PaymentDto> rcList = pservice.getByRcrDay(recurringDay);
+		String accessToken = "";
+		String customerUid = "";
+		String merchantUid = "";
+		String orderNum = "";
+		int monthPrice = 0;
+		int commission = 0;
+		int totalPayment = 0;
+		int amount = 0;
+		String name = "";
+		String paymentStatus = "";
+		try {
+			for (int i = 0; i < rcList.size(); i++) {
+				PaymentDto dto = rcList.get(i);
+				System.out.println("결제할 회원은 누구?: " + dto.getUserNum().getUserNum());
+				System.out.println("파티장은 누구?: " + dto.getBoardNum().getUserNum().getUserNum());
+				if (dto.getUserNum().getUserNum().equals(dto.getBoardNum().getUserNum().getUserNum())) {
+					// 그리고 결제 회원이랑 결제된 게시글의 회원이 같으면(파티장이면)
+					dto.setPayInstallment(-1);
+					dto = pservice.save(dto);
+					PaymentDto newDto = pservice.save(dto);
+				} else {
+					// 파티원이면,
+					accessToken = accessTokenAPI.getAccessToken();
+					customerUid = dto.getUserNum().getBillingKey();
+					System.out.println("파티원 빌링키: " + customerUid);
+					merchantUid = localDateService.getMerchantUid() + String.format("%02d", i);
+					orderNum = merchantUid;
+					monthPrice = dto.getBoardNum().getMonthPrice();
+					commission = (int) (dto.getBoardNum().getMonthPrice() * 0.2);
+					totalPayment = monthPrice + commission;
+					amount = totalPayment;
+					name = "1회차 결제";
+					paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+
+					if (paymentStatus.equals("paid")) {
+						dto.setPayInstallment(-1);
+						dto = pservice.save(dto);
+						PaymentDto newDto = pservice.save(dto);
+						newDto.setOrderNum(orderNum);
+						newDto.setPayInstallment(1);
+						newDto.setPayDate(payDate);
+						newDto.setNextDate(nextDate);
+						newDto.setTotalPayment(totalPayment);
+						newDto.setDeposit(0);
+						newDto.setMonthPrice(monthPrice);
+						newDto.setCommission(commission);
+						newDto.setHistory(name);
+						newDto.setOttType(dto.getBoardNum().getType().getType());
+						newDto = pservice.save(newDto);
+						// 파티원 구독료
+						PendingDto monthPriceDto = new PendingDto(0, dto.getBoardNum(), dto.getUserNum(), earningDate,
+								null, monthPrice, 0);
+					} else {
+						dto.setPayInstallment(-1);
+						dto = pservice.save(dto);
+						PaymentDto newDto = pservice.save(dto);
+						newDto.setOrderNum(orderNum);
+						newDto.setPayInstallment(1);
+						newDto.setPayDate(payDate);
+						newDto.setNextDate(nextDate);
+						newDto.setAgainDate(againDate);
+						newDto.setTotalPayment(totalPayment);
+						newDto.setDeposit(0);
+						newDto.setMonthPrice(monthPrice);
+						newDto.setCommission(commission);
+						newDto.setHistory("결제 실패");
+						newDto.setPaymentStatus(-1);
+						newDto.setOttType(dto.getBoardNum().getType().getType());
+						newDto = pservice.save(newDto);
+					}
+				}
+			}
+
+			// 오늘(결제일 = payDate)이 nextDate(다음결제일)이면서 결제회차 < 마지막회차이고 결제여부 0인 애들 뽑아
+			ArrayList<PaymentDto> ndList = pservice.getByNextDate(nextDate);
+			for (int i = 0; i < ndList.size(); i++) {
+				PaymentDto ndDto = ndList.get(i);
+				System.out.println("결제할 회원은?: " + ndDto.getUserNum().getUserNum());
+				System.out.println("파티장은 누구?: " + ndDto.getBoardNum().getUserNum().getUserNum());
+				System.out.println("결제할 회차는?: " + ndDto.getPayInstallment());
+				// 파티원이라면,
+				if (!ndDto.getUserNum().getUserNum().equals(ndDto.getBoardNum().getUserNum().getUserNum())) {
+					accessToken = accessTokenAPI.getAccessToken();
+					customerUid = ndDto.getUserNum().getBillingKey();
+					System.out.println(ndDto.getPayInstallment() + "회차 파티원 빌링키: " + customerUid);
+					merchantUid = localDateService.getMerchantUid() + rcList.size() + String.format("%02d", i);
+					orderNum = merchantUid;
+					monthPrice = ndDto.getMonthPrice();
+					commission = (int) (ndDto.getBoardNum().getMonthPrice() * 0.2);
+					totalPayment = monthPrice + commission;
+					amount = totalPayment;
+					name = ndDto.getPayInstallment() + "회차 결제";
+					paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+
+					if (paymentStatus.equals("paid")) {
+						PaymentDto newDto = pservice.save(ndDto);
+						newDto.setOrderNum(orderNum);
+						newDto.setPayInstallment(ndDto.getPayInstallment() + 1);
+						newDto.setPayDate(payDate);
+						newDto.setNextDate(nextDate);
+						newDto.setTotalPayment(totalPayment);
+						newDto.setDeposit(0);
+						newDto.setMonthPrice(monthPrice);
+						newDto.setCommission(commission);
+						newDto.setHistory(name);
+						newDto = pservice.save(newDto);
+						// 파티원 구독료
+						PendingDto monthPriceDto = new PendingDto(0, ndDto.getBoardNum(), ndDto.getUserNum(),
+								earningDate, null, monthPrice, 0);
+					} else {
+						PaymentDto newDto = pservice.save(ndDto);
+						newDto.setOrderNum(orderNum);
+						newDto.setPayInstallment(ndDto.getPayInstallment() + 1);
+						newDto.setPayDate(payDate);
+						newDto.setNextDate(nextDate);
+						newDto.setAgainDate(againDate);
+						newDto.setTotalPayment(totalPayment);
+						newDto.setDeposit(0);
+						newDto.setMonthPrice(monthPrice);
+						newDto.setCommission(commission);
+						newDto.setHistory(name + " 실패");
+						newDto.setPaymentStatus(-1);
+						newDto = pservice.save(newDto);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	정기결제일에 결제 실패한 유저 재결제 시도(결제여부 -1)
+//	@Scheduled(cron = "0 0 0 * * ?")
+	@PostMapping("/againDates")
+	public void paymentAgain() {
+		LocalDate againDate = localDateService.getAgainDate();
+
+		ArrayList<PaymentDto> againList = pservice.getByAgainList(againDate);
+
 		String accessToken = "";
 		String customerUid = "";
 		String merchantUid = "";
@@ -215,135 +405,90 @@ public class PaymentController {
 		int totalPayment = 0;
 		int amount = 0;
 		String name = "";
-		int payments = 0;
-		for (int i = 0; i < rcList.size(); i++) {
-			PaymentDto dto = rcList.get(i);
-			// 그리고 결제 회원이랑 결제된 게시글의 회원이 같으면(파티장이면)
-			System.out.println("결제할 회원은 누구?: " + dto.getUserNum().getUserNum());
-			System.out.println("파티장은 누구?: " + dto.getBoardNum().getUserNum().getUserNum());
-			if (dto.getUserNum().getUserNum() == dto.getBoardNum().getUserNum().getUserNum()) {
-				accessToken = accessTokenAPI.getAccessToken();
-				customerUid = dto.getUserNum().getBillingKey();
-				System.out.println("파티장 빌링키: " + customerUid);
-				merchantUid = "HNP" + String.valueOf(year).substring(2) + String.format("%02d", month)
-						+ String.format("%02d", recurringDay) + String.format("%02d", hh) + String.format("%02d", mm)
-						+ String.format("%02d", i);
-				orderNum = merchantUid;
-				deposit = dto.getBoardNum().getMonthPrice() * dto.getBoardNum().getMaxPpl();
-				commission = (int) (dto.getBoardNum().getMonthPrice() * 0.1);
-				totalPayment = deposit + commission;
-				amount = totalPayment;
-				name = "1회차 결제";
-				payments = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+		String paymentStatus = "";
+		for (int i = 0; i < againList.size(); i++) {
+			PaymentDto againDto = againList.get(i);
+			LocalDate earningDate = localDateService.getEarningDate(againDto.getPayDate());
 
-				dto.setPayInstallment(-1);
-				dto = pservice.save(dto);
-				PaymentDto newDto = pservice.save(dto);
-				newDto.setOrderNum(orderNum);
-				newDto.setPayInstallment(1);
-				newDto.setPayDate(payDate);
-				newDto.setNextDate(nextDate);
-				newDto.setTotalPayment(totalPayment);
-				newDto.setDeposit(deposit);
-				newDto.setMonthPrice(0);
-				newDto.setCommission(commission);
-				newDto.setHistory(name);
-				newDto.setOttType(dto.getBoardNum().getType().getType());
-				newDto = pservice.save(newDto);
-				// 파티원이면,
-			} else {
+			// 파티원이면,
+			if (!againDto.getUserNum().getUserNum().equals(againDto.getBoardNum().getUserNum().getUserNum())) {
 				accessToken = accessTokenAPI.getAccessToken();
-				customerUid = dto.getUserNum().getBillingKey();
-				System.out.println("파티원 빌링키: " + customerUid);
-				merchantUid = "HNP" + String.valueOf(year).substring(2) + String.format("%02d", month)
-						+ String.format("%02d", recurringDay) + String.format("%02d", hh) + String.format("%02d", mm)
-						+ String.format("%02d", i + rcList.size());
+				customerUid = againDto.getUserNum().getBillingKey();
+				merchantUid = localDateService.getMerchantUid() + String.format("%02d", i);
 				orderNum = merchantUid;
-				deposit = dto.getBoardNum().getMonthPrice() * 2;
-				monthPrice = dto.getBoardNum().getMonthPrice();
-				commission = (int) (dto.getBoardNum().getMonthPrice() * 0.2);
-				totalPayment = deposit + monthPrice + commission;
+				monthPrice = againDto.getMonthPrice();
+				commission = againDto.getCommission();
+				totalPayment = againDto.getTotalPayment();
 				amount = totalPayment;
-				name = "1회차 결제";
-				payments = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+				name = againDto.getPayInstallment() + "회차 결제";
+				paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
 
-				dto.setPayInstallment(-1);
-				dto = pservice.save(dto);
-				PaymentDto newDto = pservice.save(dto);
-				newDto.setOrderNum(orderNum);
-				newDto.setPayInstallment(1);
-				newDto.setPayDate(payDate);
-				newDto.setNextDate(nextDate);
-				newDto.setTotalPayment(totalPayment);
-				newDto.setDeposit(deposit);
-				newDto.setMonthPrice(monthPrice);
-				newDto.setCommission(commission);
-				newDto.setHistory(name);
-				newDto.setOttType(dto.getBoardNum().getType().getType());
-				newDto = pservice.save(newDto);
+				if (paymentStatus.equals("paid")) {
+					// 재결제가 성공적이면,
+					againDto.setOrderNum(orderNum);
+					againDto.setPayInstallment(againDto.getPayInstallment() + 1);
+					againDto.setAgainDate(null);
+					againDto.setHistory(name);
+					againDto.setPaymentStatus(0);
+					// 파티원 구독료
+					PendingDto monthPriceDto = new PendingDto(0, againDto.getBoardNum(), againDto.getUserNum(),
+							earningDate, null, monthPrice, 0);
+				} else {
+					// 재결제도 실패하면,
+					againDto.setOrderNum(orderNum);
+					againDto.setNextDate(null);
+					againDto.setAgainDate(null);
+					againDto.setHistory(name + " 최종 실패");
+					againDto.setPaymentStatus(-2); // -2는 회생불가
+					
+					// 보증금 => 위약금(파티장에게)
+					PendingDto pdDto = pdservice.getDeposit(againDto.getBoardNum(), againDto.getUserNum());
+					pdDto.setMsg(2);
+					pdDto = pdservice.save(pdDto);
+					LocalDate addDate = againDate;
+					// 파티장에게 적립
+					CashDto cashDto = new CashDto(0, pdDto.getBoardNum().getUserNum(), addDate, "위약금 입금", pdDto.getAmount());
+
+					// Start 1 => 3으로 변경해서 파티에서 제외
+					PGservice.editStartTo3(againDto.getBoardNum().getBoardNum(), againDto.getUserNum().getUserNum());
+				}
 			}
 		}
+	}
 
-		// 오늘(결제일 = payDate)이 nextDate(다음결제일)이면서 결제회차가 마지막회차인 애들 뽑아
-		ArrayList<PaymentDto> ndList = pservice.getByNextDate(nextDate);
-		for (int i = 0; i < ndList.size(); i++) {
-			PaymentDto ndDto = ndList.get(i);
-			System.out.println("결제할 회원은?: " + ndDto.getUserNum().getUserNum());
-			System.out.println("파티장은 누구?: " + ndDto.getBoardNum().getUserNum().getUserNum());
-			System.out.println("결제할 회차는?: " + ndDto.getPayInstallment());
-			// 파티장이라면,
-			if (ndDto.getUserNum().getUserNum() == ndDto.getBoardNum().getUserNum().getUserNum()) {
-				accessToken = accessTokenAPI.getAccessToken();
-				customerUid = ndDto.getUserNum().getBillingKey();
-				System.out.println(ndDto.getPayInstallment() + "회차 파티장 빌링키: " + customerUid);
-				merchantUid = "HNP" + String.valueOf(year).substring(2) + String.format("%02d", month)
-						+ String.format("%02d", recurringDay) + String.format("%02d", hh) + String.format("%02d", mm)
-						+ String.format("%02d", i + rcList.size() + ndList.size());
-				orderNum = merchantUid;
-				commission = (int) (ndDto.getBoardNum().getMonthPrice() * 0.1);
-				totalPayment = commission;
-				amount = totalPayment;
-				name = ndDto.getPayInstallment() + "회차 결제";
-				payments = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
-				
-				PaymentDto newDto = pservice.save(ndDto);
-				newDto.setOrderNum(orderNum);
-				newDto.setPayInstallment(ndDto.getPayInstallment() + 1);
-				newDto.setPayDate(payDate);
-				newDto.setNextDate(nextDate);
-				newDto.setTotalPayment(totalPayment);
-				newDto.setDeposit(0);
-				newDto.setCommission(commission);
-				newDto.setHistory(name);
-				newDto = pservice.save(newDto);
-				// 파티원이면,
-			} else {
-				accessToken = accessTokenAPI.getAccessToken();
-				customerUid = ndDto.getUserNum().getBillingKey();
-				System.out.println(ndDto.getPayInstallment() + "회차 파티장 빌링키: " + customerUid);
-				merchantUid = "HNP" + String.valueOf(year).substring(2) + String.format("%02d", month)
-						+ String.format("%02d", recurringDay) + String.format("%02d", hh) + String.format("%02d", mm)
-						+ String.format("%02d", i + rcList.size() + ndList.size() * 2);
-				orderNum = merchantUid;
-				monthPrice = ndDto.getMonthPrice();
-				commission = (int) (ndDto.getBoardNum().getMonthPrice() * 0.2);
-				totalPayment = monthPrice + commission;
-				amount = totalPayment;
-				name = ndDto.getPayInstallment() + "회차 결제";
-				payments = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
-				
-				PaymentDto newDto = pservice.save(ndDto);
-				newDto.setOrderNum(orderNum);
-				newDto.setPayInstallment(ndDto.getPayInstallment() + 1);
-				newDto.setPayDate(payDate);
-				newDto.setNextDate(nextDate);
-				newDto.setTotalPayment(totalPayment);
-				newDto.setDeposit(0);
-				newDto.setMonthPrice(monthPrice);
-				newDto.setCommission(commission);
-				newDto.setHistory(name);
-				newDto = pservice.save(newDto);
-			}
+//	Pending table에서 Cash table로 구독료 적립(파티원 => 파티장)
+//	@Scheduled(cron = "0 0 0 * * ?")
+	@PostMapping("/earnings")
+	public void earningCash() {
+		// getPayDate = 오늘 날짜 구하는 메서드
+		LocalDate earningDate = localDateService.getPayDate();
+		LocalDate addDate = earningDate;
+		ArrayList<PendingDto> earningList = pdservice.getEarningList(earningDate);
+
+		for (int i = 0; i < earningList.size(); i++) {
+			PendingDto pdDto = earningList.get(i);
+			// 각 유저의 구독료를 파티장 캐시테이블에 적립
+			CashDto cashDto = new CashDto(0, pdDto.getBoardNum().getUserNum(), addDate, "구독료 입금", pdDto.getAmount());
+			pdDto.setMsg(2); // 돈나감
+			pdDto = pdservice.save(pdDto); // 돈나감 업데이트
+		}
+	}
+
+//	Pending table에서 Cash table로 보증금 정상 반환(파티 무사히 끝남)
+//	@Scheduled(cron = "0 0 0 * * ?")
+	@PostMapping("/return")
+	public void returnCash() {
+		// getPayDate = 오늘 날짜 구하는 메서드
+		LocalDate returnDate = localDateService.getPayDate();
+		LocalDate addDate = returnDate;
+		ArrayList<PendingDto> returnList = pdservice.getReturnList(returnDate);
+
+		for (int i = 0; i < returnList.size(); i++) {
+			PendingDto pdDto = returnList.get(i);
+			// 각자의 보증금 반환일에 반환(반환일 = 파티 끝나는 날)
+			CashDto cashDto = new CashDto(0, pdDto.getUserNum(), addDate, "보증금 반환 입금", pdDto.getAmount());
+			pdDto.setMsg(2); // 돈나감
+			pdDto = pdservice.save(pdDto); // 돈나감 업데이트
 		}
 	}
 }
