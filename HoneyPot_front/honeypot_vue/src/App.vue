@@ -1,14 +1,16 @@
 <template>
+ 
   <nav>
+    <span style="font-family: 'AppleSDGothicNeoB';
+    font-size: 40px;    float: left;"> 허니팟 로고 </span>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
     <router-link to="/HostBoardAdd">HostBoardAdd</router-link>|
     <router-link to="/HostBoardList">HostBoardList</router-link>|
-    <router-link to="/MyPartyList">마이파티리스트</router-link> |<br>
+    <router-link to="/MyPartyList">마이파티리스트</router-link> |
     <router-link to="/RegisterTest">RegisterTest</router-link> |
-    <router-link to="/PartyTest1">PartyTest1</router-link> |
+    <router-link to="/PartyTest1">PartyTest1</router-link> | <br/>
     <router-link to="/PartyTest2">PartyTest2</router-link> |
-    <router-link to="/RecurringTest">RecurringTest</router-link><br>
+    <router-link to="/RecurringTest">RecurringTest</router-link>
     <router-link to="/JoinMainpage">회원가입</router-link> |
     <router-link to="/LoginPage">로그인</router-link> |
     <router-link to="/ChattingRoom">채팅하기</router-link>
@@ -17,6 +19,7 @@
 </template>
 
 <style>
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -24,9 +27,16 @@
   text-align: center;
   color: #2c3e50;
 }
+@font-face {
+  font-family:'AppleSDGothicNeoB';
+  src: url('assets/fonts/AppleSDGothicNeoB.ttf') format('truetype');
+  font-weight: 400;
+}
+
 
 nav {
-  padding: 30px;
+  padding: 10px;
+  background-color: #Fdd000;
 }
 
 nav a {
