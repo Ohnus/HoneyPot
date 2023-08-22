@@ -48,6 +48,9 @@ public class Pending {
 	@Column(columnDefinition = "date")
 	private LocalDate payDate; // 결제일..
 	
+	@Column(columnDefinition = "date")
+	private LocalDate returnDate; // 보증금 반환일
+	
 	private int amount; // 월구독료 또는 보증금..
 	
 	private int msg; // 0: 구독료 / 1: 보증금 / 2: 돈나감

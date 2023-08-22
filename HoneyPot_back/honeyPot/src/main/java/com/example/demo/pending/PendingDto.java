@@ -22,6 +22,7 @@ public class PendingDto {
 	private HostBoard boardNum;
 	private Member userNum;
 	private LocalDate payDate;
+	private LocalDate returnDate;
 	private int amount;
 	private int msg;
 }

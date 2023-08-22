@@ -14,8 +14,8 @@ public class PaymentService {
 	
 	// 결제내역 등록
 	public PaymentDto save(PaymentDto dto) {
-		Payment entity = dao.save(new Payment(dto.getOrderNum(), dto.getUserNum(), dto.getBoardNum(), dto.getPayInstallment(), dto.getFinalInstallment(), dto.getRecurringDay(), dto.getPayDate(), dto.getNextDate(), dto.getTotalPayment(), dto.getDeposit(), dto.getMonthPrice(), dto.getCommission(), dto.getHistory(), dto.getOttType()));
-		return new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getOttType());
+		Payment entity = dao.save(new Payment(dto.getOrderNum(), dto.getUserNum(), dto.getBoardNum(), dto.getPayInstallment(), dto.getFinalInstallment(), dto.getRecurringDay(), dto.getPayDate(), dto.getNextDate(), dto.getAgainDate(), dto.getTotalPayment(), dto.getDeposit(), dto.getMonthPrice(), dto.getCommission(), dto.getHistory(), dto.getPaymentStatus(), dto.getOttType()));
+		return new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType());
 	}
 	
 	// 결제내역 단건 불러오기(단일 내역 부분수정)
@@ -24,7 +24,7 @@ public class PaymentService {
 		if(entity == null) {
 			return null;
 		} else {
-			return new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getOttType());
+			return new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType());
 		}
 		
 	}
@@ -34,7 +34,7 @@ public class PaymentService {
 		ArrayList<Payment> list = (ArrayList<Payment>) dao.findAll();
 		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
 		for(Payment entity : list) {
-			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getOttType()));
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
 		}
 		return dtoList;
 	}
@@ -44,7 +44,7 @@ public class PaymentService {
 		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByRcrDay(recurringDay);
 		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
 		for(Payment entity : list) {
-			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getOttType()));
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
 		}
 		return dtoList;
 	}
@@ -54,7 +54,17 @@ public class PaymentService {
 		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByNextDate(nextDate);
 		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
 		for(Payment entity : list) {
-			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getOttType()));
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
+		}
+		return dtoList;
+	}
+	
+	// againDate && paymentStatus -1 리스트
+	public ArrayList<PaymentDto> getByAgainList(LocalDate againDate) {
+		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByAgainDate(againDate);
+		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
+		for(Payment entity : list) {
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
 		}
 		return dtoList;
 	}

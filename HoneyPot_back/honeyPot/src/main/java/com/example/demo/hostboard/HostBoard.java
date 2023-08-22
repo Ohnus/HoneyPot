@@ -57,7 +57,7 @@ public class HostBoard {
 	private int minPpl; //참여 최소인원 (작성자포함)
 	private int maxPpl; //참여 최대인원 (작성자 포함)
 	
-	private LocalDate subStart; //구독 시작일 
+	private LocalDate subStart; //구독 시작일
 	private LocalDate subEnd; //구독 끝날짜 
 	private int month; //몇개월인지를 클릭해서 subEnd에 넣기 
 	

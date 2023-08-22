@@ -26,10 +26,12 @@ public class PaymentDto {
 	private int recurringDay;
 	private LocalDate payDate;
 	private LocalDate nextDate;
+	private LocalDate againDate;
 	private int totalPayment;
 	private int deposit;
 	private int monthPrice;
 	private int commission;
 	private String history;
+	private int paymentStatus;
 	private String ottType;
 }

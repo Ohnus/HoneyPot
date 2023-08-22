@@ -51,6 +51,8 @@ public class Payment {
 	private LocalDate payDate; // 실제 결제일..
 	@Column(columnDefinition = "date")
 	private LocalDate nextDate; // 다음 결제일..
+	@Column(columnDefinition = "date")
+	private LocalDate againDate; // 재결제일.. 실제 결제일 + 일주일 
 	
 	@ColumnDefault("0")
 	private int totalPayment; // 총 결제금액..
@@ -62,6 +64,8 @@ public class Payment {
 	private int commission; // 수수료.. 20%, 10%
 	@ColumnDefault("'None'")
 	private String history;// 결제내역..
+	@ColumnDefault("0")
+	private int paymentStatus;
 //	@Column(nullable=false, columnDefinition="varchar2(255 char) default 'None'")
 	@ColumnDefault("'None'")
 	private String ottType; // ott 타입.. 게시글에서 긁어오기
