@@ -22,6 +22,9 @@ public class ChatService {
 	
 	//각 채팅방 별 대화 내용 보여주기
 	public ArrayList<ChatDto> getChat(int boardNum){
+		
+		System.out.println("getChat :  " + " boardNum : " + boardNum);
+		
 		ArrayList<Chat> list = (ArrayList<Chat>) dao.findByBoardNumOrderByTimeAsc(boardNum);
 		ArrayList<ChatDto> list2 = new ArrayList<ChatDto>();
 		for(Chat vo : list) {
