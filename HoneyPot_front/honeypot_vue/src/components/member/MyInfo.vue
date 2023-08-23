@@ -2,9 +2,8 @@
 <div class="myInfo">
 
     <!-- <img :src="profile" alt="프로필 이미지"> -->
-    <input v-model="name" type="text">
-    <input v-model="phone" type="text">
-    <button @click="certification">변경하기</button><br>
+    <input v-model="name" type="text" readonly>
+    <input v-model="phone" type="text" readonly>
 
     <input v-model="email" type="email">
     <button v-if="hnpAccount" @click="sendEmail">메일 인증</button><br>
@@ -50,16 +49,15 @@ export default {
             pwdValid: false,            // 비밀번호 정규식 체크
             nickNameRexegValid: false,  // 닉네임 정규식 체크
             nickNameValid: false,       // 닉네임 중복 체크
-            
 
             // profile: '',
             userNum: sessionStorage.getItem('userNum'),
-            name: self.name,
-            phone: self.phone,
-            email: self.email,
+            name: '',
+            phone: '',
+            email: '',
             enterCode: '',              // 이메일 인증번호 입력값
-            pwd: self.pwd,
-            nickname: self.nickname
+            pwd: '',
+            nickname: ''
         }
     },
 
@@ -105,7 +103,7 @@ export default {
         sendEmail() {   // 인증메일 보내기
             const self = this;
 
-            let formdata = new FormData();
+            const formdata = new FormData();
             formdata.append('email', self.email);
                 
             console.log(this.email);
@@ -145,12 +143,42 @@ export default {
             }
         },
 
+        
+        // 마이페이지에서 빈 값, 잘못된 값 등 있는지 체크
+        checkEmpty(value) {
+            if (value == '' || value == null || value == undefined) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+
         editInfo() {
+            const self = this;
 
+            const formdata = new FormData();
+
+            formdata.append('email', self.email);
+            formdata.append('pwd', self.pwd);
+            formdata.append('nickname', self.nickname);
+
+            console.log(self.email + " / " + self.pwd + " / " + self.nickname);
+
+            self.$axios.post("http://localhost:8988/members/edit/" + self.userNum, formdata)
+            .then(function (res){
+                if (res.status == 200) {
+                    const dto = res.data.dto;
+                    console.log(dto);
+                    window.location.href = "/MyInfo";
+                } else {
+                    alert ('에러코드' + res.status)
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
         }
-
     }
-
-
 }
 </script>
