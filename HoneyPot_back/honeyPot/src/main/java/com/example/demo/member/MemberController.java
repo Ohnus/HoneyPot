@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,16 +54,13 @@ public class MemberController {
 		String certifiName = (String) map.get("name");
 		String certifiPhone = (String) map.get("phone");
 	
-		
 		System.out.println(certifiName + " / " + certifiPhone);		
-		
 		
 		// 전체 멤버 DB 정보 가져오기
 		ArrayList<MemberDto> dtoList = service.getAllUser();
 		
 		System.out.println("dtoList: " + dtoList);
 		
-
 		if (dtoList != null) {
 			for (MemberDto list : dtoList) {
 				if (list.getPhone().equals(certifiPhone) && list.getName().equals(certifiName)) {
@@ -92,62 +89,6 @@ public class MemberController {
 		return map;
 			
 	}
-	
-	
-//	// 내정보 수정 시 본인인증
-//	@GetMapping("/edit/certifications")
-//	public Map editCertifications(@RequestParam("imp_uid") String impUid) {
-//			boolean certified = true;		// 중복된 핸드폰번호 + 이름 없음
-//			boolean duplicated1 = false;	// 중복된 핸드폰번호 + 이름 있음
-//			boolean duplicated2 = false;	// 중복된 핸드폰번호 있음
-//			Map map = new HashMap<>();
-//			
-//			// 본인인증 정보 가져오기
-//			map = certificationService.getAccessToken(impUid);
-//
-//			String certifiName = (String) map.get("name");
-//			String certifiPhone = (String) map.get("phone");
-//		
-//			
-//			System.out.println(certifiName + " / " + certifiPhone);		
-//			
-//			
-//			// 전체 멤버 DB 정보 가져오기
-//			ArrayList<MemberDto> dtoList = service.getAllUser();
-//			
-//			System.out.println("dtoList: " + dtoList);
-//			
-//
-//			if (dtoList != null) {
-//				for (MemberDto list : dtoList) {
-//					if (list.getPhone().equals(certifiPhone) && list.getName().equals(certifiName)) {
-//						System.out.println("이름 + 핸드폰 값 중복");
-//						duplicated1 = true;
-//						certified = false;  
-//						break;
-//					} else if (list.getPhone().equals(certifiPhone)) {
-//						System.out.println("핸드폰 값 중복");
-//						duplicated2 = true;
-//						certified = false;  
-//						break;
-//					}
-//					
-//				}			
-//			
-//			}
-//
-//			map.put("certified", certified);
-//			map.put("duplicated1", duplicated1);
-//			map.put("duplicated2", duplicated2);
-//			
-//			map.put("name", certifiName);
-//			map.put("phone", certifiPhone);
-//			
-//			return map;
-//				
-//		}
-//	
-//	
 	
 	
 	// 인증 메일 전송
@@ -262,6 +203,8 @@ public class MemberController {
 		map.put("email", dto.getEmail());
 		map.put("pwd", dto.getPwd());
 		map.put("nickname", dto.getNickname());
+		map.put("bankCode", dto.getBankCode());
+		map.put("bankAcc", dto.getBankAcc());
 		
 		// 허니팟 계정인지 판단, 아니면 메일 수정 못하게 막음
 		boolean hnpAccount = false;
@@ -278,25 +221,80 @@ public class MemberController {
 	}
 	
 
-	// 내 정보 수정: 비밀번호, 이메일(인증), 전화번호(본인인증), 닉네임, 프로필 이미지
-//	@PostMapping("/edit/{email}")
-//	public Map editInfo(@PathVariable("email") String email, @RequestBody MemberDto dto) {
-//		
-//		dto = service.getByEmail(email);
-//		System.out.println("dto: " + dto);
-//		
-//		Map map = new HashMap();
-//		
-//		dto.setProfile(Profile);
-//		dto.setName(dto.getName());
-//		dto.setPhone(dto.getPhone());
-//		dto.setEmail(dto.getEmail());
-//		dto.setPwd(dto.getPwd());
-//		dto.setNickname(dto.getPwd());
-//		
-//		System.out.println("dto: " + dto);
-//		
-//	}
+	// 내 정보 수정: 비밀번호, 이메일(인증), 닉네임, 프로필 이미지
+	@PostMapping("/edit/{userNum}")
+	public Map editInfo(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
+	
+		System.out.println("updatedDto: " + updatedDto);
+		
+		MemberDto dto = service.getByUserNum(userNum);
+		
+		System.out.println("oldDto: " + dto);
+		
+		// 새 정보 담기
+		dto.setEmail(updatedDto.getEmail());
+		dto.setPwd(updatedDto.getPwd());
+		dto.setNickname(updatedDto.getNickname());
+		
+		// 새로 입력하지 않은 값은 그대로
+
+		Map map = new HashMap();
+		
+		dto = service.save(dto);
+		System.out.println("dto: " + dto);
+		
+		map.put("dto", dto);
+		
+		return map;
+	}
+	
+	
+	// 예금주 조회
+	@GetMapping("/certifications/bankCheck")
+	public Map CheckAccount(@RequestParam("bank_code") String bankCode, @RequestParam("bank_num") String bankAcc) {
+		Map map = new HashMap<>();
+		map = certificationService.getAccessToken1(bankCode, bankAcc);
+	
+		String bankHolderInfo = (String) map.get("bankHolderInfo");
+		
+		Object errorObj = map.get("error");
+		if (errorObj instanceof String) {
+		    String errorStr = (String) errorObj;
+		    int error1 = Integer.parseInt(errorStr);
+		    map.put("errormsg", String.valueOf(error1));
+		} 
+		
+		map.put("bankHolderInfo", bankHolderInfo);
+
+		return map;
+	}
+	
+	
+	// 계좌정보 수정
+	@PostMapping("/editBankInfo/{userNum}")
+	public Map editBankInfo(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
+		
+		System.out.println("updatedDto: " + updatedDto);
+			
+		MemberDto dto = service.getByUserNum(userNum);
+			
+		System.out.println("oldDto: " + dto);
+			
+		// 새 정보 담기
+		dto.setBankCode(updatedDto.getBankCode());
+		dto.setBankAcc(updatedDto.getBankAcc());
+
+		Map map = new HashMap();
+			
+		dto = service.save(dto);
+		System.out.println("dto: " + dto);
+			
+		map.put("dto", dto);
+			
+		return map;
+	}
+	
+		
 	
 	
 	// 로그인
