@@ -125,11 +125,11 @@ public class CertificationService {
 		return map;
 	}
 	
-	public HashMap getAccessToken1(String bank_code, String bank_num) {
+	public HashMap getAccessToken1(String bankCode, String bankAcc) {
 
         HashMap map = new HashMap<>();
-		String impKey = "본인의 키";
-		String impSecret = "본인의 비밀키";
+		String impKey = "7676232421304273";
+		String impSecret = "KaGIBZUzJdj4rEV1HV40xpZ7JhiKuF82a6BY2VrJjEnfoXKMDsMr2wWE1aHG3qTynOua1wxObgan8aNK";
         // 토큰 요청 보낼 주소
 		String strUrl = "https://api.iamport.kr/users/getToken"; 
 
@@ -158,7 +158,7 @@ public class CertificationService {
 
 			int resposeCode = conn.getResponseCode();
 
-			System.out.println("응답코드 =============" + resposeCode);
+			System.out.println("응답코드 ============= " + resposeCode);
 			if (resposeCode == 200) {// 성공
 				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				StringBuilder sb = new StringBuilder();
@@ -176,8 +176,8 @@ public class CertificationService {
 
 				String getPaymentUrl = "https://api.iamport.kr/vbanks/holder";
 
-				String query = String.format("?bank_code=%s&bank_num=%s", URLEncoder.encode(bank_code, "UTF-8"),
-						URLEncoder.encode(bank_num, "UTF-8"));
+				String query = String.format("?bank_code=%s&bank_num=%s", URLEncoder.encode(bankCode, "UTF-8"),
+						URLEncoder.encode(bankAcc, "UTF-8"));
 				URL bankurl = new URL(getPaymentUrl + query);
 				System.out.println(bankurl);
 

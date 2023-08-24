@@ -23,8 +23,8 @@ public class MemberDto {
 	private String nickname;
 	private String phone;
 	private int snsType;
-	private int bankCode;
-	private int bankAcc;
+	private String bankCode;
+	private String bankAcc;
 	private String profile;
 	private String billingKey;
 	private MultipartFile f;	

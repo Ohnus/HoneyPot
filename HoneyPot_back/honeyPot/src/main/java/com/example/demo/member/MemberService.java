@@ -105,7 +105,7 @@ public class MemberService {
 	}
 	
 	
-
+	// 회원 탈퇴
 	public void delUser(String email) {
 		dao.deleteById(email);
 	}

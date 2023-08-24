@@ -11,6 +11,7 @@ import NaverJoin from '../components/member/NaverJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
 import MyInfo from '../components/member/MyInfo.vue'
+import MyBankInfo from '../components/member/MyBankInfo.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
 import ChattingRoomList from '../components/chat/ChattingRoomList.vue'
@@ -105,6 +106,11 @@ const routes = [
     path: '/MyInfo',
     name: 'MyInfo',
     component: MyInfo
+  },
+   {
+    path: '/MyBankInfo',
+    name: 'MyBankInfo',
+    component: MyBankInfo
   },
   {
     path: '/ChattingRoomList',

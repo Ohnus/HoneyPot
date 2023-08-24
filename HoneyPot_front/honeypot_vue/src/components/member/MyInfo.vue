@@ -1,7 +1,11 @@
 <template>
 <div class="myInfo">
 
-    <!-- <img :src="profile" alt="프로필 이미지"> -->
+    <div class="userImg">
+    <img :src="profile" style="width:300px; height:300px">
+    <input type="file" id="file" @change="previewImage" accept="image/*">
+    <button>기본 이미지로 변경</button>
+    </div>
     <input v-model="name" type="text" readonly>
     <input v-model="phone" type="text" readonly>
 
@@ -26,19 +30,26 @@
     <span v-else-if="pwdCheckValid" style="color:blue">비밀번호가 일치합니다.</span>
     </div>
 
-        <!-- @input으로 처리하면 검색을 못하고 @blur로 처리하니까 검색은 잘 되는데 필드를 벗어나야 검사를 하는듯..? 그리고 한 번 검사 끝나면 중복값 다시 넣어도 메서드 재실행 안됨.. -->
-        <div>
-        <input v-model="nickname" type="text" @blur="checkNickname"><br> 
-        <span v-if="!nickNameRexegValid" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정해주세요.</span>
-        <span v-if="!nicknameValid" style="color:#FF0000">중복된 닉네임입니다.</span>
-        </div>
+    <!-- @input으로 처리하면 검색을 못하고 @blur로 처리하니까 검색은 잘 되는데 필드를 벗어나야 검사를 하는듯..? 그리고 한 번 검사 끝나면 중복값 다시 넣어도 메서드 재실행 안됨.. -->
+    <div>
+    <input v-model="nickname" type="text" @blur="checkNickname"><br> 
+    <span v-if="!nickNameRexegValid" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정해주세요.</span>
+    <span v-if="!nicknameValid" style="color:#FF0000">중복된 닉네임입니다.</span>
+    </div>
 
-        <button @click="editInfo">수정완료</button>
+    <button @click="editInfo">수정완료</button>
+
 </div>
+    
+<div class="Out">
+    <button @click="userOut">회원탈퇴</button>
+</div>
+
+<router-link to="/MyBankInfo">계좌수정</router-link>
+
 </template>
 
 <script>
-
 export default {
     name: 'MyInfo',
     data() {
@@ -50,8 +61,8 @@ export default {
             nickNameRexegValid: false,  // 닉네임 정규식 체크
             nickNameValid: false,       // 닉네임 중복 체크
 
-            // profile: '',
             userNum: sessionStorage.getItem('userNum'),
+            profile: '',
             name: '',
             phone: '',
             email: '',
@@ -77,19 +88,19 @@ export default {
                 self.$axios.get('http://localhost:8988/members/edit/' + self.userNum)
                 .then(function (res) {
                     if (res.status == 200) {
-                        console.log("name: " + res.data.name);
-                        console.log("phone: " + res.data.phone);
-                        console.log("email: " + res.data.email);
-                        console.log("pwd: " + res.data.pwd);
-                        console.log("nickname: " + res.data.nickname);
-                        console.log("hnpAccount: " + res.data.hnpAccount);
-
                         self.name = res.data.name;
                         self.phone = res.data.phone;
                         self.email = res.data.email;
                         self.pwd = res.data.pwd;
                         self.nickname = res.data.nickname;     
+                        self.profile = res.data.profile;    
                         self.hnpAccount = res.data.hnpAccount;  // 허니팟 계정 여부 판단, 아닐 시 메일 수정 불가  
+
+                        if (self.profile == null) {
+                            self.profile = require('../../assets/images/BasicUserImg.png');
+                        } else {
+                            self.profile = res.data.profile;    // 이걸로 가져와도 되나..? 흠
+                        }
                     } else {
                         alert('에러코드: ' + res.status)
                     }
@@ -178,6 +189,10 @@ export default {
             .catch(function (error) {
                 console.error(error);
             });
+        }, 
+
+        userOut() {
+            
         }
     }
 }
