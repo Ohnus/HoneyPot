@@ -7,7 +7,7 @@
     <div>userNum : {{userNum}}</div>
 
     <div class="chatroom" v-for="chatroom in list" :key="chatroom.chatroomNum">
-        <div class="chatheader" @click="chatting(chatroom.boardNum)" >{{ chatroom.subject }}</div>
+        <div class="chatheader" @click="enterchatroom(chatroom.boardNum)" >{{ chatroom.subject }}</div>
     </div>
 
     <div class="chatting">
@@ -15,18 +15,27 @@
             <div class="chat">{{ chat.content }} / 보낸이 : {{ chat.isFromSender.name}} / 보낸 시간: {{ chat.time }} / </div> 
             <!-- <div class = "chatcheck">chatNum :{{ chatcheck(chat.chatNum) }}</div> -->
         </div>
+
+        <div class="chat"  v-for="webchat in webchats" :key="webchat.chatNum">
+             <div class="chat">{{ webchat.content }} / 보낸이 : {{ webchat.isFromSender.name}} / 보낸 시간: {{ webchat.time }} / </div> 
+        </div> 
+
         <div>
             <textarea class = "send_chat" v-model="content" @keyup.enter="send()"></textarea>
             <button @click="send()">보내기</button>
         </div>
 
+    
 
     </div>
-
+    
     </div>
+   
 </template>
 
+
 <script>
+
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
@@ -43,14 +52,17 @@ export default {
          content:'',
            list:[],
             chats:[],
+            webchats:[],
             chatcheckResults: {},
-            connected :false
+            stompClient:null,
+            dto:null
         }
     },
+   
      
     created:function(){
 
-    
+      
 
 
         const self = this;
@@ -76,15 +88,27 @@ export default {
     methods: {
         
         
-        chatting(boardNum){
+        enterchatroom(boardNum){
+            const self = this;
 
-            // 채팅방을 클릭하면 소켓 연결.
+       
+                 if(self.stompClient&&self.stompClient.connected){
+                //     self.stompClient=null;
+                //     self.webchats=[];
+                //     this.connected = false;
+                //      console.log('소켓 연결 끊김' + self.stompClient)
+                console.log('구독해제')
+              self.stompClient.unsubscribe();
+              self.webchats=[];
+                 }
+                
+
                 // 소켓 연결.
                 this.connect();
 
-
-            const self = this;
+            
             self.boardNum = boardNum;
+            
             console.log("boardNum : " + boardNum);
             console.log("userNum : "+ self.userNum)
         self.$axios
@@ -94,7 +118,7 @@ export default {
             if(res.status == 200){
                 
                 self.chats = res.data.chat;
-                //self.connectWS();
+             
             
             }else{
                 alert("에러코드 : " + res.status);
@@ -121,15 +145,7 @@ export default {
         // },
 
         send(){
-            
-            
-            alert("보내기")
-
-            if(this.content === ''){
-                alert('내용을 작성해주세요')
-                return
-            }
-
+        
             const self = this;
             const form = new FormData();
 
@@ -149,15 +165,25 @@ export default {
                 if(res.data.flag){
                     alert("채팅 작성 완료");
                     self.content=''
-
-                    if (this.stompClient && this.stompClient.connected) {
+                    self.dto = res.data.dto;
                     
-                        console.log("dto 다시 보내줘야함")
+                    console.log("4) self.dto : "+ self.dto);
+                    console.log("5) self.dto : "+ self.dto.chatNum);
+                    console.log("6) " + self.dto);
+                    if (self.stompClient && self.stompClient.connected) {
+                    
+                    
+    
+                        console.log("1) dto 다시 보내줘야함")
+                        console.log('2) this.stompClient : ' + self.stompClient)
+                        
+                        console.log('3) ' + self.dto);
+                        self.stompClient.send("/pub/receive", JSON.stringify(self.dto), {});
+
+                   
+    
+    
                 }
-                    
-
-
-
 
                 }else{
                     alert("쪽지보내기 실패")
@@ -167,29 +193,38 @@ export default {
                 alert("에러코드 : " + res.status);
             }
         });
+        
         },
 
+   
+            
+
+
         connect(){
+            const self = this;
 
             // const serverURL = "http://localhost:8988"
             let socket = new SockJS('http://localhost:8988/room');
-            this.stompClient = Stomp.over(socket);
+            self.stompClient = Stomp.over(socket);
             console.log("소켓 연결을 시도합니다. 서버 주소: ");
+           
 
-            this.stompClient.connect(
+            self.stompClient.connect(
                 {},
                 frame => {
                 // 소켓 연결 성공
                 this.connected = true;
                 console.log('소켓 연결 성공', frame);
-                // 서버의 메시지 전송 endpoint를 구독합니다.
-                // 이런형태를 pub sub 구조라고 합니다.
-                // this.stompClient.subscribe("/send", res => {
-                //     console.log('구독으로 받은 메시지 입니다.', res.body);
+                //서버의 메시지 전송 endpoint를 구독합니다.
+                //이런형태를 pub sub 구조라고 합니다.
 
-                //     // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-                //     this.recvList.push(JSON.parse(res.body))
-                // });
+                 self.stompClient.subscribe("/sub/channel/"+self.boardNum, res => {
+                    console.log('구독으로 받은 메시지 입니다.', res.body);
+
+                // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
+                 self.webchats.push(JSON.parse(res.body))
+                    
+                     });
                 },
                 error => {
                 // 소켓 연결 실패
@@ -198,7 +233,8 @@ export default {
                 }
 
             );
-        }
+        },
+      
 
         
 
