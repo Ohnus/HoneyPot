@@ -1,5 +1,7 @@
 package com.example.demo.member;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +12,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.JwtTokenProvider;
 
@@ -203,10 +205,11 @@ public class MemberController {
 		map.put("email", dto.getEmail());
 		map.put("pwd", dto.getPwd());
 		map.put("nickname", dto.getNickname());
+		map.put("profile", dto.getProfile());
 		map.put("bankCode", dto.getBankCode());
 		map.put("bankAcc", dto.getBankAcc());
 		
-		// 허니팟 계정인지 판단, 아니면 메일 수정 못하게 막음
+		// 허니팟 계정인지 판단, 아니면 메일 수정 못하게 클라이언트 단에서 막음
 		boolean hnpAccount = false;
 		
 		int snsType = dto.getSnsType();
@@ -220,28 +223,66 @@ public class MemberController {
 		return map;
 	}
 	
+	
+	// 프로필 이미지 수정
+	@PostMapping("/editImg/{userNum}")
+	public Map editImg(@PathVariable("userNum") String userNum, @RequestParam("file") MultipartFile f, MemberDto dto) {
+		Map map = new HashMap<>();
+		
+		String usernum = dto.getUserNum();
+		File dir = new File(path + "/" + usernum);
+		
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+
+		
+		String fname = f.getOriginalFilename();
+		String newpath = path + usernum + "/" + fname;
+		File newfile = new File(newpath);
+		
+		try {
+			f.transferTo(newfile);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		dto.setProfile(newpath);
+		service.save(dto);
+		
+		map.put("dto", dto);
+		
+		return map;
+	}
+	
 
 	// 내 정보 수정: 비밀번호, 이메일(인증), 닉네임, 프로필 이미지
 	@PostMapping("/edit/{userNum}")
 	public Map editInfo(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
 	
-		System.out.println("updatedDto: " + updatedDto);
+		System.out.println("신규이메일: " + updatedDto.getEmail());
+		System.out.println("신규비밀번호: " + updatedDto.getPwd());
+		System.out.println("신규닉네임: " + updatedDto.getNickname());
 		
 		MemberDto dto = service.getByUserNum(userNum);
 		
-		System.out.println("oldDto: " + dto);
+		System.out.println("기존이메일: " + dto.getEmail());
+		System.out.println("기존비밀번호: " + dto.getPwd());
+		System.out.println("기존닉네임: " + dto.getNickname());
 		
 		// 새 정보 담기
 		dto.setEmail(updatedDto.getEmail());
 		dto.setPwd(updatedDto.getPwd());
 		dto.setNickname(updatedDto.getNickname());
 		
-		// 새로 입력하지 않은 값은 그대로
-
 		Map map = new HashMap();
 		
 		dto = service.save(dto);
-		System.out.println("dto: " + dto);
+		System.out.println("업데이트된 정보: " + dto);
 		
 		map.put("dto", dto);
 		
@@ -250,9 +291,12 @@ public class MemberController {
 	
 	
 	// 예금주 조회
-	@GetMapping("/certifications/bankCheck")
-	public Map CheckAccount(@RequestParam("bank_code") String bankCode, @RequestParam("bank_num") String bankAcc) {
+	@GetMapping("/certifications/checkAccount")
+	public Map CheckAccount(@RequestParam("bankCode") String bankCode, @RequestParam("bankAcc") String bankAcc) {
 		Map map = new HashMap<>();
+	
+		System.out.println("왔다");
+		System.out.println(bankCode + " / " + bankAcc);
 		map = certificationService.getAccessToken1(bankCode, bankAcc);
 	
 		String bankHolderInfo = (String) map.get("bankHolderInfo");
@@ -273,28 +317,28 @@ public class MemberController {
 	// 계좌정보 수정
 	@PostMapping("/editBankInfo/{userNum}")
 	public Map editBankInfo(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
+	
+		System.out.println("신규은행코드: " + updatedDto.getBankCode());
+		System.out.println("신규계좌번호: " + updatedDto.getBankAcc());
 		
-		System.out.println("updatedDto: " + updatedDto);
-			
 		MemberDto dto = service.getByUserNum(userNum);
-			
-		System.out.println("oldDto: " + dto);
-			
+		
+		System.out.println("기존은행코드: " + dto.getBankCode());
+		System.out.println("기존계좌번호: " + dto.getBankAcc());
+		
 		// 새 정보 담기
 		dto.setBankCode(updatedDto.getBankCode());
 		dto.setBankAcc(updatedDto.getBankAcc());
 
 		Map map = new HashMap();
-			
+		
 		dto = service.save(dto);
-		System.out.println("dto: " + dto);
-			
+		System.out.println("업데이트된 정보: " + dto);
+		
 		map.put("dto", dto);
-			
+		
 		return map;
 	}
-	
-		
 	
 	
 	// 로그인
@@ -326,5 +370,10 @@ public class MemberController {
 		
 		return map;
 	}
+	
+	// 로그아웃
+	
+	// 회원탈퇴
+	
 	
 }

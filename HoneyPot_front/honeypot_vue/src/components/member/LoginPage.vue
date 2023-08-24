@@ -1,11 +1,13 @@
 <template>
-
     <div>
         <input v-model="email" type="text">
         <input v-model="pwd" type="password">
         <button @click="login">로그인</button>
     </div>
-
+    <div> 
+        <router-link to="/FindUserId"><button>아이디 찾기</button></router-link> | 
+        <router-link to="/FindUserPwd"><button>비밀번호 찾기</button></router-link>
+    </div>
 </template>
 
 <script>

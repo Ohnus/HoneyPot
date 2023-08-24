@@ -1,10 +1,26 @@
 <template>
     <div class="myBankInfo">
     
-        <input v-model="bankCode" type="text">
+        <select v-model="bankCode">
+            <option value="null">은행선택</option>
+            <option value="004">국민은행</option>
+            <option value="020">우리은행</option>
+            <option value="088">신한은행</option>
+            <option value="003">기업은행</option>
+            <option value="023">SC제일은행</option>
+            <option value="011">농협은행</option>
+            <option value="005">외환은행</option>
+            <option value="090">카카오뱅크</option>
+            <option value="032">부산은행</option>
+            <option value="071">우체국</option>
+            <option value="031">대구은행</option>
+            <option value="035">제주은행</option>
+            <option value="007">수협은행</option>
+            <option value="027">씨티은행</option>
+        </select>
         <input v-model="bankAcc" type="text" placeholder="계좌번호를 입력주세요('-' 제외)">
     
-        <button @click="editBankInfo">수정완료</button>
+        <button @click="bankCheck">수정완료</button>
 
     </div>
 </template>
@@ -15,8 +31,6 @@ export default {
     name: 'MyBankInfo',
     data() {
         return {
-            bankValid: false,       // 계좌번호 유효성 체크
-    
             userNum: sessionStorage.getItem('userNum'),
             name: self.name,
             bankCode: '',
@@ -29,10 +43,10 @@ export default {
     }, 
     
     methods: {
-        getInfo() { // 기존 정보 가져오기
+        getBankInfo() { // 기존 정보 가져오기
             const self = this;
 
-            self.$axios.get('http://localhost:8988/members/edit' + self.userNum)
+            self.$axios.get('http://localhost:8988/members/edit/' + self.userNum)
             .then(function (res) {
                 if(res.status == 200) {
                     console.log("name: " + res.data.name);
@@ -51,43 +65,66 @@ export default {
             })
         },
 
-    
-        editBankInfo() {
+
+        bankCheck() {  // 계좌정보 유효성 체크
             const self = this;
-    
-            const formdata = new FormData();
 
-            formdata.append('bankCode', self.bankCode);
-            formdata.append('bankAcc', self.bankAcc);
-    
-            console.log(self.name + " / " + self.bankCode + " / " + self.bankAcc);
+            const data = {
+                bankCode: self.bankCode,
+                bankAcc: self.bankAcc
+            }
 
-            // 예금주명 체크
-            self.$axios.get("http://localhost:8988/members/certifications/bankCheck", formdata)
+            console.log(self.name + " / " + this.bankCode + " / " + this.bankAcc);
+
+            self.$axios.get("http://localhost:8988/members/certifications/checkAccount", { params : data })
             .then(function (res) {
                 if (res.status == 200) {
-                    console.log(res.data.bankHolderInfo);
+                    console.log("예금주명: " + res.data.bankHolderInfo);
                     console.log(self.name);
 
-                    } if (self.name == res.data.bankHolderInfo) {
-                        self.$axios.post("http://localhost:8988/members/editBankInfo" + self.userNum, formdata)
-                        .then (function (res) {
-                            if (res.status == 200) {
-                                const dto = res.data.dto;
-                                console.log(dto);
-                                window.location.href = "/MyBankInfo";
-                            } else {
-                                alert ('에러코드' + res.status);
-                            }
-                        });
+                    if (res.data.bankHolderInfo != null) {
+                        if (self.name == res.data.bankHolderInfo) {
+                            self.editBankInfo();
+                        } else if (self.name != res.data.bankHolderInfo) {
+                            alert ('본인 명의의 계좌만 등록 가능합니다.')
+                        }
                     } else {
-                        alert ('에러코드' + res.status);
-                    }
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-            }
+                        alert ('유효한 계좌정보가 아닙니다.')
+                    }        
+                } else {
+                    alert ('에러코드' + res.status)
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            }); 
+        },
+
+        editBankInfo() {  // 새 정보 저장
+            const self = this;
+    
+            const formdata = new FormData();            
+            
+            formdata.append('bankCode', self.bankCode);
+            formdata.append('bankAcc', self.bankAcc);
+
+            console.log(self.name + " / " + self.bankCode + " / " + self.bankAcc);
+
+            self.$axios.post("http://localhost:8988/members/editBankInfo/" + self.userNum, formdata)
+            .then(function (res) {
+                if (res.status == 200) {
+                    const dto = res.data.dto;
+                    console.log(dto);
+                    window.location.href = "/MyBankInfo";
+                } else {
+                    alert ('에러코드' + res.status)
+                }
+            })
+            .catch (function (error) {
+                console.error (error)
+            })
         }
+        
     }
+}
 </script>

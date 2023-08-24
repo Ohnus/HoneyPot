@@ -41,11 +41,16 @@ public class Member {
 	private String phone;
 	
 	@Column(nullable=false)
-	private int snsType;	// 가입된 계정 타입: 허니팟 0 / 카카오 1 / 네이버 2
+	private int snsType;		// 가입된 계정 타입: 허니팟 0, 카카오 1, 네이버 2
 	
-	private int bankCode;	// 은행 코드
-	private int bankAcc;	// 계좌 번호
-	private String profile;	// 프로필 사진
+	@Column(nullable=true)
+	private String bankCode;	// 은행 코드
+	
+	@Column(nullable=true)
+	private String bankAcc;		// 계좌 번호
+	
+	@Column(nullable=true)
+	private String profile;		// 프로필 사진
 	
 	@Column(nullable=false)
 	private String billingKey;	// 빌링키: 계정 당 하나만 발급되며(여러 개 카드 등록 불가) 디폴트 값 0으로 저장 예정
