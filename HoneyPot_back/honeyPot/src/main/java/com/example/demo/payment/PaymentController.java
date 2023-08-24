@@ -197,33 +197,40 @@ public class PaymentController {
 	}
 
 	// 파티원 보증금 결제/저장 + pending table에 파티원 보증금 저장
-	// 
 	// 앞단에서 dto 정보 다 보내기
 	// 회원번호, 글번호, 마지막회차, 실제결제일, 보증금, ott 타입
 	@PostMapping("/memberDeposits")
 	public Map memberDeposit(PaymentDto dto) {
-		LocalDate payDate = localDateService.getPayDate();
+		int year = dto.getBoardNum().getSubStart().getYear();
+		int nextMonth = dto.getPayDate().getMonthValue() + 1;
 		LocalDate nextDate = localDateService.getNextDate();
 		
 		Map map = new HashMap<>();
-		PaymentDto newDto;
 		String accessToken = accessTokenAPI.getAccessToken();
 		String customerUid = dto.getUserNum().getBillingKey();
 		String merchantUid = dto.getOrderNum();
-		int amount = dto.getDeposit();
-		String name = dto.getHistory();
+		int amount = 0;
+		String name = "";
 		String paymentStatus = "";
 		// 현재 결제일이 파티 시작일보다 이전일 때,
 		// 보증금만 결제 및 0회차 등록
 		if(dto.getPayDate().compareTo(dto.getBoardNum().getSubStart()) > 0) {
+			amount = dto.getDeposit();
+			name = "보증금 결제";
 			paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
 			System.out.println("결제여부: " + paymentStatus);
 			if (paymentStatus.equals("paid")) {
 				System.out.println("paid 인식함");
 				map.put("checkMsg", "보증금이 결제되었습니다.");
 				
-				// 
-				newDto = pservice.save(dto);
+				// Payment 테이블 저장..
+				// 회원번호, 글번호, 마지막회차, 실제결제일, 보증금, ott타입
+				PaymentDto newDto = pservice.save(dto);
+				// 정기결제일, 총결제금액, 결제내역 업데이트
+				newDto.setRecurringDay(dto.getBoardNum().getSubStart().getDayOfMonth());
+				newDto.setTotalPayment(amount);
+				newDto.setHistory(name);
+				newDto = pservice.save(newDto);
 
 				// 파티원 보증금
 				PendingDto depositDto = new PendingDto(0, dto.getBoardNum(), dto.getUserNum(), null,
@@ -239,9 +246,46 @@ public class PaymentController {
 		} else if(dto.getPayDate().compareTo(dto.getBoardNum().getSubStart()) < 0) {
 			// 7월15일 시작 파티인데 현재는 8월23일
 			// 보증금 및 (30 - ((현재 결제일) - (파티 시작일의 일))) * 일할구독료 결제
+			int todayDate = dto.getPayDate().getDayOfMonth();
+			int startDate = dto.getBoardNum().getSubStart().getDayOfMonth();
+			if(startDate < todayDate) {
+				int monthPrice = (int) Math.ceil((30-(todayDate-startDate)) * (dto.getBoardNum().getMonthPrice()/30));
+				amount = dto.getDeposit() + monthPrice;
+				name = "보증금 및 일할계산분 결제";
+				paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+				if(paymentStatus.equals("paid")) {
+					
+				} else {
+					
+				}
 			// 7월26일 시작 파티인데 현재는 8월23일
 			// 보증금 및 ((파티 시작일의 일) - (현재 결제일)) * 일할구독료 결제
-		
+			} else if(startDate > todayDate) {
+				int monthPrice = (int) Math.ceil((startDate-todayDate) * (dto.getBoardNum().getMonthPrice()/30));
+				int commission = (int) (monthPrice * 0.2);
+				amount = dto.getDeposit() + monthPrice + commission;
+				name = "보증금 및 일할계산분 결제";
+				paymentStatus = paymentsAPI.doPayment(accessToken, customerUid, merchantUid, amount, name);
+				if(paymentStatus.equals("paid")) {
+					map.put("checkMsg", "보증금과 일할계산분이 결제되었습니다.");
+					
+					// Payment 테이블 저장..
+					// 회원번호, 글번호, 마지막회차, 실제결제일, 보증금, ott타입
+					PaymentDto newDto = pservice.save(dto);
+					// 결제회차, 정기결제일, 다음결제일, 총결제금액, 구독료, 수수료, 결제내역 업데이트
+					int payInstallment = dto.getPayDate().getMonthValue() - dto.getBoardNum().getSubStart().getMonthValue();
+					newDto.setPayInstallment(payInstallment);
+					newDto.setRecurringDay(dto.getBoardNum().getSubStart().getDayOfMonth());
+					newDto.setNextDate(nextDate);
+					
+				} else {
+					
+				}
+			// 7월23일 시작 파티인데 현재는 8월23일
+			// 보증금 및 월구독료 결제
+			} else {
+				
+			}
 		// 현재 결제일과 파티 시작일이 같을 때,
 		} else {
 			
