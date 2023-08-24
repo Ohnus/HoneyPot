@@ -15,6 +15,7 @@ import MyBankInfo from '../components/member/MyBankInfo.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
 import ChattingRoomList from '../components/chat/ChattingRoomList.vue'
+import ChattingRoom from '../components/chat/ChattingRoom.vue'
 import MyPartyList from '../components/partygroup/MyPartyList.vue'
 import PartyDetail from '../components/partygroup/PartyDetail.vue'
 
@@ -116,6 +117,11 @@ const routes = [
     path: '/ChattingRoomList',
     name: 'ChattingRoomList',
     component: ChattingRoomList
+  },
+  {
+    path: '/ChattingRoom',
+    name: 'ChattingRoom',
+    component: ChattingRoom
   }
 
 ]

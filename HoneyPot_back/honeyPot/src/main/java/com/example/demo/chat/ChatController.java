@@ -59,6 +59,7 @@ public class ChatController {
 		map.put("flag", flag);
 		map.put("dto", dto2);
 		System.out.println("flag : " + flag);
+		System.out.println("dto : " + dto2);
 		System.out.println("채팅보내기 : " + dto2);
 		return map;
 	}
