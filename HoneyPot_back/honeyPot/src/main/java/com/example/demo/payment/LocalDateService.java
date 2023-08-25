@@ -44,7 +44,7 @@ public class LocalDateService {
 	
 	public LocalDate getEarningDate(LocalDate payDate) {
 		int year = payDate.getYear();
-		int month = payDate.getMonthValue();
+		int month = payDate.getMonthValue() + 1;
 		int returnDay = payDate.getDayOfMonth() - 1;
 		String date = String.format("%02d/%02d/%02d", year % 100, month, returnDay);
 		DateTimeFormatter changePattern = DateTimeFormatter.ofPattern("yy/MM/dd");
