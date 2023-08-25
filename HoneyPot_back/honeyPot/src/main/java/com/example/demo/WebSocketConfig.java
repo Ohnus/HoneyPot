@@ -10,22 +10,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-
-
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		System.out.println("소켓 연결 시도 : " + registry);
        registry.addEndpoint("/room").setAllowedOriginPatterns("*").withSockJS();
-//        registry.addEndpoint("/stomp").setAllowedOrigins("*").withSockJS();
+
     }
 	
 	@Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-		
-	   //
-		
 		
 	   //enableSimpleBroker : 내장 브로커 사용. 메시지를 받고 구독자들에게 전달해줌
 	   registry.enableSimpleBroker("/sub");
@@ -35,9 +30,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         
     }
 	
-//	@Override
-//    public void configureMessageBroker(MessageBrokerRegistry registry) {
-//	   registry.enableSimpleBroker("/topic");
-//        registry.setApplicationDestinationPrefixes("/");
-//    }
+
 }

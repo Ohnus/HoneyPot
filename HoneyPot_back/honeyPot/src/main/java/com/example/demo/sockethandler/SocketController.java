@@ -20,7 +20,7 @@ public class SocketController {
 		@MessageMapping("/receive")
 		public void SocketHandler(ChatDto dto) {
 			
-			System.out.println("/sub/receive : " + dto);
+			System.out.println("/pub/receive : " + dto);
 			// 2)/sub/channel/boardNum에 구독중인 클라이언트에게 메시지를 보냄
 			simpMessageSendingOperations.convertAndSend("/sub/channel/" + dto.getBoardNum(), dto);
 			System.out.println(" SocketHandler 요청옴");
