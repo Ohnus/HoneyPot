@@ -42,51 +42,80 @@
 
 
         <div class="secondcontainer" v-show="secondStep">
-            <div class="ottaccinfo" >
-             <p style ="font-size:25px">[파티장 가이드] </p>
-            <p style ="font-size:16px">
-            <span>{{ type }}</span> 프리미엄 요금제를 결제해 주세요. <br/>
-            <br/>
-            🎫 파티장이 '{{ type }} 프리미엄' 요금제를 먼저 결제하여 파티원과 공유하면, <br/>
-            허니팟이 매달 파티 요금을 적립해 드려요.<br/>
-            <br/>
+            <div class="ottaccinfo">
+                <p style="font-size:25px; font-weight: 700;">[파티장 가이드] </p>
+                <p style="font-size:18px; font-weight: 500;">
+                    🎫 <span>{{ type }}</span> 프리미엄 요금제를 결제해 주세요. <br />
+                </p>
+                <p style="font-size:15px; margin-top:-15px;">
+                    파티장이 '{{ type }} 프리미엄' 요금제를 먼저 결제하여 파티원과 공유하면, <br />
+                    허니팟이 매달 파티 요금을 적립해 드려요.<br />
+                </p>
+                <br />
+                <p style="font-size:18px; font-weight: 500;">
+                    🔐 공유해도 안전한 비밀번호를 사용해 주세요. <br />
+                </p>
+                <p style="font-size:15px; margin-top:-15px;">
+                    파티장의 계정을 파티원과 함께 사용하게 될거예요. <br />
+                    평소에 자주 쓰는 비밀번호를 공유하면 안돼요.<br />
+                </p>
+                <br />
+                <p style="font-size:18px; font-weight: 500;">
+                    🔞성인 인증을 완료해 주세요.<br />
+                </p>
+                <p style="font-size:15px; margin-top:-15px;">
+                    파티장이 성인 인증을 하지 않으면, <br />
+                    파티원이 성인 콘텐츠 시청을 할 수 없어요.<br />
+                </p>
+                <br />
 
-           공유해도 안전한 비밀번호를 사용해 주세요. <br/>
-           <br/>
-            🔐 파티장의 계정을 파티원과 함께 사용하게 될거예요. <br/>
-            평소에 자주 쓰는 비밀번호를 공유하면 안돼요.<br/>
-            <br/>
-            성인 인증을 완료해 주세요.<br/>
-            <br/>
-            🔞 파티장이 성인 인증을 하지 않으면, <br/>
-            파티원이 성인 콘텐츠 시청을 할 수 없어요.<br/>
-            <br/>
-            결제 카드 등록이 필요해요. <br/>
-            <br/>
-            🪙 파티장 귀책사유 발생시 위약금을 부과하기 위해 결제 카드 등록이 필요해요.<br/>
-             등록 과정에서 100원이 결제된 후 바로 취소될 거예요.<br/>
-            </p>
+                <p style="font-size:18px; font-weight: 500;">
+                    🪙결제 카드 등록이 필요해요. <br />
+                </p>
+                <p style="font-size:15px; margin-top:-15px;">
+                    파티장 귀책사유 발생시 위약금을 부과하기 위해 결제 카드 등록이 필요해요.<br />
+                    등록 과정에서 100원이 결제된 후 바로 취소될 거예요.<br />
+                </p>
+            </div>
+
+            <div class="ottId">
+                <p>{{ type }} 계정의 아이디와 비밀번호를 입력해 주세요 </p>
+                <div><input type="text" v-model="ottAcct" placeholder="아이디"></div>
+                <div><input type="password" v-model="ottPwd" placeholder="비밀번호"></div>
+                <div><button @click="twoStep">다음</button></div>
+            </div>
+
         </div>
 
-        <div class="ottId" >
-            <p>{{ type }} 계정의 아이디와 비밀번호를 입력해 주세요 </p>
-            <div>아이디 : <input type="text" v-model="ottAcct"></div>
-            <div>비밀번호 : <input type="password" v-model="ottPwd"></div>
-            <div><button @click="twoStep">다음</button></div>
+        <div class="thirdcontainer" v-show="thirdStep">
+            <div class="PplInfo">
+                몇 명의 파티원을 모집하실 건가요?
+                <br/>
+                본인을 포함한 파티 시작 최소 인원과 최대 인원을 입력해주세요.
+                최소인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해드려요. 
+                
+
+                
+            </div>
+            <div class="pplSelect">
+                <p> 모집인원을 입력하여 주세요 </p>
+                <div><input type="number" v-model="minPpl" placeholder="최소인원" :min="2" :max="type === 'Apple' ? 5 : 4">
+                </div>
+                <div><input type="number" v-model="maxPpl" placeholder="최대인원" :max="type === 'Apple' ? 5 : 4" :min="minPpl">
+                </div>                
+                <button @click="threeStep">다음</button>
+            </div>
         </div>
 
-    </div>
-
-        <div class="pplSelect" v-show="thirdStep">
-            (본인을 포함한) 최소인원 <input type="number" v-model="minPpl">
-            (본인을 포함한) 최대인원 <input type="number" v-model="maxPpl">
-            <button @click="threeStep">다음</button>
-        </div>
-
-        <div class="dateSelect" v-show="fourthStep">
-            구독 시작날짜 : <input type="date" :min="minDate" v-model="subStart">
-            몇개월 진행 : <input type="number" v-model="month">
-            <button @click="fourStep">등록하기</button>
+        <div class="fourthcontainer" v-show="fourthStep">
+            <div class="dateInfo">
+                이제 안내문어쩌고
+            </div>
+            <div class="dateSelect">
+                <div><input type="date" :min=minDate placeholder="시작 날짜를 입력하세요" v-model="subStart"></div>
+                <div><input type="number" placeholder="진행 할 개월 수 " v-model="month" :min="1"></div>
+                <button @click="fourStep">등록하기</button>
+            </div>
         </div>
 
     </div>
@@ -100,7 +129,7 @@ export default {
 
             // userNum: sessionStorage.getItem('username'),
             userNum: 1,
-            type: null,
+            type: '',
             ottAcct: null,
             ottPwd: null,
             minPpl: null,
@@ -136,7 +165,7 @@ export default {
             }
         },
         threeStep() {
-            if (this.minPpl && this.maxPpl) {
+            if (this.minPpl && this.maxPpl && this.minPpl <= this.maxPpl) {
                 this.thirdStep = false;
                 this.fourthStep = true;
             }
@@ -174,9 +203,10 @@ export default {
 }
 </script>
 <style scoped>
-div{
-    color : #444444;
+div {
+    color: #444444;
 }
+
 p {
     font-family: 'AppleSDGothicNeoB';
     font-size: 20px;
@@ -237,24 +267,68 @@ button:hover {
 
 
 
-.secondcontainer {
+.secondcontainer,
+.thirdcontainer,
+.fourthcontainer {
     display: flex;
-    justify-content: space-between; 
-    align-items: flex-start; 
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
-.ottaccinfo{
-    flex-basis: 50%; 
+.ottaccinfo,
+.PplInfo,
+.dateInfo {
+    flex-basis: 50%;
     padding: 10px;
     margin: 6% 15% 0 -10%;
 
 }
-.ottId {
-    flex-basis: 50%; 
+
+.ottId,
+.pplSelect,
+.dateSelect {
+    flex-basis: 50%;
     padding: 10px;
     margin: 18% 6% 0 -10%;
 
 }
 
+input[type=text],
+input[type=password],
+input[type=number] {
+    width: 200px;
+    height: 32px;
+    font-size: 15px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 10px;
+    margin-bottom: 3%;
+    background-color: rgb(233, 233, 233);
+}
 
+input[type=date]::before {
+    color: #444444;
+    content: attr(placeholder);
+}
+
+input[type=date]::-webkit-datetime-edit-text {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type=date]::-webkit-datetime-edit-month-field {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type=date]::-webkit-datetime-edit-day-field {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type=date]::-webkit-datetime-edit-year-field {
+    -webkit-appearance: none;
+    display: none;
+}
 </style>

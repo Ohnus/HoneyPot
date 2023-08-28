@@ -31,7 +31,7 @@
 @font-face {
   font-family:'AppleSDGothicNeoB';
   src: url('assets/fonts/AppleSDGothicNeoB.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 300;
 }
 
 
