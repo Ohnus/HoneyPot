@@ -85,7 +85,5 @@ public class ImportPayments {
 			msg = 3;
 			return msg;
 		}
-		
 	}
-	
 }
