@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.hostboard.HostBoard;
+import com.example.demo.member.Member;
+
 @Service
 public class PaymentService {
 	
@@ -37,6 +40,16 @@ public class PaymentService {
 			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
 		}
 		return dtoList;
+	}
+	
+	// 탈퇴예정자의 보드넘, 유저넘 이용해서 최신순으로 리스트 조회 후, 최신글 리턴
+	public PaymentDto getByBoardNumAndUserNum(HostBoard boardNum, Member userNum) {
+		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByBoardNumAndUserNum(boardNum, userNum);
+		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
+		for(Payment entity : list) {
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
+		}
+		return dtoList.get(0);
 	}
 	
 	// RecurringDay 리스트

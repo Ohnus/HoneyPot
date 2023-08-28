@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.hostboard.HostBoard;
+import com.example.demo.member.Member;
+import com.example.demo.pending.Pending;
+
 import jakarta.transaction.Transactional;
 
 @Repository
@@ -30,4 +34,10 @@ public interface PaymentDao extends JpaRepository<Payment, String> {
 	@Modifying
 	@Query(value="select * from payment where again_date=:againDate and payment_status=-1 order by order_num asc", nativeQuery = true)
 	ArrayList<Payment> findByAgainDate(@Param("againDate") LocalDate againDate);
+	
+	// 탈퇴신청했던(startCheck 4로 걸러진) 유저의 보드넘, 유저넘으로 해당 유저 게시글 리스트 결제회차로 최신순으로 조회 후.. 그리고 최신 글 결제여부 -2로 수정
+	@Transactional
+	@Modifying
+	@Query(value="select * from payment where board_num=:boardNum and user_num=:userNum order by pay_installment desc", nativeQuery = true)
+	ArrayList<Payment> findByBoardNumAndUserNum(@Param("boardNum") HostBoard boardNum, @Param("userNum") Member userNum);
 }
