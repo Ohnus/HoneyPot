@@ -188,8 +188,43 @@ public class MemberController {
 		return map;
 	}
 	
+	// 본인인증 아이디 찾기
+	@GetMapping("/getId")
+	public Map getIdByCertification(@RequestParam("name") String name, @RequestParam("phone") String phone) {
+	
+		System.out.println(name + " / " + phone);
+		Map map = new HashMap<>();
+		
+		MemberDto dto = service.getByNameAndPhone(name, phone);
+		System.out.println(dto);
+		
+		map.put("email", dto.getEmail());
+		
+		int snsType = dto.getSnsType();
+		
+		String snsValue = "";
+		
+		switch (snsType) {
+			case 0:				// 허니팟 계정 가입
+				snsValue = "허니팟";
+				break;
+			case 1:				// 카카오 계정 가입
+				snsValue = "카카오";
+				break;
+			case 2:				// 네이버 계정 가입
+				snsValue = "네이버";
+				break;
+		}
+		
+		map.put("snsType", snsValue);
+		
+		return map;		
+	}
+
+	
+	
 	// 내 정보 불러오기
-	@GetMapping("/edit/{userNum}")
+	@GetMapping("/{userNum}")
 	public Map getInfo(@PathVariable("userNum") String userNum) {
 		
 		Map map = new HashMap();
@@ -208,6 +243,7 @@ public class MemberController {
 		map.put("profile", dto.getProfile());
 		map.put("bankCode", dto.getBankCode());
 		map.put("bankAcc", dto.getBankAcc());
+		map.put("snsType", dto.getSnsType());
 		
 		// 허니팟 계정인지 판단, 아니면 메일 수정 못하게 클라이언트 단에서 막음
 		boolean hnpAccount = false;
@@ -236,7 +272,6 @@ public class MemberController {
 			dir.mkdir();
 		}
 
-		
 		String fname = f.getOriginalFilename();
 		String newpath = path + usernum + "/" + fname;
 		File newfile = new File(newpath);
@@ -294,8 +329,7 @@ public class MemberController {
 	@GetMapping("/certifications/checkAccount")
 	public Map CheckAccount(@RequestParam("bankCode") String bankCode, @RequestParam("bankAcc") String bankAcc) {
 		Map map = new HashMap<>();
-	
-		System.out.println("왔다");
+
 		System.out.println(bankCode + " / " + bankAcc);
 		map = certificationService.getAccessToken1(bankCode, bankAcc);
 	

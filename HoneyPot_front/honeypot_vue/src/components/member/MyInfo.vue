@@ -85,7 +85,7 @@ export default {
                 alert('로그인되지 않은 상태입니다.\n로그인 페이지로 이동합니다.')
                 window.location.href = "/LoginPage";
             } else {    // 로그인 상태면 기존 정보 가져옴
-                self.$axios.get('http://localhost:8988/members/edit/' + self.userNum)
+                self.$axios.get('http://localhost:8988/members/' + self.userNum)
                 .then(function (res) {
                     if (res.status == 200) {
                         self.name = res.data.name;

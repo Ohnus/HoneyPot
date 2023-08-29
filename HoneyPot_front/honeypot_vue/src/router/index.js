@@ -12,6 +12,8 @@ import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
 import MyInfo from '../components/member/MyInfo.vue'
 import MyBankInfo from '../components/member/MyBankInfo.vue'
+import FindUserId from '../components/member/FindUserId.vue'
+import FindUserPwd from '../components/member/FindUserPwd.vue'
 import HostBoardList from '../components/hostboard/HostBoardList.vue'
 import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
 import ChattingRoomList from '../components/chat/ChattingRoomList.vue'
@@ -112,6 +114,16 @@ const routes = [
     path: '/MyBankInfo',
     name: 'MyBankInfo',
     component: MyBankInfo
+  },
+  {
+    path: '/FindUserId',
+    name: 'FindUserId',
+    component: FindUserId
+  },
+  {
+    path: '/FindUserPwd',
+    name: 'FindUserPwd',
+    component: FindUserPwd
   },
   {
     path: '/ChattingRoomList',

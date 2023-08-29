@@ -74,6 +74,20 @@ public class MemberService {
 		}
 	}
 	
+	// 본인인증(이름+핸드폰번호)로 일치하는 이메일 검색
+	public MemberDto getByNameAndPhone(String name, String phone) {
+		Member entity = dao.findByNameAndPhone(name, phone);
+		MemberDto dto = null;
+		
+		if(entity == null) {
+			return dto;
+		} else {
+			dto = new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
+					entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null);
+			return dto;
+		}
+	}
+	
 	
 	// 로그인, 내 정보 확인
 	public MemberDto getByEmail(String email) {
