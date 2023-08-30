@@ -2,7 +2,9 @@ package com.example.demo.sockethandler;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.util.HtmlUtils;
 
 import com.example.demo.chat.ChatDto;
 
@@ -25,6 +27,15 @@ public class SocketController {
 			simpMessageSendingOperations.convertAndSend("/sub/channel/" + dto.getBoardNum(), dto);
 			System.out.println(" SocketHandler 요청옴");
 			
+		}
+
+		
+		@MessageMapping("/greetings")
+		public void greeting(greetings greetings)throws Exception{
+			//return new Greeting(HtmlUtils.htmlEscape(session.getSessionAttributes().get("name") + "님께서 입장하셨습니다!"));
+			simpMessageSendingOperations.convertAndSend("/sub/channel/" + greetings.boardNum,greetings);
+			System.out.println("greetings.boardNum" + greetings.boardNum);
+			System.out.println("greetings.id"+greetings.id);
 		}
 		
 		

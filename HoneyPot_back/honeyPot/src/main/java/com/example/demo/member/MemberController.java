@@ -149,6 +149,7 @@ public class MemberController {
 	public Map emailCheck(@RequestParam("email") String email) {
 		boolean flag = false; // 중복된 이메일 없음
 		
+		System.out.println("이메일 중복 검사");
 		Map map = new HashMap<>();
 		
 		System.out.println(email);

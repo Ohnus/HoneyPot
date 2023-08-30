@@ -8,6 +8,7 @@ import RecurringTest from '../components/paymenttest/RecurringTest.vue'
 import JoinMainpage from '../components/member/JoinMainpage.vue'
 import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
+import KakaoJoin from '../components/member/KakaoJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
 import MyInfo from '../components/member/MyInfo.vue'
@@ -122,6 +123,11 @@ const routes = [
     path: '/ChattingRoom',
     name: 'ChattingRoom',
     component: ChattingRoom
+  },
+  {
+    path: '/KakaoJoin',
+    name: 'KakaoJoin',
+    component: KakaoJoin
   }
 
 ]
