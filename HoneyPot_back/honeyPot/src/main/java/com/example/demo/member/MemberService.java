@@ -88,6 +88,20 @@ public class MemberService {
 		}
 	}
 	
+	// 이름+이메일로 일치하는 회원 검색
+	public MemberDto getByNameAndEmail(String name, String email) {
+		Member entity = dao.findByNameAndEmail(name, email);
+		MemberDto dto = null;
+		
+		if(entity == null) {
+			return dto;
+		} else {
+			dto = new MemberDto(entity.getUserNum(), entity.getEmail(), entity.getPwd(), entity.getName(), entity.getNickname(),
+					entity.getPhone(), entity.getSnsType(), entity.getBankCode(), entity.getBankAcc(), entity.getProfile(), entity.getBillingKey(), null);
+			return dto;
+		}
+	}
+	
 	
 	// 로그인, 내 정보 확인
 	public MemberDto getByEmail(String email) {

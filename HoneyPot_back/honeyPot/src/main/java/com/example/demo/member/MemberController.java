@@ -93,7 +93,7 @@ public class MemberController {
 	}
 	
 	
-	// 인증 메일 전송
+	// 회원가입 인증메일
 	@ResponseBody
 	@PostMapping("/emailConfirm") 
 	public Map emailConfirm(@RequestParam("email") String email) {
@@ -116,6 +116,26 @@ public class MemberController {
 		map.put("flag", flag);
 		map.put("authCode", authCode);
 		
+		return map;	
+	}
+	
+	// 아이디 찾기 인증메일
+	@ResponseBody
+	@PostMapping("/findIdEmailConfirm") 
+	public Map findIdEmailConfirm(@RequestParam("email") String email) {
+		String authCode = null;
+			
+		Map map = new HashMap<>();
+			
+		System.out.println(email);
+		MemberDto dto = service.getByEmail(email);
+			
+		if (dto != null && email.equals(dto.getEmail())) {
+			authCode = emailService.joinEmail(email);	
+		}
+			
+		map.put("authCode", authCode);
+			
 		return map;	
 	}
 	
@@ -198,9 +218,7 @@ public class MemberController {
 		
 		MemberDto dto = service.getByNameAndPhone(name, phone);
 		System.out.println(dto);
-		
-		map.put("email", dto.getEmail());
-		
+
 		int snsType = dto.getSnsType();
 		
 		String snsValue = "";
@@ -217,9 +235,59 @@ public class MemberController {
 				break;
 		}
 		
+		map.put("userNum", dto.getUserNum());
+		map.put("name", dto.getName());
+		map.put("email", dto.getEmail());
 		map.put("snsType", snsValue);
 		
 		return map;		
+	}
+	
+	// 이메일 아이디 찾기
+	@GetMapping("/getId2")
+	public Map getIdByEmail(@RequestParam("name") String name, @RequestParam("email") String email) {
+
+		System.out.println("넘어온 값: " + name + " / " + email);
+		
+		boolean flag = false;	// 입력값과 DB 일치여부
+
+		Map map = new HashMap<>();
+				
+		MemberDto dto = service.getByNameAndEmail(name, email);
+		
+		if (dto == null) {
+			flag = false;
+		} else if (name.equals(dto.getName()) && email.equals(dto.getEmail())) {
+			flag = true;
+			
+			int snsType = dto.getSnsType();
+		
+			String snsValue = "";
+		
+			switch (snsType) {
+				case 0:				// 허니팟 계정 가입
+					snsValue = "허니팟";
+					break;
+				case 1:				// 카카오 계정 가입
+					snsValue = "카카오";
+					break;
+				case 2:				// 네이버 계정 가입
+					snsValue = "네이버";
+					break;
+			}
+	
+			map.put("userNum", dto.getUserNum());
+			map.put("name", dto.getName());
+			map.put("email", dto.getEmail());
+			map.put("snsType", snsValue);
+			System.out.println(dto.getName() + dto.getEmail() + snsValue);
+
+		}
+		
+		map.put("flag", flag);
+		System.out.println(flag);
+		
+		return map;
 	}
 
 	
@@ -324,6 +392,31 @@ public class MemberController {
 		
 		return map;
 	}
+	
+	
+	// 비밀번호만 수정 (비밀번호 찾기)
+	@PostMapping("/editPwd/{userNum}")
+	public Map editPwd(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
+		
+		System.out.println("신규비밀번호: " + updatedDto.getPwd());
+			
+		MemberDto dto = service.getByUserNum(userNum);
+			
+		System.out.println("기존비밀번호: " + dto.getPwd());
+			
+		// 새 정보 담기
+		dto.setPwd(updatedDto.getPwd());
+
+		Map map = new HashMap();
+			
+		dto = service.save(dto);
+		System.out.println("업데이트된 정보: " + dto);
+			
+		map.put("dto", dto);
+			
+		return map;
+	}
+		
 	
 	
 	// 예금주 조회
