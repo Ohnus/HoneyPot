@@ -9,7 +9,12 @@
             <div class="chatheader" @click="enterchatroom(chatroom.boardNum)">{{ chatroom.subject }}</div>
             <div class = "chatroom-chatcheck">boardNum :{{ chatroomchatcheck(chatroom.boardNum) }}</div>
         </div>
-
+        <div>
+            채팅방 참여 멤버 목록
+            <div class="members" v-for="member in members" :key="member.index">
+                <div class ="member">{{ member.name }} / {{ member.userNum }}</div>         
+            </div>
+        </div>
         <div class="chatting">
             <div class="chats" v-for="chat in chats" :key="chat.chatNum">
                 <div class="chat">{{ chat.content }} / 보낸이 : {{ chat.isFromSender.name }} / 보낸 시간: {{ chat.time }} / </div>
@@ -20,6 +25,9 @@
                 <div class="chat">{{ webchat.content }} / 보낸이 : {{ webchat.isFromSender.name }} / 보낸 시간: {{ webchat.time }}
                     /
                 </div>
+            </div>
+            <div class="greetings" v-for="greeting in greetings" :key="greeting.index" >
+                <div class="greetings">{{ greeting.id }} </div>
             </div>
 
             <div>
@@ -49,6 +57,7 @@ export default {
             id: sessionStorage.getItem("loginId"),
             userNum: sessionStorage.getItem("userNum"),
             boardNum: '',
+            members:[],//각 채팅방 별 참여 멤버목록
 
             count: '', // 각 채팅 별 안읽은 인원
             chatcheckResults: [], //각 채팅 별 안읽은 인원 리스트
@@ -60,7 +69,9 @@ export default {
             webchats: [], // 구독 목록
             stompClient: null, // 소켓 연결
             dto: null, // 채팅 작성 객체
-            subscription: null // 구독
+            subscription: null, // 구독
+
+            greetings:[] // 채팅방 입장 시 
         }
     },
 
@@ -116,6 +127,9 @@ export default {
         enterchatroom(boardNum) {
             const self = this;
 
+            
+            self.greetings =[];
+
             // 채팅방 들어가면 안읽은 채팅 개수 0으로 업데이트
             if(self.chatroomchatcheckResults[boardNum] != 0){
             self.chatroomchatcheckResults[boardNum] = 0;
@@ -128,18 +142,50 @@ export default {
 
             self.boardNum = boardNum;
 
+          
+
             //endpoint 구독
             self.subscription = self.stompClient.subscribe("/sub/channel/" + self.boardNum, res => {
                 console.log('1) 구독으로 받은 메시지 입니다.', res.body);
+                
 
-                // 받은 데이터를 json으로 파싱하고 리스트에 담기
-                self.webchats.push(JSON.parse(res.body))
+
+
+                const result = JSON.parse(res.body);
+                console.log(result.type);
+                console.log(self.greetings);
+                if(result.type === 'enter'){
+                    self.greetings.push(result);
+                    console.log('응');
+                    
+                    
+                }else{
+                   
+                    // 받은 데이터를 json으로 파싱하고 리스트에 담기
+                    //self.webchats.push(JSON.parse(res.body))
+                    self.webchats.push(result);
+                    console.log('아니')
+                }
+               
+
+                
 
             });
+
+              //채팅 입장 시 알리기
+              const greeting={
+                type:'enter',
+                id :self.id+"님 입장",
+                boardNum:self.boardNum
+            }
+            self.stompClient.send("/pub/greetings", JSON.stringify(greeting), {});
 
             console.log("2) boardNum : " + boardNum);
             console.log("3) userNum : " + self.userNum)
 
+
+          
+          
 
             // 채팅 내용 가져오기
             self.$axios
@@ -151,6 +197,20 @@ export default {
                         alert("에러코드 : " + res.status);
                     }
                 });
+
+                
+            // 채팅방 참여 멤버목록 가져오기
+            self.$axios
+                .get("http://localhost:8988/chatheader/getmembers/" + self.boardNum)
+                .then(function (res) {
+                    if (res.status == 200) {
+                        self.members = res.data.members;
+                    } else {
+                        alert("에러코드 : " + res.status);
+                    }
+                });
+
+
         },
 
         // 각 채팅방 별 안읽은 채팅 개수 확인

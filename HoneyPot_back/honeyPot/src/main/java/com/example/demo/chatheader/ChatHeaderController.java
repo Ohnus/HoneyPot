@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.member.MemberDto;
+
 @RestController
 @Controller
 @CrossOrigin(origins = "*")
@@ -70,5 +72,22 @@ public class ChatHeaderController {
 	
 		service.deleteChatRoom(boardNum, loginId);
 	}
+	
+	//boardNum채팅방 참여 멤버 목록 가져오기
+	@GetMapping("/getmembers/{boardNum}")
+	public Map getMembers(@PathVariable("boardNum") int boardNum) {
+		boolean flag = true;
+		ArrayList<MemberDto> members = null;
+		try {
+		members = (ArrayList<MemberDto>)service.getMembers(boardNum);
+		}catch(Exception e){
+			flag = false;
+		}
+		Map map = new HashMap();
+		map.put("flag", flag);
+		map.put("members", members);
+		return map;
+	}
+	
 
 }
