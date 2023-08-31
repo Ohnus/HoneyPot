@@ -37,7 +37,7 @@
                 </label>
             </div>
 
-            <button @click="oneStep">다음</button>
+            <button @click="oneStep" style="margin: 30px 0 0 70px;">다음</button>
         </div>
 
 
@@ -88,31 +88,46 @@
         </div>
 
         <div class="thirdcontainer" v-show="thirdStep">
-            <div class="PplInfo">
-                몇 명의 파티원을 모집하실 건가요?
-                <br/>
-                본인을 포함한 파티 시작 최소 인원과 최대 인원을 입력해주세요.
-                최소인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해드려요. 
-                
+            <div class="PplInfo" style="padding-top: 13%;">
+                <p style="font-size:25px; font-weight: 700;">
+                    [모집 인원 가이드]</p>
+                <p style="font-size:18px; font-weight: 500;">
+                    👫몇 명의 파티원을 모집하실 건가요?</p>
+                <br />
+                <p style="font-size:15px; margin-top:-15px;">
+                    본인을 포함한 파티 시작 최소 인원과 최대 인원을 입력해 주세요.<br />
+                    최소 인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해 드려요. </p>
 
-                
+
+
             </div>
             <div class="pplSelect">
                 <p> 모집인원을 입력하여 주세요 </p>
                 <div><input type="number" v-model="minPpl" placeholder="최소인원" :min="2" :max="type === 'Apple' ? 5 : 4">
                 </div>
                 <div><input type="number" v-model="maxPpl" placeholder="최대인원" :max="type === 'Apple' ? 5 : 4" :min="minPpl">
-                </div>                
+                </div>
                 <button @click="threeStep">다음</button>
             </div>
         </div>
 
         <div class="fourthcontainer" v-show="fourthStep">
-            <div class="dateInfo">
-                이제 안내문어쩌고
+            <div class="dateInfo" style="padding-top: 10%;">
+                <p style="font-size:25px; font-weight: 700;">
+                    [파티 기간 가이드]</p>
+                <p style="font-size:18px; font-weight: 500;">
+                    📅 몇 개월동안 파티를 진행 하실껀가요? </p>
+                <br />
+                <p style="font-size:15px; margin-top:-15px;">
+                    <span>{{ type }} </span> 시작 날짜와 원하는 구독 개월 수를 입력해 주세요. <br />
+                    구독마감 1개월 전까지 꾸준히 파티원을 모집해 드리고 있어요.<br />
+                    구독 기간 중 파티장의 과실로 파티를 지속하지 못한다면 위약금을 돌려 받을 수 없어요.
+                </p>
             </div>
             <div class="dateSelect">
-                <div><input type="date" :min=minDate placeholder="시작 날짜를 입력하세요" v-model="subStart"></div>
+                <div>
+                    <input type="date" :min=minDate data-placeholder="시작 날짜" v-model="subStart" required>
+                </div>
                 <div><input type="number" placeholder="진행 할 개월 수 " v-model="month" :min="1"></div>
                 <button @click="fourStep">등록하기</button>
             </div>
@@ -245,16 +260,12 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-
     transition-duration: 0.4s;
     cursor: pointer;
     background-color: #Fdd000;
     color: #444444;
     border: 2px solid #Fdd000;
     border-radius: 10px;
-
-
-    margin: 30px 0 0 70px;
     font-weight: 900;
     font-size: 16px;
 }
@@ -279,10 +290,11 @@ button:hover {
 .PplInfo,
 .dateInfo {
     flex-basis: 50%;
-    padding: 10px;
+    padding-top: 10px;
     margin: 6% 15% 0 -10%;
 
 }
+
 
 .ottId,
 .pplSelect,
@@ -295,7 +307,8 @@ button:hover {
 
 input[type=text],
 input[type=password],
-input[type=number] {
+input[type=number],
+input[type=date] {
     width: 200px;
     height: 32px;
     font-size: 15px;
@@ -309,26 +322,36 @@ input[type=number] {
 
 input[type=date]::before {
     color: #444444;
-    content: attr(placeholder);
+    width : 100%;
+    content: attr(data-placeholder);
 }
 
-input[type=date]::-webkit-datetime-edit-text {
-    -webkit-appearance: none;
+input[type="date"]:valid::before {
     display: none;
 }
 
-input[type=date]::-webkit-datetime-edit-month-field {
-    -webkit-appearance: none;
+
+
+
+
+input[type=date] {
+    position: relative;
+}
+
+input[type=date]::-webkit-clear-button,
+input[type=date]::-webkit-inner-spin-button {
     display: none;
 }
 
-input[type=date]::-webkit-datetime-edit-day-field {
-    -webkit-appearance: none;
-    display: none;
-}
 
-input[type=date]::-webkit-datetime-edit-year-field {
-    -webkit-appearance: none;
-    display: none;
+input[type=date]::-webkit-calendar-picker-indicator {
+position :absolute;
+left : 0;
+right : 0;
+width : 100%;
+height : 100%;
+background: transparent;
+color: transparent;
+cursor : pointer;
 }
 </style>
