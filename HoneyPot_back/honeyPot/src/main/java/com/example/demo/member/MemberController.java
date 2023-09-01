@@ -151,7 +151,7 @@ public class MemberController {
 		MemberDto dto = service.getByNickname(nickname);
 		System.out.println(dto);
 		
-		if (dto != null && nickname.equals(dto.getName())) {
+		if (dto != null && nickname.equals(dto.getNickname())) {
 			flag = false;
 		} else {
 			flag = true;

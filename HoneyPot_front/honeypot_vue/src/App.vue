@@ -34,6 +34,54 @@
   font-weight: 300;
 }
 
+@font-face {
+  font-family:'AppleSDGothicNeoEB';
+  src: url('assets/fonts/AppleSDGothicNeoEB.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoH';
+  src: url('assets/fonts/AppleSDGothicNeoH.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoL';
+  src: url('assets/fonts/AppleSDGothicNeoL.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoM';
+  src: url('assets/fonts/AppleSDGothicNeoM.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoR';
+  src: url('assets/fonts/AppleSDGothicNeoR.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoSB';
+  src: url('assets/fonts/AppleSDGothicNeoSB.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoT';
+  src: url('assets/fonts/AppleSDGothicNeoT.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family:'AppleSDGothicNeoUL';
+  src: url('assets/fonts/AppleSDGothicNeoUL.ttf') format('truetype');
+  font-weight: 300;
+}
+
 
 nav {
   padding: 10px;
