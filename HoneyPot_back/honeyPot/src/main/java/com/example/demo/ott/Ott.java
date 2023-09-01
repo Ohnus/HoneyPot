@@ -17,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ott {
-	
+
 	@Id
 	@Column(name = "type")
 	private String type;
@@ -25,3 +25,5 @@ public class Ott {
 	private int maxppl;
 
 }
+
+
