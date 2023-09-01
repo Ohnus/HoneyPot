@@ -80,8 +80,8 @@
 
             <div class="ottId">
                 <p>{{ type }} 계정의 아이디와 비밀번호를 입력해 주세요 </p>
-                <div><input type="text" v-model="ottAcct" placeholder="아이디"></div>
-                <div><input type="password" v-model="ottPwd" placeholder="비밀번호"></div>
+                <div><input type="text" v-model="ottAcct" @input="validateInputId('ottAcct')" placeholder="아이디"></div>
+                <div><input type="password" v-model="ottPwd" @input="validateInputId('ottPwd')" placeholder="비밀번호"></div>
                 <div><button @click="twoStep">다음</button></div>
             </div>
 
@@ -96,16 +96,14 @@
                 <br />
                 <p style="font-size:15px; margin-top:-15px;">
                     본인을 포함한 파티 시작 최소 인원과 최대 인원을 입력해 주세요.<br />
-                    최소 인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해 드려요. </p>
-
-
-
+                    최소 인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해 드려요. <br/>
+                금액은 최대 인원으로 측정 되며 최소 인원으로 시작 했다면 파티장이 1인 요금을 더 부담해야 해요.</p>
             </div>
             <div class="pplSelect">
                 <p> 모집인원을 입력하여 주세요 </p>
-                <div><input type="number" v-model="minPpl" placeholder="최소인원" :min="2" :max="type === 'Apple' ? 5 : 4">
+                <div><input type="number" v-model="minPpl" placeholder="최소인원" @input="validateInput('minPpl')" >
                 </div>
-                <div><input type="number" v-model="maxPpl" placeholder="최대인원" :max="type === 'Apple' ? 5 : 4" :min="minPpl">
+                <div><input type="number" v-model="maxPpl" placeholder="최대인원"  @input="validateInput('maxPpl')" >
                 </div>
                 <button @click="threeStep">다음</button>
             </div>
@@ -171,25 +169,55 @@ export default {
             if (this.type) {
                 this.firstStep = false;
                 this.secondStep = true;
+            } else {
+                alert('파티 만들기 원하는 OTT 사이트를 선택해주세요');
             }
         },
         twoStep() {
+            //매크로보내면 되긴하는데... 흠... 
             if (this.ottAcct && this.ottPwd) {
                 this.secondStep = false;
                 this.thirdStep = true;
+            } else {
+                alert('OTT 아이디와 비밀번호를 입력해주세요');
             }
         },
+        validateInputId(field) {
+      // 입력값에서 한글 안되게 하기
+      this[field] = this[field].replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+    },
+
         threeStep() {
             if (this.minPpl && this.maxPpl && this.minPpl <= this.maxPpl) {
                 this.thirdStep = false;
                 this.fourthStep = true;
+            } else {
+                alert('올바른 인원을 선택하여 주세요');
             }
         },
+        validateInput(field) {
+            // 입력값을 숫자로 변환
+            this[field] = Number(this[field]);
+
+            // 최소값과 최대값 설정
+            const minValue = 2;
+            const maxValue = this.type === 'Apple' ? 5 : 4;
+
+            // 최소값 미만 또는 최대값 초과인 경우 최소값 또는 최대값으로 설정
+            if (this[field] < minValue) {
+                this[field] = minValue;
+            } else if (this[field] > maxValue) {
+                this[field] = maxValue;
+            }
+        },
+ 
         fourStep() {
 
             if (this.subStart && this.month) {
                 this.fourthStep = false;
-                this.save();
+                this.save(); //여기서 결제로 넘어가고 결제에서 this.save() 메서드 실행 시켜주면 됌 
+            } else {
+                alert('날짜 입력을 해주세요');
             }
         },
         save() {
@@ -241,9 +269,10 @@ img {
 }
 
 input[type=radio]:checked+label {
-    border: 5px solid #Fdd000;
-    border-radius: 23px;
-    padding: 5px 5px 5px 5px;
+    border-bottom: 5px solid #Fdd000;
+    /* border-radius: 23px; */
+    /* padding: 5px 5px 5px 5px; */
+    /* padding-bottom: 2px; */
 }
 
 .firstline {
@@ -322,7 +351,7 @@ input[type=date] {
 
 input[type=date]::before {
     color: #444444;
-    width : 100%;
+    width: 100%;
     content: attr(data-placeholder);
 }
 
@@ -345,13 +374,13 @@ input[type=date]::-webkit-inner-spin-button {
 
 
 input[type=date]::-webkit-calendar-picker-indicator {
-position :absolute;
-left : 0;
-right : 0;
-width : 100%;
-height : 100%;
-background: transparent;
-color: transparent;
-cursor : pointer;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
 }
 </style>
