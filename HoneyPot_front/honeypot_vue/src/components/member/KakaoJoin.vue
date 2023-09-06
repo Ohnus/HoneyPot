@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- <p>안녕 email: {{ self.email }} /password: {{ self.password }}</p> -->
-        <p>안녕</p>
+        <p>안녕 {{ email }}</p>
     </div>
 </template>
 
@@ -29,10 +29,10 @@ export default {
                 .get("http://localhost:8988/kakaoJoin/" + this.code)
                 .then(function (res) {
                     if (res.status == 200) {
-                        console.log("res : " + res.data.response);
-                        console.log("res : " + res.access_token);
-                    //  self.email = res.data.email;
-                    //  self.password = res.data.id;
+                       console.log('res.data.access_token : ' +res.data.access_token);
+                       console.log('res.data.userInfo : ' +res.data.userInfo.kakao_account.email);
+                        
+                       self.email = res.data.userInfo.kakao_account.email;
                      
                     } else {
                         alert("에러코드 : " + res.status);
