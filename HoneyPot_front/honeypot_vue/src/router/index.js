@@ -7,6 +7,7 @@ import PartyTest2 from '../components/paymenttest/PartyTest2.vue'
 import RecurringTest from '../components/paymenttest/RecurringTest.vue'
 import JoinMainpage from '../components/member/JoinMainpage.vue'
 import HoneypotJoin from '../components/member/HoneypotJoin.vue'
+import NaverLogin from '../components/member/NaverLogin.vue'
 import NaverJoin from '../components/member/NaverJoin.vue'
 import KakaoJoin from '../components/member/KakaoJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
@@ -90,6 +91,11 @@ const routes = [
     path: '/HoneypotJoin',
     name: 'HoneypotJoin',
     component: HoneypotJoin
+  },
+  {
+    path: '/NaverLogin',
+    name: 'NaverLogin',
+    component: NaverLogin
   },
   {
     path: '/NaverJoin',

@@ -477,24 +477,34 @@ public class MemberController {
 		System.out.println(email + "/" + pwd);
 		
 		boolean flag = false;
+		boolean account = false;
 		
 		MemberDto dto = service.getByEmail(email);
-		String userNum = dto.getUserNum();
-		
 		System.out.println(dto);
 		
-		if (dto != null && pwd.equals(dto.getPwd())) {
-			String token = tokenprovider.generateJwtToken(dto); // 토큰 발급
-			flag = true;
-			map.put("token", token);
+		String userNum = dto.getUserNum();
+		int snsType = dto.getSnsType();
+		
+		System.out.println(snsType);
+		
+		if (snsType == 0) {
+			account = true;
+			
+			if (dto != null && pwd.equals(dto.getPwd())) {
+				String token = tokenprovider.generateJwtToken(dto); // 토큰 발급
+				flag = true;
+				map.put("token", token);
+			}
+			
+		} else {
+			account = false;
 		}
+		
 		map.put("flag", flag);
+		map.put("account", account);
 		map.put("email", dto.getEmail());
 		map.put("userNum", userNum);
-		
-		System.out.println(flag);
-		System.out.println(email);
-		System.out.println(userNum);
+		map.put("snsType", snsType);
 		
 		return map;
 	}

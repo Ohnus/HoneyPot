@@ -1,13 +1,15 @@
 <template>
 
-<div v-if="duplicated1" class="duplicateNotice1">
+<div v-if="duplicated1" class="duplicateNotice">
 <div>본인 인증된 정보로 이미 가입된 이력이 존재합니다.</div>
-<router-link to="/메인페이지링크"><button>메인으로</button></router-link>
+<br>
+<router-link to="/FindUserId"><button>아이디 찾기</button></router-link>
 </div>
 
-<div v-else-if="duplicated2" class="duplicateNotice2">
+<div v-else-if="duplicated2" class="duplicateNotice">
 <div>해당 핸드폰번호로 가입된 이력이 존재합니다. 고객센터에 문의해주세요.</div>
-<router-link to="/메인페이지링크"><button>메인으로</button></router-link>
+<br>
+<router-link to=""><button>메인으로</button></router-link>
 </div>
 
 <div v-else-if="certified" class="HoneypotJoinForm">    
@@ -414,6 +416,16 @@ input::-webkit-input-placeholder {
 }
 
 .certificationNotice {
+    position: absolute;
+    top: 20%;
+    left: 40%;
+    font-family: 'AppleSDGothicNeoB';
+}
+
+.duplicateNotice {
+    position: absolute;
+    top: 40%;
+    left: 40%;
     font-family: 'AppleSDGothicNeoB';
 }
 
