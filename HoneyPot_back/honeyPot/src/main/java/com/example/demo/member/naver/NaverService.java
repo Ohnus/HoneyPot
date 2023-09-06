@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,6 +83,7 @@ public class NaverService {
 		HashMap userInfo = new HashMap<>();
 
 		String email = "";
+		String id ="";
 		log.info("유저정보 요청 시작");
 		String strUrl =  "https://openapi.naver.com/v1/nid/me"; // request를 보낼 주소
 		userInfo.put("accessToken", access_token);
@@ -118,6 +121,28 @@ public class NaverService {
 			//필요한 값들을 가져와서 
 			//Map 에 담아서 다시 컨트롤러로 return 하면 끝
 			
+			
+		    JSONObject jsonResponse = null;
+			try {
+				jsonResponse = new JSONObject(result);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    try {
+				email = jsonResponse.getJSONObject("response").getString("email");
+				id = jsonResponse.getJSONObject("response").getString("id");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		    // email 값을 userInfo 맵에 추가
+		    userInfo.put("email", email);
+		    userInfo.put("id", id);
+			
+			System.out.println(email);
+			System.out.println(id);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

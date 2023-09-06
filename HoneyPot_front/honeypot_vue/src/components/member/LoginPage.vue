@@ -45,8 +45,8 @@
 
 <div class="row justify-content-center">
 <div class="col-md-3" style="margin-bottom: 10px">
-<router-link to="/NaverLogin"><img src="../../assets/images/naverLogin.png" style="width:12%; margin-right:5px"></router-link>
-<router-link to=""><img src="../../assets/images/kakaoLogin.png"  @click="kakaoLogin()" style="width:12%; margin-left:5px"></router-link>
+<img @click="naverLogin" src="../../assets/images/naverLogin.png" style="width:12%; margin-right:5px">
+<router-link to=""><img src="../../assets/images/kakaoLogin.png" style="width:12%; margin-left:5px"></router-link>
 </div>
 </div>
 <br>
@@ -69,8 +69,17 @@ export default {
     data() {
         return {
             email: '',     
-            pwd: '' 
+            pwd: '',
+
+            form: {
+                email: '',
+                navertoken: ''
+            }
         }
+    },
+
+    created() {
+
     },
 
     methods: {
@@ -88,17 +97,21 @@ export default {
             self.$axios.post("http://localhost:8988/members/login", formdata)
             .then(function (res) {
                 if (res.status == 200) {
-                    if (res.data.flag) {
-                        sessionStorage.setItem('token', res.data.token);    // 세션에 뭐뭐 넣어야하지..?
-                        sessionStorage.setItem('loginId', res.data.email);
-                        sessionStorage.setItem('userNum', res.data.userNum);
+                    if (res.data.account) {
+                        if (res.data.flag) {
+                            sessionStorage.setItem('token', res.data.token);   
+                            sessionStorage.setItem('loginId', res.data.email);
+                            sessionStorage.setItem('userNum', res.data.userNum);
+                            sessionStorage.setItem('snsType', res.data.snsType);
 
-                        console.log(sessionStorage.getItem("loginId") + "/" + sessionStorage.getItem("userNum"));
+                            console.log(sessionStorage.getItem("snsType"));
                         
-                        window.location.href = "/";
-                        
+                            window.location.href = "/";
+                        } else {
+                            alert ('로그인에 실패하였습니다. 로그인 정보를 다시 확인해주세요.')
+                        }
                     } else {
-                        alert ('로그인에 실패하였습니다. 로그인 정보를 다시 확인해주세요.')
+                        alert ('허니팟에서 가입된 아이디가 아닙니다.\n네이버 혹은 카카오 계정으로 로그인해주세요.')
                     }
                 }
             })                
@@ -106,15 +119,6 @@ export default {
                 console.error(error);
             });
         },
-        kakaoLogin(){
-            const client_id='d836a71e352daf8a9987274ee1b74912'
-            const redirect_uri='http://localhost:8989/KakaoJoin'
-           
-            const uri = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
-          
-            window.location.replace(uri);
-        }
-
     }
 }
 

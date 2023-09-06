@@ -1,6 +1,8 @@
 <template>
+<br>
 
-비밀번호 찾기
+<p style="font-family: AppleSDGothicNeoB; font-size: 20px; color: #444444; margin-top:80px">비밀번호 찾기</p>
+
 
 <div v-show="findPwProcedure">
 <input v-model="name" placeholder="이름 입력">

@@ -19,16 +19,16 @@ public class NaverController {
 	private NaverService service;
 	
 	// 네이버 로그인
-	 @PostMapping("/login/{code}/{state}")
-	   public Map naverToken(@PathVariable ("code") String code, @PathVariable ("state") String state) {
-	      Map map = new HashMap();
-	      System.out.println("code" + code);
-	      System.out.println("state" + state);
+	@PostMapping("/login/{code}/{state}")
+	  public Map naverToken(@PathVariable ("code") String code, @PathVariable ("state") String state) {
+	     Map map = new HashMap();
+	     System.out.println("code" + code);
+	     System.out.println("state" + state);
 	      
-	      String access_token = service.requestToken(code, state);
-	      map.put("access_token", access_token);
-	      map.put("userinfo", service.userInfo(access_token));
+	     String access_token = service.requestToken(code, state);
+	     map.put("access_token", access_token);
+	     map.put("userinfo", service.userInfo(access_token));
 	      
-	      return map;
-	  }
+	     return map;
+	}
 }
