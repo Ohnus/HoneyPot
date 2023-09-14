@@ -70,7 +70,7 @@
 </div>
 </div>
 </div>
-<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent">공란</span> 
+<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent"></span> 
 <span v-else-if="!authCodeValid" id="checkMsg" style="color:red">인증코드를 재확인해주세요.</span>
 <span v-else-if="authCodeValid" id="checkMsg" style="color:blue">이메일 인증이 완료되었습니다.</span>
 
@@ -97,7 +97,7 @@
 </span>
 <input v-model="pwdCheck" type="password" class="form-control" placeholder="비밀번호 재입력" @blur="samePwdCheck">
 </div>
-<span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent">공란</span> 
+<span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent"></span> 
 <span v-else-if="!pwdCheckValid" id="checkMsg" style="color:#FF0000">비밀번호가 일치하지 않습니다.</span>
 <span v-else-if="pwdCheckValid" id="checkMsg" style="color:blue">비밀번호가 일치합니다.</span>
 </div>
@@ -118,7 +118,7 @@
 </div>
 </div>
 <span v-if="!nickNameRexegValid" id="checkMsg" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정해주세요.</span>
-<span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent">공란</span> 
+<span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent"></span> 
 <span v-else-if="!nicknameValid" id="checkMsg" style="color:#FF0000">중복된 닉네임입니다.</span>
 <span v-else-if="nicknameValid" id="checkMsg" style="color:blue">닉네임 설정이 완료되었습니다.</span>
 </div>

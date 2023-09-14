@@ -73,7 +73,7 @@
 </div>
 </div>
 </div>
-<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent">공란</span> 
+<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent"></span> 
 <span v-else-if="!authCodeValid" id="checkMsg" style="color:red">인증코드를 재확인해주세요.</span>
 <span v-else-if="authCodeValid" id="checkMsg" style="color:blue">이메일 인증이 완료되었습니다.</span>
 
@@ -348,6 +348,7 @@ button:hover {
     height: 50px;
     background-color: transparent;
     font-family: 'AppleSDGothicNeoB';
+    border-radius: 0px;
 }
 
 .selectbutton2 {
@@ -357,6 +358,7 @@ button:hover {
     height: 50px;
     background-color: transparent;
     font-family: 'AppleSDGothicNeoB';
+    border-radius: 0px;
 }
 
 .selectbutton1:hover {

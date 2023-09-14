@@ -12,7 +12,7 @@ import NaverJoin from '../components/member/NaverJoin.vue'
 import KakaoJoin from '../components/member/KakaoJoin.vue'
 import JoinComplete from '../components/member/JoinComplete.vue'
 import LoginPage from '../components/member/LoginPage.vue'
-import MyInfo from '../components/member/MyInfo.vue'
+import MyInfoSidebar from '../components/member/MyInfoSidebar.vue'
 import MyBankInfo from '../components/member/MyBankInfo.vue'
 import FindUserId from '../components/member/FindUserId.vue'
 import FindUserPwd from '../components/member/FindUserPwd.vue'
@@ -113,9 +113,9 @@ const routes = [
     component: LoginPage
   },
   {
-    path: '/MyInfo',
-    name: 'MyInfo',
-    component: MyInfo
+    path: '/MyInfoSidebar',
+    name: 'MyInfoSidebar',
+    component: MyInfoSidebar
   },
    {
     path: '/MyBankInfo',
