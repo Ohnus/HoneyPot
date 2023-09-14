@@ -22,6 +22,8 @@ import ChattingRoomList from '../components/chat/ChattingRoomList.vue'
 import ChattingRoom from '../components/chat/ChattingRoom.vue'
 import MyPartyList from '../components/partygroup/MyPartyList.vue'
 import PartyDetail from '../components/partygroup/PartyDetail.vue'
+import AddAutoMatching from '../components/AutoMatching/AddAutoMatching.vue'
+
 
 
 
@@ -61,6 +63,11 @@ const routes = [
     path: '/PartyDetail',
     name: 'PartyDetail',
     component: PartyDetail
+  },
+  {
+    path : '/AddAutoMatching',
+    name : 'AddAutoMatching',
+    component: AddAutoMatching
   },
   {
     path: '/RegisterTest',

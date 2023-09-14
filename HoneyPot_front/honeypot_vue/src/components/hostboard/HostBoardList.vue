@@ -28,16 +28,20 @@
                 </label>
             </div>
 
+        
+                <button @click="$router.push('/AddAutoMatching')"> 자동매칭 등록</button>
+
             <div v-if="list != null && list.length > 0">
                 <div class="order-container">
-      <div v-for="order in filteredList" :key="order.boardNum" class="order-item">
+      <div v-for="order in filteredList" :key="order.boardNum" 
+      @mouseover="changeBackgroundColor(order, true)" 
+         @mouseout="changeBackgroundColor(order, false)"
+         :style="{ backgroundColor: order.highlight ? 'lightgray' : 'white' }" class="order-item">
         <div v-if="order.ing === 0" @click="detail(order.boardNum)" class="order-details">
           <span class="highlight">{{ order.type.type }} </span><span> 을(를) </span>
           <span class="highlight">{{ formatDate(order.subEnd) }} </span> <span> 까지 </span>
                 <span> 월</span> <span class="highlight"> {{ calculateValue(order.type.price, order.maxPpl) }} </span> <span> 원에</span>
                     <span> 이용해 보세요</span>
-          
-
         </div>
       </div>
     </div>
@@ -51,8 +55,7 @@ export default {
         return {
             list: [],
             boardNum: 0,
-            // userNum : sessionStorage.getItem('loginId'),
-            userNum: 1,
+            userNum: sessionStorage.getItem("userNum"),
             type: null,
             subStart: null,
             subEnd: null,
@@ -98,6 +101,9 @@ export default {
             // price와 maxPpl를 이용하여 계산한 값을 반올림해서 반환
             const calculatedValue = Math.round(price / maxPpl);
             return calculatedValue;
+        },
+        changeBackgroundColor(order, isMouseOver) {
+            order.highlight = isMouseOver;
         }
     }
 }
@@ -108,20 +114,21 @@ span {
     font-family: 'AppleSDGothicNeoB';
     font-size: 18px;
     font-weight: 400;
- }
+}
 
 .highlight {
     font-family: 'AppleSDGothicNeoB';
-     font-size: 26px; 
-     color: #Fdd000;
-     font-weight: 500;
-     
+    font-size: 26px;
+    color: #Fdd000;
+    font-weight: 500;
+
 }
+
 .image-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 20%;
+    padding-right: 17%;
     padding-top: 3%;
 }
 
@@ -150,7 +157,7 @@ input[type=radio]:checked+label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 3%;
+    /* margin-top: 1%; */
 }
 
 .order-item {
@@ -162,6 +169,32 @@ input[type=radio]:checked+label {
     align-self: center;
     margin: 10px 10px 10px 10px;
     padding: 2%;
+    cursor: pointer;
 
+}
+button {
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: #Fdd000;
+    color: #444444;
+    border: 2px solid #Fdd000;
+    border-radius: 10px;
+
+    margin: 3% 0 0 40%;
+    /*위치조정*/
+    font-weight: 900;
+    /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */
+    font-size: 16px;
+    /* 지금 버튼 사이즈에는 이게 딱임 */
+
+}
+
+button:hover {
+    background-color: white;
 }
 </style>

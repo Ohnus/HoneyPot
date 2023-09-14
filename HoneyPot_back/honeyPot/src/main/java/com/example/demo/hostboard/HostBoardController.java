@@ -35,6 +35,7 @@ public class HostBoardController {
 	//파티장 글 등록 
 	@PostMapping("")
 	public Map add(HostBoardDto dto) {
+		System.out.println("받아온dto" + dto.getUserNum());
 		Map map = new HashMap();
 		HostBoardDto dto2 = null;
 		boolean flag = true;
@@ -70,7 +71,6 @@ public class HostBoardController {
 	public Map del(@PathVariable("boardNum") int boardNum) {
 		Map map = new HashMap();
 		boolean flag = true;
-		
 		ArrayList<PartyGroupDto> list = PGService.findByStartCheck(boardNum, 0); // startcheck가 0인 것들 골라와
 		if (list != null) { // 0 이라면
 			HBService.delete(boardNum); // 취소 가능
