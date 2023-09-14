@@ -37,6 +37,13 @@ public class MemberService {
 		return key;
 	}
 	
+	// 카카오 userNum 생성
+	public String generateRandomUserNum(int snsType, String userNum) {
+		System.out.println("userNum 생성");
+		String key = "KKO"+userNum;
+		
+		return key;
+	}
 
 	// 회원가입 및 수정
 	public MemberDto save(MemberDto dto) {

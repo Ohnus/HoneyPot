@@ -46,7 +46,7 @@
 <div class="row justify-content-center">
 <div class="col-md-3" style="margin-bottom: 10px">
 <img @click="naverLogin" src="../../assets/images/naverLogin.png" style="width:12%; margin-right:5px">
-<router-link to=""><img src="../../assets/images/kakaoLogin.png" style="width:12%; margin-left:5px"></router-link>
+<router-link to=""><img src="../../assets/images/kakaoLogin.png" @click="kakaoLogin()" style="width:12%; margin-left:5px"></router-link>
 </div>
 </div>
 <br>
@@ -119,6 +119,14 @@ export default {
                 console.error(error);
             });
         },
+        kakaoLogin(){
+            const client_id='d836a71e352daf8a9987274ee1b74912'
+            const redirect_uri='http://localhost:8989/KakaoJoin'
+           
+            const uri = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
+          
+            window.location.replace(uri);
+        }
     }
 }
 

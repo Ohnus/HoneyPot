@@ -194,13 +194,17 @@ public class MemberController {
 		System.out.println(dto);
 		
 		Map map = new HashMap();
-		
-		String userNum = service.generateRandomUserNum(dto.getSnsType()); 	// 회원번호 난수생성
+		String userNum;
+		if(dto.getSnsType()==1) {
+			userNum = service.generateRandomUserNum(dto.getSnsType(),dto.getUserNum());// 카카오 userNum
+		}else {
+			userNum = service.generateRandomUserNum(dto.getSnsType()); 	// 회원번호 난수생성
+		}
 		String billingKey = "0";	// 빌링키 값 0 설정
 		
 		dto.setUserNum(userNum);
 		dto.setBillingKey("0");
-	
+		
 		MemberDto dto2 = service.save(dto);
 		System.out.println(dto2);
 		
@@ -509,6 +513,27 @@ public class MemberController {
 		return map;
 	}
 	
+	// userNum (카카오 로그인 시 기존회원 확인)
+	@GetMapping("/userNumCheck/{userNum}")
+	public Map userNumCheck(@PathVariable("userNum") String userNum) {
+		boolean flag = false; // 회원가입 안되어 있음
+		
+		System.out.println("userNum 회원가입 확인");
+		Map map = new HashMap<>();
+		
+		System.out.println(userNum);
+		MemberDto dto = service.getByUserNum(userNum);
+		
+		if(dto != null && userNum.equals(dto.getUserNum())) {
+			System.out.println("이미 가입된 회원");
+			flag =false;
+		} else {
+			flag = true;
+		}
+		map.put("flag", flag);
+		map.put("dto", dto);
+		return map;
+	}
 	// 로그아웃
 	
 	// 회원탈퇴

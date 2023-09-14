@@ -4,6 +4,9 @@
 
         <div>loginId : {{ id }}</div>
         <div>userNum : {{ userNum }}</div>
+        <div>token : {{ token }}</div>
+        <div>snsType : {{ snstype }}</div>
+
 
         <div class="chatroom" v-for="chatroom in list" :key="chatroom.chatroomNum">
             <div class="chatheader" @click="enterchatroom(chatroom.boardNum)">{{ chatroom.subject }}</div>
@@ -56,6 +59,8 @@ export default {
         return {
             id: sessionStorage.getItem("loginId"),
             userNum: sessionStorage.getItem("userNum"),
+            token:sessionStorage.getItem("token"),
+            snstype:sessionStorage.getItem("snsType"),
             boardNum: '',
             members:[],//각 채팅방 별 참여 멤버목록
 
