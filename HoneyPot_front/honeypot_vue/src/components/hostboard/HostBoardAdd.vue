@@ -140,8 +140,8 @@ export default {
     data() {
         return {
 
-            // userNum: sessionStorage.getItem('username'),
-            userNum: 1,
+            userNum: sessionStorage.getItem("userNum"),
+            // userNum: 1,
             type: '',
             ottAcct: null,
             ottPwd: null,
@@ -159,6 +159,7 @@ export default {
 
         }
     },
+
     computed: {
         minDate() {
             return dayjs().format('YYYY-MM-DD');
@@ -225,6 +226,7 @@ export default {
             const self = this;
 
             let formdata = new FormData();
+            console.log(self.userNum)
             formdata.append('userNum', self.userNum)
             formdata.append('type', self.type)
             formdata.append('ottAcct', self.ottAcct)

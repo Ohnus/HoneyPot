@@ -28,16 +28,17 @@ export default {
     data() {
         return {
             list : [],
-            // userNum : this.$route.query.userNum
-            userNum : 3
+            userNum: sessionStorage.getItem("userNum"),
+ 
 
 
         }
 
     },
     created : function(){
-        const self = this;
         
+        const self = this;        
+        self.userNum= sessionStorage.getItem("userNum"),
         self.$axios.get('http://localhost:8988/partygroup/' + self.userNum)
             .then(function (res) {
                 if (res.status == 200) {

@@ -47,10 +47,10 @@ public class AutoMatching {
 	@OnDelete(action = OnDeleteAction.SET_NULL) 
 	private Ott type; 
 	
-	private LocalDate startDate;
-	private LocalDate exDate;
-	private int monthMin;
-	private int monthMax;
+	private LocalDate startDate; //언제시작인 것? 
+	private LocalDate exDate; // 마감일자는? 
+	private int monthMin; //최소 몇개월? 
+	private int monthMax; // 최대 몇개월 
 	
 	 @ColumnDefault("0")
 	 @Column(nullable = false)
