@@ -1,28 +1,32 @@
 <template>
-    <div class="myBankInfo">
-    
-        <select v-model="bankCode">
-            <option value="null">은행선택</option>
-            <option value="004">국민은행</option>
-            <option value="020">우리은행</option>
-            <option value="088">신한은행</option>
-            <option value="003">기업은행</option>
-            <option value="023">SC제일은행</option>
-            <option value="011">농협은행</option>
-            <option value="005">외환은행</option>
-            <option value="090">카카오뱅크</option>
-            <option value="032">부산은행</option>
-            <option value="071">우체국</option>
-            <option value="031">대구은행</option>
-            <option value="035">제주은행</option>
-            <option value="007">수협은행</option>
-            <option value="027">씨티은행</option>
-        </select>
-        <input v-model="bankAcc" type="text" placeholder="계좌번호를 입력주세요('-' 제외)">
-    
-        <button @click="bankCheck">수정완료</button>
 
-    </div>
+<div class="myBankInfo">
+<p class="menuTitle">인출 계좌 관리</p><hr>
+<p class="menuComment">본인 명의의 계좌만 등록 가능합니다.</p>
+    
+<select v-model="bankCode">
+    <option value="null">은행선택</option>
+    <option value="004">국민은행</option>
+    <option value="020">우리은행</option>
+    <option value="088">신한은행</option>
+    <option value="003">기업은행</option>
+    <option value="023">SC제일은행</option>
+    <option value="011">농협은행</option>
+    <option value="005">외환은행</option>
+    <option value="090">카카오뱅크</option>
+    <option value="032">부산은행</option>
+    <option value="071">우체국</option>
+    <option value="031">대구은행</option>
+    <option value="035">제주은행</option>
+    <option value="007">수협은행</option>
+    <option value="027">씨티은행</option>
+</select>
+
+<input v-model="bankAcc" type="text" placeholder="계좌번호를 입력주세요('-' 제외)">
+<button @click="bankCheck">수정완료</button>
+
+</div>
+
 </template>
     
 <script>
@@ -129,4 +133,19 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.menuTitle {
+    font-family: 'AppleSDGothicNeoB';
+    font-size: 20px;
+    text-align: left;
+}
+.menuComment {
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 14px;
+    color: #bdbdbd;
+    text-align: left;
+}
+
+
+
+</style>

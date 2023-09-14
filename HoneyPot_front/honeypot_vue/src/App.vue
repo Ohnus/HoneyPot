@@ -13,7 +13,7 @@
     <router-link to="/RecurringTest">RecurringTest</router-link>
     <router-link to="/JoinMainpage">회원가입</router-link> |
     <router-link to="/LoginPage">로그인</router-link> |
-    <router-link to="/MyInfo">내정보</router-link> |
+    <router-link to="/MyInfoSidebar">내정보</router-link> |
     <router-link to="/ChattingRoomList">채팅하기</router-link>
   </nav>
   <router-view/>
