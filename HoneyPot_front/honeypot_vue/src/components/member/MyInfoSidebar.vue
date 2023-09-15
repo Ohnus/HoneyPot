@@ -18,7 +18,7 @@
 
 <p class="ul">파티 관리</p>
 <div style="margin-left: -48px;">
-<button @click="activeComp=''">파티 참여 현황</button>
+<button @click="activeComp='my-partylist'">파티 참여 현황</button>
 <button @click="activeComp=''">파티 매칭 현황</button>
 </div>
 
@@ -44,7 +44,8 @@ export default {
           activeComp: 'my-info',
           cash: ''
         }
-    }
+    },
+
 }
 
 </script>

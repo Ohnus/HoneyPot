@@ -221,7 +221,7 @@ button {
 
     margin: 80px 0 0 70px;
     /*위치조정*/
-    font-weight: 900;
+    font-weight: 400;
     /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */
     font-size: 16px;
     /* 지금 버튼 사이즈에는 이게 딱임 */
