@@ -2,38 +2,38 @@
     <div>
 
         <div class="ott" v-show="firstStep">
-            <p style="padding-top: 2%; font-size: 28px;">어떤 파티를 만드시겠어요?</p>
+            <p class="ottselect">어떤 파티를 만드시겠어요? </p>
             <div class="firstline">
                 <input type="radio" class="radiobtn" v-model="type" value="Netflix" id="img_Neflix">
                 <label for="img_Neflix">
                     <img :src="require('@/assets/images/netflix.png')" />
-                    <p>넷플릭스</p>
+                    <p class="ottname">넷플릭스</p>
                 </label>
                 <input type="radio" class="radiobtn" v-model="type" value="Tving" id="img_Tving">
                 <label for="img_Tving">
                     <img :src="require('@/assets/images/tving.png')" />
-                    <p>티빙</p>
+                    <p class="ottname">티빙</p>
                 </label>
                 <input type="radio" class="radiobtn" v-model="type" value="Wave" id="img_Wave">
                 <label for="img_Wave">
                     <img :src="require('@/assets/images/wave1.png')" />
-                    <p>웨이브</p>
+                    <p class="ottname"> 웨이브</p>
                 </label>
 
                 <input type="radio" class="radiobtn" v-model="type" value="Disney+" id="img_Disney">
                 <label for="img_Disney">
                     <img :src="require('@/assets/images/disney.png')" />
-                    <p>디즈니플러스</p>
+                    <p class="ottname">디즈니플러스</p>
                 </label>
                 <input type="radio" class="radiobtn" v-model="type" value="Watcha" id="img_Watcha">
                 <label for="img_Watcha">
                     <img :src="require('@/assets/images/watcha.png')" />
-                    <p>왓챠</p>
+                    <p class="ottname">왓챠</p>
                 </label>
                 <input type="radio" class="radiobtn" v-model="type" value="Apple" id="img_Apple">
                 <label for="img_Apple">
                     <img :src="require('@/assets/images/apple.png')" />
-                    <p>애플티비</p>
+                    <p class="ottname">애플티비</p>
                 </label>
             </div>
 
@@ -96,14 +96,14 @@
                 <br />
                 <p style="font-size:15px; margin-top:-15px;">
                     본인을 포함한 파티 시작 최소 인원과 최대 인원을 입력해 주세요.<br />
-                    최소 인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해 드려요. <br/>
-                금액은 최대 인원으로 측정 되며 최소 인원으로 시작 했다면 파티장이 1인 요금을 더 부담해야 해요.</p>
+                    최소 인원만 모여도 파티는 시작되며 최대 인원까지 계속 모집해 드려요. <br />
+                    금액은 최대 인원으로 측정 되며 최소 인원으로 시작 했다면 파티장이 1인 요금을 더 부담해야 해요.</p>
             </div>
             <div class="pplSelect">
                 <p> 모집인원을 입력하여 주세요 </p>
-                <div><input type="number" v-model="minPpl" placeholder="최소인원" @input="validateInput('minPpl')" >
+                <div><input type="number" v-model="minPpl" placeholder="최소인원" @input="validateInput('minPpl')">
                 </div>
-                <div><input type="number" v-model="maxPpl" placeholder="최대인원"  @input="validateInput('maxPpl')" >
+                <div><input type="number" v-model="maxPpl" placeholder="최대인원" @input="validateInput('maxPpl')">
                 </div>
                 <button @click="threeStep">다음</button>
             </div>
@@ -126,7 +126,7 @@
                 <div>
                     <input type="date" :min=minDate data-placeholder="시작 날짜" v-model="subStart" required>
                 </div>
-                <div><input type="number" placeholder="진행 할 개월 수 " v-model="month" :min="1"></div>
+                <div><input type="number" placeholder="진행 할 개월 수 " v-model="month" @input="MaxValue(month, 24)"></div>
                 <button @click="fourStep">등록하기</button>
             </div>
         </div>
@@ -141,7 +141,6 @@ export default {
         return {
 
             userNum: sessionStorage.getItem("userNum"),
-            // userNum: 1,
             type: '',
             ottAcct: null,
             ottPwd: null,
@@ -149,6 +148,7 @@ export default {
             maxPpl: null,
             subStart: null,
             month: null,
+            
 
             //true 랑 false 
             firstStep: true,
@@ -184,9 +184,16 @@ export default {
             }
         },
         validateInputId(field) {
-      // 입력값에서 한글 안되게 하기
-      this[field] = this[field].replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
-    },
+            // 입력값에서 한글 안되게 하기
+            // if (this[field] != null && this[field] !== '') {
+
+            const korean = /[ㄱ-ㅎㅏ-ㅣ가-힣\s]/.test(this[field]);
+            if (korean) {
+                this[field] = '';
+            }
+            
+        
+        },
 
         threeStep() {
             if (this.minPpl && this.maxPpl && this.minPpl <= this.maxPpl) {
@@ -211,7 +218,13 @@ export default {
                 this[field] = maxValue;
             }
         },
- 
+        MaxValue(value, maxValue) {
+            if (value > maxValue) {
+                this.month = maxValue;
+            }
+        },
+
+
         fourStep() {
 
             if (this.subStart && this.month) {
@@ -257,6 +270,18 @@ p {
     font-size: 20px;
 }
 
+.ottselect {
+    font-size: 28px;
+    margin-top: 4%;
+}
+
+.ottname {
+    font-family: 'AppleSDGothicNeoB';
+    font-size: 20px;
+    margin-top: 4%;
+    margin-bottom: 1%;
+}
+
 .radiobtn {
     opacity: 0;
     padding: 2%;
@@ -272,9 +297,7 @@ img {
 
 input[type=radio]:checked+label {
     border-bottom: 5px solid #Fdd000;
-    /* border-radius: 23px; */
-    /* padding: 5px 5px 5px 5px; */
-    /* padding-bottom: 2px; */
+
 }
 
 .firstline {
@@ -297,7 +320,7 @@ button {
     color: #444444;
     border: 2px solid #Fdd000;
     border-radius: 10px;
-    font-weight: 900;
+    font-weight: 400;
     font-size: 16px;
 }
 
@@ -336,6 +359,14 @@ button:hover {
 
 }
 
+input::placeholder {
+    color: #444444;
+}
+
+input::data-placeholder {
+    color: #444444;
+}
+
 input[type=text],
 input[type=password],
 input[type=number],
@@ -360,10 +391,6 @@ input[type=date]::before {
 input[type="date"]:valid::before {
     display: none;
 }
-
-
-
-
 
 input[type=date] {
     position: relative;

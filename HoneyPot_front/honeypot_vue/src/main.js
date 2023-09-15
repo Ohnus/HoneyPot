@@ -5,6 +5,10 @@ import store from './store'
 import axios from 'axios'
 import MyInfo from './components/member/MyInfo.vue'
 import MyBankInfo from './components/member/MyBankInfo.vue'
+import MyPartyList from './components/partygroup/MyPartyList.vue'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.css'
 
 //window.Kakao.init("bb62c20662c03ee0780acbc7749790fc");
 
@@ -14,6 +18,8 @@ app.use(router)
 app.config.globalProperties.$axios = axios; 
 app.component('my-info', MyInfo);
 app.component('my-bankinfo', MyBankInfo);
+app.component('my-partylist', MyPartyList);
+
 
 app.mount('#app')
 
