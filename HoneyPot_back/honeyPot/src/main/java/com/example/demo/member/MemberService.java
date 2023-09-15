@@ -11,7 +11,7 @@ public class MemberService {
 	@Autowired
 	private MemberDao dao;
 	
-	// 회원번호 난수 생성
+	// 허니팟, 네이버 회원번호 난수 생성
 	public String generateRandomUserNum(int snsType) {
 		Random random = new Random();
 		
@@ -20,9 +20,6 @@ public class MemberService {
 		switch (snsType) {
 			case 0:				// 허니팟 계정 가입
 				key = "HNP";
-				break;
-			case 1:				// 카카오 계정 가입
-				key = "KKO";
 				break;
 			case 2:				// 네이버 계정 가입
 				key = "NAV";

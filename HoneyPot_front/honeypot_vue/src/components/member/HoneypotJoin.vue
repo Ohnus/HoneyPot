@@ -1,6 +1,6 @@
 <template>
 
-<div v-if="duplicated1" class="duplicateNotice">
+<!-- <div v-if="duplicated1" class="duplicateNotice">
 <div>본인 인증된 정보로 이미 가입된 이력이 존재합니다.</div>
 <br>
 <router-link to="/FindUserId"><button>아이디 찾기</button></router-link>
@@ -12,7 +12,7 @@
 <router-link to=""><button>메인으로</button></router-link>
 </div>
 
-<div v-else-if="certified" class="HoneypotJoinForm">    
+<div v-else-if="certified" class="HoneypotJoinForm">     -->
 
 <br>
 <p style="font-family: AppleSDGothicNeoB; font-size: 20px">회원가입</p>
@@ -70,8 +70,8 @@
 </div>
 </div>
 </div>
-<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent"></span> 
-<span v-else-if="!authCodeValid" id="checkMsg" style="color:red">인증코드를 재확인해주세요.</span>
+<span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent">'</span> 
+<span v-else-if="!authCodeValid" id="checkMsg" style="color:red;">인증코드를 재확인해주세요.</span>
 <span v-else-if="authCodeValid" id="checkMsg" style="color:blue">이메일 인증이 완료되었습니다.</span>
 
 
@@ -97,7 +97,7 @@
 </span>
 <input v-model="pwdCheck" type="password" class="form-control" placeholder="비밀번호 재입력" @blur="samePwdCheck">
 </div>
-<span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent"></span> 
+<span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent">'</span> 
 <span v-else-if="!pwdCheckValid" id="checkMsg" style="color:#FF0000">비밀번호가 일치하지 않습니다.</span>
 <span v-else-if="pwdCheckValid" id="checkMsg" style="color:blue">비밀번호가 일치합니다.</span>
 </div>
@@ -123,23 +123,43 @@
 <span v-else-if="nicknameValid" id="checkMsg" style="color:blue">닉네임 설정이 완료되었습니다.</span>
 </div>
 
-<div> 약관 추가 예정.. ㅎ </div>
 
-<button @click="join">허니팟 시작하기</button>
+<div class="row justify-content-center" style="margin-top:22px; margin-bottom:22px">   
+<div class="col-md-4">
+
+<div class="terms">
+<br>
+<p style="font-family: 'AppleSDGothicNeoR'; color:#BDBDBD; font-size:15px">회원가입을 위해 이용약관에 동의해주세요.</p>
+
+<label class="container"><span style="color:#Fdd000; font-weight: bold;"> (필수)</span> 이용 약관
+  <input type="checkbox" v-model ="serviceAgree">
+  <span class="checkmark"></span>
+</label>
+<label class="container"><span style="color:#Fdd000; font-weight: bold;"> (필수)</span> 개인정보 수집 및 이용 동의
+  <input type="checkbox" v-model="personalInfoAgree">
+  <span class="checkmark"></span>
+</label>
+
+</div>
+</div>
 </div>
 
+
+<button @click="join">허니팟 시작하기</button>
+<!-- </div>
 <div v-else class="certificationNotice" style="margin-top:100px">
 <br>
 <div style="font-size:20px">허니팟은 100% 인증을 통해<br>믿을 수 있는 구독 환경을 제공합니다.</div><br>
 <div style="color:#BDBDBD">실명 인증을 진행해주세요.</div><br>
 <button @click="certification">확인</button>
 <br>
-</div>
+</div> -->
 
 </template>
 
-
 <script>
+
+
 export default {
     name: 'HoneypotJoin',
     data() {
@@ -155,6 +175,8 @@ export default {
             authCodeMsgBlank: true,
             pwdMsgBlank: true,
             nickNameMsgBlank: true,
+            serviceAgree: false,
+            personalInfoAgree: false,
             
             name: self.name,    // 본인인증한 이름 정보
             phone: self.phone,  // 본인인증한 핸드폰 번호 정보
@@ -344,7 +366,7 @@ export default {
 
             // 값이 모두 입력되어있고, 유효성 검사를 모두 통과한 경우만 회원가입 진행
             if (this.checkEmpty(self.email) && this.checkEmpty(self.pwd) && this.checkEmpty(self.pwdCheck) && this.checkEmpty(self.nickname)
-                && self.authCodeValid && self.pwdValid && self.pwdCheckValid && self.nicknameValid) {
+                && self.authCodeValid && self.pwdValid && self.pwdCheckValid && self.nicknameValid && self.serviceAgree && self.personalInfoAgree) {
                 const formdata = new FormData();
 
                 formdata.append('name', self.name);
@@ -427,6 +449,83 @@ input::-webkit-input-placeholder {
     top: 40%;
     left: 40%;
     font-family: 'AppleSDGothicNeoB';
+}
+
+.terms {
+    border: 1px solid #ece9e9;
+    border-radius: 7px;
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 13px;
+    color: #444444;
+}
+
+.container {
+  display: block;
+  position: relative;
+  padding-left: 150px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: 'AppleSDGothicNeoR';
+  text-align: left;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 2px;
+  left: 125px;
+  height: 13px;
+  width: 13px;
+  background-color: #e1e0e0;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #e1e0e0;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #Fdd000;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 4.5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 

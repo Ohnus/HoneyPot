@@ -4,9 +4,11 @@
 
 <div class="cashState">
 <p class="cashTitle">허니팟 캐시 현황</p>
+<div style="margin-top:20px;">
 <img src="../../assets/images/coin.png" style="width:35px; height:30px">
 <span id="cash">{{ cash }}원</span>
-<p style="margin-top:15px;"><router-link to=""><button style="width:135px;">내역보기</button></router-link></p>
+</div>
+<p style="margin-top:25px;"><router-link to=""><button style="width:135px;">내역보기</button></router-link></p>
 </div>
 
 <div class="sideMenu">
@@ -58,9 +60,10 @@ export default {
     border-radius: 20px;
     padding: 30px;
     width: 250px;
-    height: 180px;
+    height: 200px;
     position: relative;
     left: 20px;
+    top: -20px;
 
 }
 
@@ -80,9 +83,9 @@ export default {
     border-radius: 20px;
     padding: 30px;
     width: 1000px;
-    height: 460px;
+    height: 480px;
     position: absolute;
-    top: 100px;
+    top: 80px;
     left: 390px;
 
 }

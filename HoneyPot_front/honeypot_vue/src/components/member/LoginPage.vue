@@ -1,5 +1,6 @@
 <template>
 <br>
+<button @click="logout()">로그아웃</button>
 
 <div class="login">
 <p style="font-family: AppleSDGothicNeoB; font-size: 20px; color: #444444; margin-top:100px">로그인</p>
@@ -45,8 +46,8 @@
 
 <div class="row justify-content-center">
 <div class="col-md-3" style="margin-bottom: 10px">
-<img @click="naverLogin" src="../../assets/images/naverLogin.png" style="width:12%; margin-right:5px">
-<router-link to=""><img src="../../assets/images/kakaoLogin.png" @click="kakaoLogin()" style="width:12%; margin-left:5px"></router-link>
+<img src="../../assets/images/naverLogin.png" @click="naverLogin()" style="width:12%; margin-right:5px">
+<img src="../../assets/images/kakaoLogin.png" @click="kakaoLogin()" style="width:12%; margin-left:5px">
 </div>
 </div>
 <br>
@@ -120,13 +121,28 @@ export default {
                 console.error(error);
             });
         },
+
         kakaoLogin(){
             const client_id='d836a71e352daf8a9987274ee1b74912'
             const redirect_uri='http://localhost:8989/KakaoJoin'
-           
+            
             const uri = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
-          
+            
             window.location.replace(uri);
+        },
+
+        naverLogin() {
+            const client_id = "XUfF5HOL1SVNILfyWR1b";
+            const redirect_uri = encodeURIComponent("http://localhost:8989/NaverJoin", "UTF-8");
+
+            const apiURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`
+            window.location.href = apiURL;
+        },
+
+        logout() {
+            sessionStorage.clear();
+            window.location.href = "/";
+
         }
     }
 }
@@ -156,50 +172,50 @@ button {
 }
 
 button:hover {
-  background-color: white;
-  color: #444444;
-  font-family: 'AppleSDGothicNeoB';
+    background-color: white;
+    color: #444444;
+    font-family: 'AppleSDGothicNeoB';
 }
 
 #line {
-  border: none;
-  height: 1px; /* 가로선의 높이를 조절하세요. */
-  background-color: #bdbdbd; /* 가로선의 색상을 설정하세요. */
-  margin-top: 10px; /* 가로선 위 여백을 조절하세요. */
-  margin-bottom: 10px; /* 가로선 아래 여백을 조절하세요. */
-  /* margin-right: -100px;
-  margin-left: -100px; */
-  width: 115px;
+    border: none;
+    height: 1px; /* 가로선의 높이를 조절하세요. */
+    background-color: #bdbdbd; /* 가로선의 색상을 설정하세요. */
+    margin-top: 10px; /* 가로선 위 여백을 조절하세요. */
+    margin-bottom: 10px; /* 가로선 아래 여백을 조절하세요. */
+    /* margin-right: -100px;
+    margin-left: -100px; */
+    width: 115px;
 }
 
 .findMenu {
-  font-family: 'AppleSDGothicNeoR';
-  fort-size:13px;
-  color: #BDBDBD;
+    font-family: 'AppleSDGothicNeoR';
+    fort-size:13px;
+    color: #BDBDBD;
 }
 
 .findButton {
-  background-color: transparent;
-  border: 0px;
-  font-family: 'AppleSDGothicNeoM';
-  font-size: 13px;
-  color: #BDBDBD;
+    background-color: transparent;
+    border: 0px;
+    font-family: 'AppleSDGothicNeoM';
+    font-size: 13px;
+    color: #BDBDBD;
 
 }
 
 input::-webkit-input-placeholder {
-  color: #BDBDBD;
+    color: #BDBDBD;
 }
 
 .form-control {
-  font-family: 'AppleSDGothicNeoR';
-  font-size: 15px;
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 15px;
 }
 
 p {
-  font-family: 'AppleSDGothicNeoR';
-  font-size: 13px;
-  color: #BDBDBD;
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 13px;
+    color: #BDBDBD;
 }
 
 

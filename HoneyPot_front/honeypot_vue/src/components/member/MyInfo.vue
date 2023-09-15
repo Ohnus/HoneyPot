@@ -1,6 +1,14 @@
 <template>
 
-<div class="myInfo">
+<div>
+
+<div style="position: fixed; top:570px; left:800px; z-index: 2;">
+    <button @click="editInfo" style="margin-right: 5px;">수정완료</button>  
+    <button @click="userOut" style="margin-left: 5px;">회원탈퇴</button>
+</div>
+
+
+<div class="myInfo" style="z-index: 1;">
     <p class="menuTitle">내 정보 수정</p><hr>
     <div class="row justify-content-center" style="margin-top: 30px;">
     <div class="col-md-4">
@@ -19,7 +27,7 @@
     <div class="userInfo">
 
     <div class="row justify-content-center">   
-    <div class="col-md-6">
+    <div class="col-md-5">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="1 1 14 14">
@@ -30,7 +38,7 @@
     </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
@@ -38,12 +46,14 @@
     </svg>
     </span>
     <input v-model="phone" type="text" class="form-control" readonly>
+
     </div>
+    <span v-if="blank" id="checkMsg" style="color:transparent;">'</span> 
     </div>
     </div>
 
-    <div class="row justify-content-center" style="margin-top:15px">
-    <div class="col-md-12">
+    <div class="row justify-content-center">
+    <div class="col-md-10">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
@@ -52,13 +62,14 @@
     </span>
     <input v-model="email" type="email" class="form-control">
     <button v-if="hnpAccount" @click="sendEmail">메일 변경</button>
-    </div>
+    </div>    
+    <span v-if="blank" id="checkMsg" style="color:transparent;">'</span> 
     </div>
     </div>
 
     <div v-show="isSentEmail" class="authEmail">
-    <div class="row justify-content-center" style="margin-top:15px;">
-    <div class="col-md-12">
+    <div class="row justify-content-center">
+    <div class="col-md-10">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
@@ -71,13 +82,13 @@
     </div>
     </div>
     </div>
-    <span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent;"></span> 
+    <span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent;">'</span> 
     <span v-else-if="!authCodeValid" id="checkMsg" style="color:red;">인증코드를 재확인해주세요.</span>
     <span v-else-if="authCodeValid" id="checkMsg" style="color:blue;">이메일 인증이 완료되었습니다.</span>
     </div>
     
-    <div class="row justify-content-center" style="margin-top:15px">
-    <div class="col-md-6">
+    <div class="row justify-content-center" v-if="hnpAccount">
+    <div class="col-md-5">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
@@ -86,11 +97,11 @@
     </span>
     <input v-model="pwd" type="password" class="form-control" placeholder="비밀번호 입력" @blur="checkPwd">
     </div>
-    <span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent">''</span> 
-    <span v-else-if="!pwdMsgBlank" v-show="!pwdValid" id="checkMsg" style="color:red">대문자, 특수문자 포함 8자리 이상으로 설정해주세요.</span>
+    <span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent">'</span> 
+    <span v-else-if="!pwdMsgBlank" v-show="!pwdValid" id="checkMsg" style="color:red">대문자, 특수문자 포함 8자리 이상으로 설정</span>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
@@ -99,14 +110,14 @@
     </span>
     <input v-model="pwdCheck" type="password" class="form-control" placeholder="비밀번호 재입력" @blur="samePwdCheck">
     </div>
-    <span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent"></span> 
+    <span v-if="pwdMsgBlank" id="checkMsg" style="color:transparent">'</span> 
     <span v-else-if="!pwdCheckValid" id="checkMsg" style="color:#FF0000">비밀번호가 일치하지 않습니다.</span>
     <span v-else-if="pwdCheckValid" id="checkMsg" style="color:blue">비밀번호가 일치합니다.</span>
     </div>
     </div>
 
     <div class="row justify-content-center">
-    <div class="col-md-12">
+    <div class="col-md-10">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-sunglasses" viewBox="0 0 16 16">
@@ -115,25 +126,22 @@
     </svg>
     </span>
     <input v-model="nickname" type="text" class="form-control" placeholder="닉네임 입력">
-    <button @click="checkNickname">중복 체크</button>
+    <button @click="checkNickname">닉네임 변경</button>
     </div>
     </div>
-    <span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent"></span> 
-    <span v-else-if="!nickNameRexegValid" id="checkMsg" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정해주세요.</span>
-    <span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent">''</span> 
+    </div>
+    <span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent">'</span> 
+    <span v-else-if="!nickNameRexegValid" id="checkMsg" style="color:#FF0000">띄어쓰기 없이 8자리 미만으로 설정</span>
+    <span v-if="nickNameMsgBlank" id="checkMsg" style="color:transparent">'</span> 
     <span v-else-if="!nicknameValid" id="checkMsg" style="color:#FF0000">중복된 닉네임입니다.</span>
     <span v-else-if="nicknameValid" id="checkMsg" style="color:blue">닉네임 설정이 완료되었습니다.</span>
     </div>
     </div>
-    </div>
-    </div>
+    </div>    
+</div>
 
-    <div>
-    <button @click="editInfo">수정완료</button>  
-    <button @click="userOut">회원탈퇴</button>
-    </div>   
+</div>
 
-    </div>
 
 </template>
 
@@ -152,12 +160,13 @@ export default {
             pwdValid: false,            // 비밀번호 정규식 체크
             nickNameRexegValid: false,  // 닉네임 정규식 체크
             nickNameValid: false,       // 닉네임 중복 체크
+            blank: true,
             authCodeMsgBlank: true,
             pwdMsgBlank: true,
             nickNameMsgBlank: true,
             
             userNum: sessionStorage.getItem('userNum'),
-            profile: '',
+            profile: 'self.profile',
             name: '',
             phone: '',
             email: '',
@@ -195,7 +204,7 @@ export default {
                         if (self.profile == null) {
                             self.profile = require('../../assets/images/BasicUserImg.png');
                         } else {
-                            self.profile = res.data.profile;    // 이걸로 가져와도 되나..? 흠
+                            self.profile = res.data.profile;   
                         }
                     } else {
                         alert('에러코드: ' + res.status)
@@ -209,7 +218,7 @@ export default {
 
         previewImage(event) {
             const file = event.target.files[0];
-            if(file) {
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = () => {
                     this.profile = reader.result;
@@ -346,6 +355,12 @@ export default {
 
             console.log(self.email + " / " + self.pwd + " / " + self.nickname);
 
+            if (document.getElementById('file-input').value !== '') {
+                const file = document.getElementById('file-input').files[0]
+
+                formdata.append('f', file)
+            }
+
             self.$axios.post("http://localhost:8988/members/edit/" + self.userNum, formdata)
             .then(function (res){
                 if (res.status == 200) {
@@ -412,6 +427,11 @@ button:hover {
 #checkMsg {
     font-size: 11px;
     font-family: 'AppleSDGothicNeoR';
+}
+
+.form-control {
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 14px;
 }
 
 input::-webkit-input-placeholder {

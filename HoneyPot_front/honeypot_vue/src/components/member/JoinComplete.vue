@@ -10,7 +10,7 @@
 <br>
 <br>
 
-<router-link to="/메인페이지로 이동 예정"><button>허니팟 이용하러 가기</button></router-link>
+<router-link to="/"><button>허니팟 이용하러 가기</button></router-link>
 </div>
 
 </template>

@@ -164,29 +164,6 @@ public class MemberController {
 	}
 	
 	
-	// 이메일 중복 체크 (sns 가입 시 비교)
-	@GetMapping("/emailCheck")
-	public Map emailCheck(@RequestParam("email") String email) {
-		boolean flag = false; // 중복된 이메일 없음
-		
-		System.out.println("이메일 중복 검사");
-		Map map = new HashMap<>();
-		
-		System.out.println(email);
-		MemberDto dto = service.getByEmail(email);
-		
-		if(dto != null && email.equals(dto.getEmail())) {
-			System.out.println("중복 된 메일 존재");
-			flag = true;
-		} else {
-			flag = false;
-		}
-		map.put("flag", flag);
-		
-		return map;
-	}
-	
-	
 	// 회원가입
 	@PostMapping("/join")		
 	public Map join(MemberDto dto) {
@@ -194,12 +171,15 @@ public class MemberController {
 		System.out.println(dto);
 		
 		Map map = new HashMap();
+		
 		String userNum;
-		if(dto.getSnsType()==1) {
-			userNum = service.generateRandomUserNum(dto.getSnsType(),dto.getUserNum());// 카카오 userNum
-		}else {
-			userNum = service.generateRandomUserNum(dto.getSnsType()); 	// 회원번호 난수생성
+		
+		if (dto.getSnsType() == 1) {
+			userNum = service.generateRandomUserNum(dto.getSnsType(), dto.getUserNum()); // 카카오 회원번호
+		} else {
+			userNum = service.generateRandomUserNum(dto.getSnsType()); 	// 허니팟,네이버 회원번호 난수생성
 		}
+		
 		String billingKey = "0";	// 빌링키 값 0 설정
 		
 		dto.setUserNum(userNum);
@@ -212,6 +192,7 @@ public class MemberController {
 		
 		return map;
 	}
+	
 	
 	// 본인인증 아이디 찾기
 	@GetMapping("/getId")
@@ -332,56 +313,35 @@ public class MemberController {
 		return map;
 	}
 	
-	
-	// 프로필 이미지 수정
-	@PostMapping("/editImg/{userNum}")
-	public Map editImg(@PathVariable("userNum") String userNum, @RequestParam("file") MultipartFile f, MemberDto dto) {
-		Map map = new HashMap<>();
-		
-		String usernum = dto.getUserNum();
-		File dir = new File(path + "/" + usernum);
-		
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
 
-		String fname = f.getOriginalFilename();
-		String newpath = path + usernum + "/" + fname;
-		File newfile = new File(newpath);
-		
-		try {
-			f.transferTo(newfile);
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		dto.setProfile(newpath);
-		service.save(dto);
-		
-		map.put("dto", dto);
-		
-		return map;
-	}
-	
 
 	// 내 정보 수정: 비밀번호, 이메일(인증), 닉네임, 프로필 이미지
 	@PostMapping("/edit/{userNum}")
-	public Map editInfo(@PathVariable("userNum") String userNum, MemberDto updatedDto) {
-	
-		System.out.println("신규이메일: " + updatedDto.getEmail());
-		System.out.println("신규비밀번호: " + updatedDto.getPwd());
-		System.out.println("신규닉네임: " + updatedDto.getNickname());
-		
+	public Map editInfo(@PathVariable("userNum") String userNum, MultipartFile f, MemberDto updatedDto) {
+
 		MemberDto dto = service.getByUserNum(userNum);
+
+		String fname = null;
 		
-		System.out.println("기존이메일: " + dto.getEmail());
-		System.out.println("기존비밀번호: " + dto.getPwd());
-		System.out.println("기존닉네임: " + dto.getNickname());
-		
+		if (f != null && !f.isEmpty()) {
+			fname = f.getOriginalFilename();
+			
+			String newpath = path + "member/" + dto.getUserNum() + "/" + fname;
+			File newfile = new File(newpath);
+			System.out.println("newpath: " + newpath);
+			
+			try {
+				f.transferTo(newfile);
+				dto.setProfile(newpath);
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
 		// 새 정보 담기
 		dto.setEmail(updatedDto.getEmail());
 		dto.setPwd(updatedDto.getPwd());
@@ -534,7 +494,41 @@ public class MemberController {
 		map.put("dto", dto);
 		return map;
 	}
-	// 로그아웃
+	
+	
+	// 네이버 가입 여부 확인
+	@GetMapping("/naverCheck")
+	public Map emailCheck(@RequestParam("email") String email) {
+		boolean flag = false; // 중복된 네이버 아이디 없음
+		boolean flag2 = false; // 중복된 메일 없음
+
+		System.out.println("이메일 중복 검사");
+		Map map = new HashMap<>();
+		
+		System.out.println(email);
+		MemberDto dto = service.getByEmail(email);
+		
+		System.out.println(dto);
+		
+		if(dto != null && email.equals(dto.getEmail()) && dto.getSnsType() == 2) {
+			System.out.println("중복 된 네이버 아이디 존재");
+			flag = true;
+		} else if (dto != null && email.equals(dto.getEmail())) {
+			System.out.println("중복 된 이메일 존재");
+			flag2 = true;
+		} else {
+			System.out.println("중복 된 아이디 & 이메일 없음");
+			flag = false;
+		}
+		
+		map.put("flag", flag);
+		map.put("flag2", flag2);
+		map.put("dto", dto);
+
+		return map;
+	}
+	
+	
 	
 	// 회원탈퇴
 	

@@ -24,8 +24,14 @@
 </div>
 </div>
 
+
 <div v-show="selectEmailCertification" class="inputInfo">
-<div class="row justify-content-center">   
+    
+<div style="position: fixed; top:530px; left:730px; z-index: 2;">
+<button class="button" @click="findIdMethod">아이디 찾기</button>
+</div>
+
+<div class="row justify-content-center" style="z-index 1;">   
 <div class="authbox2">
 <p id="notice">
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
@@ -77,11 +83,7 @@
 <span v-else-if="!authCodeValid" id="checkMsg" style="color:red">인증코드를 재확인해주세요.</span>
 <span v-else-if="authCodeValid" id="checkMsg" style="color:blue">이메일 인증이 완료되었습니다.</span>
 
-<div class="row justify-content-center" style="margin-top:10px">
-<div class="col-md-8">
-<button class="button" @click="findIdMethod">아이디 찾기</button>
-</div>
-</div>
+
 </div>
 </div>
 </div>
@@ -114,7 +116,7 @@ export default {
             getId: false,
             findId: false,
             isSentEmail: false,
-            authCodeValid: true,
+            authCodeValid: false,
             authCodeMsgBlank: true,
 
             name: '',
@@ -278,12 +280,25 @@ export default {
             }
         }, 
 
+        checkEmpty(value) {
+            if (value == '' || value == null || value == undefined) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+
         findIdMethod() {
-            this.findIdProcedure = false;
-            this.getId = true;
-            this.findId = true;
+            if (this.checkEmpty(self.email) && this.checkEmpty(self.name) && this.authCodeValid) {
+                this.findIdProcedure = false;
+                this.getId = true;
+                this.findId = true;
+            } else {
+                alert('입력되지 않은 값 혹은 유효성을 체크하지 않은 값이 존재합니다. 다시 확인해주세요.')
+            }
         }
-    }
+    } 
 }
 
 

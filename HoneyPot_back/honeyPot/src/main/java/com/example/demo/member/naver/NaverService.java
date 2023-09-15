@@ -26,7 +26,7 @@ public class NaverService {
 		String access_Token = "";
 		String refresh_Token = "";
 		String strUrl = "https://nid.naver.com/oauth2.0/token"; // 토큰 요청 보낼 주소
-		 NaverTokenVo NaverToken = new  NaverTokenVo(); // 요청받을 객체
+		NaverTokenVo NaverToken = new  NaverTokenVo(); // 요청받을 객체
 
 
 		try {
@@ -40,8 +40,8 @@ public class NaverService {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("grant_type=authorization_code");
-			sb.append("&client_id=uW8BXEv6IHbwQSCwO9jn");
-			sb.append("&client_secret=vr29KocwBA");
+			sb.append("&client_id=XUfF5HOL1SVNILfyWR1b");
+			sb.append("&client_secret=h0OFMLCbdH");
 			sb.append("&code=" + code);
 			sb.append("&state=" + state);
 			
