@@ -8,7 +8,7 @@
       <router-link to="/HostBoardAdd" class="nav-link" ><span class="nav-word">파티생성</span></router-link>
       <router-link to="/HostBoardList" class="nav-link"><span class="nav-word" >파티찾기</span></router-link>
       <span class="nav-link" @click="logout" ><span class="nav-word">로그아웃</span></span>
-      <router-link to="MyInfo" class="nav-link" >여기에 이미지 넣는거 멤버에서 ㅎ ㅐ줘</router-link>
+      <router-link to="MyinfoSidebar" class="nav-link" >여기에 이미지 넣는거 멤버에서 ㅎ ㅐ줘</router-link>
     </span>
   </nav>
   <router-view />
