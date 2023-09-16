@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.example.demo.automatching.AutoMatching;
+=======
+import com.example.demo.cash.CashDto;
+>>>>>>> origin/BSH
 =======
 import com.example.demo.cash.CashDto;
 >>>>>>> origin/BSH
@@ -87,24 +92,6 @@ public class PartyGroupController {
 		map.put("list", list);
 		return map;
 	}
-	@GetMapping("/{boardNum}/{userNum}")
-	public Map getUserList(@PathVariable("boardNum") HostBoard boardNum, @PathVariable("userNum") Member userNum) {
-		Map map = new HashMap();
-		PartyGroupDto dto2 =  PGService.getDetail(boardNum.getBoardNum(), userNum.getUserNum());
-		map.put("dto", dto2);
-		return map;
-	}
-	
-	//오토매칭으로 매칭 된 리스트 
-	@GetMapping("/automatching/{mathchingNum}")
-	public Map getUserMatchingList(@PathVariable("mathchingNum") AutoMatching matchingNum) {
-		Map map = new HashMap();
-		System.out.println("@@@" + matchingNum.getMatchingNum());
-		PartyGroupDto dto2 =  PGService.finByMatchingNum(matchingNum.getMatchingNum());
-		map.put("dto", dto2);
-		return map;
-	}
-	
 
 	// 파티원이 직접 참여하기 누르거나 AutoMatching으로 돌려
 	@PostMapping("/{boardNum}/{userNum}")
@@ -180,7 +167,6 @@ public class PartyGroupController {
 		Map Result = PGService.editStartTo4(boardNum, userNum); // 결과를 받아서 넣고
 		boolean flag = (boolean) Result.get("flag");
 		if (flag) { // flag가 true 여서 중간 탈퇴가 진행 되었다면
-			map.put("msg", "탈퇴가 진행 되어 새로운 파티원 모집을 시작합니다");
 			HBService.changIngToZero(boardNum); // ing 를 0 으로 바꿔서 리스트에 보이게 해줘
 		}
 		map.put("flag", flag);
