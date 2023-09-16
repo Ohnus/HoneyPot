@@ -86,7 +86,7 @@ public class HostBoardController {
 	// 전체 글 목록 (필요할까?)
 	@GetMapping("")
 	public Map getAll() {
-		ArrayList<HostBoardDto> list = HBService.getAll();
+		ArrayList<HostBoardDto> list = HBService.getIngZero();
 		Map map = new HashMap();
 		map.put("list", list);
 		return map;

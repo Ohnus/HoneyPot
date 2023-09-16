@@ -32,7 +32,7 @@
         <br />
         <br/>
         <span>{{ calculateValue(dto.type.price, dto.maxPpl) }} (원) </span> <br/>
-        <span>{{ Math.round(calculateValue(dto.type.price, dto.maxPpl) * 0.9) }} (원) </span>
+        <span>{{ Math.round(calculateValue(dto.type.price, dto.maxPpl) * 0.1) }} (원) </span>
     </div>
 </div>
 

@@ -29,14 +29,14 @@
             </div>
 
         
-                <button @click="$router.push('/AddAutoMatching')"> 자동매칭 등록</button>
+                <button @click="$router.push('/AddAutoMatching')"><span style="font-size:16px;"> 자동매칭 등록</span></button>
 
-            <div v-if="list != null && list.length > 0">
+            <div v-if="list != null && list.length > 0 ">
                 <div class="order-container">
       <div v-for="order in filteredList" :key="order.boardNum" 
       @mouseover="changeBackgroundColor(order, true)" 
          @mouseout="changeBackgroundColor(order, false)"
-         :style="{ backgroundColor: order.highlight ? 'lightgray' : 'white' }" class="order-item">
+         :style="{ backgroundColor: order.highlight ? '#dedede' : 'white' }" class="order-item">
         <div v-if="order.ing === 0" @click="detail(order.boardNum)" class="order-details">
           <span class="highlight">{{ order.type.type }} </span><span> 을(를) </span>
           <span class="highlight">{{ formatDate(order.subEnd) }} </span> <span> 까지 </span>

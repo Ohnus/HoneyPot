@@ -21,11 +21,10 @@ import HostBoardDetail from '../components/hostboard/HostBoardDetail.vue'
 import ChattingRoomList from '../components/chat/ChattingRoomList.vue'
 import ChattingRoom from '../components/chat/ChattingRoom.vue'
 import MyPartyList from '../components/partygroup/MyPartyList.vue'
+import MyPartyDetail from '../components/partygroup/MyPartyDetail.vue'
 import AddAutoMatching from '../components/AutoMatching/AddAutoMatching.vue'
-
-
-
-
+import MyAutoMatchingList from '../components/AutoMatching/MyAutoMatchingList.vue'
+import MyAutoMatchingDetail from '../components/AutoMatching/MyAutoMatchingDetail.vue'
 
 const routes = [
   {
@@ -60,10 +59,26 @@ const routes = [
   },
 
   {
+    path : '/MyPartyDetail',
+    name : 'MyPartyDetail',
+    component: MyPartyDetail
+  },
+  {
     path : '/AddAutoMatching',
     name : 'AddAutoMatching',
     component: AddAutoMatching
   },
+  {
+    path : '/MyAutoMatchingList',
+    name : 'MyAutoMatchingList',
+    component: MyAutoMatchingList
+  },
+  {
+    path : '/MyAutoMatchingDetail',
+    name : 'MyAutoMatchingDetail',
+    component: MyAutoMatchingDetail
+  },
+
   {
     path: '/RegisterTest',
     name: 'RegisterTest',

@@ -252,8 +252,8 @@ export default {
             self.$axios.post('http://localhost:8988/hostboard', formdata)
                 .then(function (res) {
                     if (res.status == 200) {
-                        let dto = res.data.dto;
-                        alert(dto.boardNum);
+                        self.$router.push("/HostBoardList")
+                        
                     }
                 });
         }
@@ -322,6 +322,7 @@ button {
     border-radius: 10px;
     font-weight: 400;
     font-size: 16px;
+    font-family: 'AppleSDGothicNeoB';
 }
 
 button:hover {

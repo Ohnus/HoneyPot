@@ -53,6 +53,18 @@ public class PartyGroupService {
 		return list2;
 	}
 
+	//내파티리스트에서 글 상세 보려고
+	public PartyGroupDto getDetail(int boardNum, String userNum) {
+		    List<PartyGroup> list = dao.checkPartyGroup(boardNum, userNum);
+		    PartyGroup pg = null; 
+
+		    if (!list.isEmpty()) {
+		        pg = list.get(0); 
+		    }
+			return new PartyGroupDto(pg.getGroupNum(), pg.getBoardNum(), pg.getUserNum(), pg.getStartCheck(),
+					pg.getMatchingNum());
+	}
+
 	// 구독 중복 있나 보려고 하는 메서드
 	public int checkPartyGroup(int boardNum, String userNum) {
 		ArrayList<PartyGroup> list = (ArrayList<PartyGroup>) dao.checkPartyGroup(boardNum, userNum);
@@ -172,5 +184,17 @@ public class PartyGroupService {
 		// 매칭 넘이 있으면 false 를 반환 -> 추가 하지 못함
 
 	}
+	
+	//오토매칭에서 글 상세 보려고 
+	public PartyGroupDto finByMatchingNum(int MatchingNum) {
+		List<PartyGroup> list = dao.findByMatchingNum(MatchingNum);
+		 PartyGroup pg = null; 
 
+		    if (!list.isEmpty()) {
+		        pg = list.get(0); 
+		    }
+			return new PartyGroupDto(pg.getGroupNum(), pg.getBoardNum(), pg.getUserNum(), pg.getStartCheck(),
+					pg.getMatchingNum());
+	}
+	
 }
