@@ -20,7 +20,7 @@
                         alt="Apple Logo" />
                 </div>  
 
-                <div class="card-body" style="text-align:center;">          
+                <div class="card-body" style="text-align:center;"  @click="detail(order.boardNum.boardNum)">          
                             <div style="font-family: 'AppleSDGothicNeoB'; font-size: 20px; color:#Fdd000; font-weight:500 ; ">
                             <span v-if="order.startCheck ==0" >시작 대기 중</span>
                             <span v-else-if="order.startCheck ==1">진행 중</span>
@@ -45,7 +45,7 @@
                               <span style="font-family: 'AppleSDGothicNeoB'; font-size: 18px; font-weight:500; color:#Fdd000"> {{ calculateRemainingDays(order.boardNum.subEnd) }}</span> <span> 일 남음 </span></span>
                         </div>
                         <div style="margin-top:2%; font-family: 'AppleSDGothicNeoSB'; font-size: 16px;" >
-                            <span> 구독료 {{ Math.round (order.boardNum.monthPrice * 0.9)}}원 </span>
+                            <span> 구독료 {{ Math.round (order.boardNum.monthPrice * 0.1 + order.boardNum.monthPrice)}}원 </span>
                         </div>
                         <div style="font-family: 'AppleSDGothicNeoSB'; font-size: 16px;" >
                             <span>보증금 {{ order.boardNum.type.price}}원</span> 
@@ -127,7 +127,15 @@ export default {
             if (this.currentPage < lastPage) {
                 this.currentPage++;
             }
-        }
+        },
+        detail(boardNum) {
+            this.$router.push({ name: 'MyPartyDetail',  query: { 
+    boardNum: boardNum,
+    userNum: sessionStorage.getItem("userNum"),
+
+  } })
+
+        },
     }
 
 }

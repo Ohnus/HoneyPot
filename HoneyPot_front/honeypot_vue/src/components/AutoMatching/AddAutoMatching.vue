@@ -207,6 +207,7 @@ export default {
                 .then(function (res) {
                     if (res.status == 200) {
                         alert('자동매칭 등록이 완료 되었습니다')
+                        self.$router.push("/MyInfoSideBar")
                     }
                 });
         }
@@ -296,6 +297,8 @@ button {
     font-weight: 400;
     font-size: 16px;
     margin: 4% 0 0 0%;
+    font-family: 'AppleSDGothicNeoB';
+
     /*위치조정*/
 
 

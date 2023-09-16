@@ -190,7 +190,7 @@ button:hover {
 
 .findMenu {
     font-family: 'AppleSDGothicNeoR';
-    fort-size:13px;
+    font-size:13px;
     color: #BDBDBD;
 }
 

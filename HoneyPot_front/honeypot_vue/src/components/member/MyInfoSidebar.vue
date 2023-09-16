@@ -19,7 +19,7 @@
 <p class="ul">파티 관리</p>
 <div style="margin-left: -48px;">
 <button @click="activeComp='my-partylist'">파티 참여 현황</button>
-<button @click="activeComp=''">파티 매칭 현황</button>
+<button @click="activeComp='my-automatcinglist'">파티 매칭 현황</button>
 </div>
 
 <p class="ul">정산 수단 관리</p>
