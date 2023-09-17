@@ -6,9 +6,9 @@
 <p class="cashTitle">허니팟 캐시 현황</p>
 <div style="margin-top:20px;">
 <img src="../../assets/images/coin.png" style="width:35px; height:30px">
-<span id="cash">{{ cash }}원</span>
+<span id="cash">{{ havingCash }}원</span>
 </div>
-<p style="margin-top:25px;"><router-link to=""><button class="cashDetailButton" style="width:135px;">내역보기</button></router-link></p>
+<p style="margin-top:25px;"><router-link to=""><button @click="activeComp='cash-list'" style="width:135px;">내역보기</button></router-link></p>
 </div>
 
 <div class="sideMenu">
@@ -25,7 +25,7 @@
 <p class="ul">정산 수단 관리</p>
 <div style="margin-left: -48px;">
 <button @click="activeComp='my-bankinfo'">인출 계좌 관리</button>
-<button @click="activeComp=''">결제 수단 관리</button>
+<button @click="activeComp='register-card'">결제 수단 관리</button>
 </div>
 </div>
 
@@ -42,9 +42,28 @@ export default {
     data() {
         return {
           activeComp: 'my-info',
-          cash: ''
+          userNum: sessionStorage.getItem('userNum'),
+          havingCash: ''
         }
     },
+    created: function () {
+        this.getMyCash();
+    },
+    methods: {
+        getMyCash() {
+            const self = this;
+            let formdata = new FormData();
+            formdata.append("userNum", self.userNum);
+            self.$axios.post('http://localhost:8988/cashs/getCash', formdata)
+                    .then(function (res) {
+                        if (res.status == 200) {
+                            self.havingCash = res.data.havingCash;
+                        } else {
+                            alert("에러코드: " + res.status);
+                        }
+                    });
+        }
+    }
 
 }
 
@@ -102,7 +121,7 @@ export default {
     text-align: left;
 }
 
-.cashDetailButton {
+button {
     padding: 5px 13px;
     text-align: center;
     text-decoration: none;
@@ -121,7 +140,7 @@ export default {
 
 }
 
-.cashDetailButton:hover {
+button:hover {
     background-color: white;
     color: #444444;
     font-family: 'AppleSDGothicNeoB';
