@@ -62,6 +62,13 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	@Query(value = "delete from party_group where board_Num=:board_num and start_check = 0", nativeQuery = true)
 	void deleteByBoardNum(@Param("board_num") int board_num);
 
+	//startcheck 가 1이거나 4가 있나 확인 -> 탈퇴 할 때 탈퇴를 막기 위해 
+	@Transactional
+	@Modifying
+	@Query(value = "select * from party_group where user_num=:user_num and (start_check=1 or start_check=4)", nativeQuery = true)
+	ArrayList<PartyGroup> findStartCheck(@Param("user_num") Member user_num);
+
+	
 	// statcheck 별로 정렬
 	@Transactional
 	@Modifying
@@ -77,5 +84,7 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	@Modifying
 	@Query(value = "select * from party_group where matching_num=:matching_num", nativeQuery = true)
 	List<PartyGroup> findByMatchingNum(@Param("matching_num") int matching_num);
+
+	
 
 }

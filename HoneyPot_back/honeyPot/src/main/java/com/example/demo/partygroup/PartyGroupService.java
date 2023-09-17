@@ -52,6 +52,13 @@ public class PartyGroupService {
 		}
 		return list2;
 	}
+	
+	//startcheck 가 1이나 4면 탈퇴 못함 
+	public boolean outcheck(Member userNum) {
+	    List<PartyGroup> list = dao.findStartCheck(userNum);
+	    //리스트가 비어있으면 true 레코드가 없으니 탈퇴 가능 
+	    return !list.isEmpty();
+	}
 
 	//내파티리스트에서 글 상세 보려고
 	public PartyGroupDto getDetail(int boardNum, String userNum) {
