@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.chat.Chat;
-import com.example.demo.chat.ChatDto;
 import com.example.demo.member.Member;
 import com.example.demo.member.MemberDto;
+import com.example.demo.ott.Ott;
 
 
 @Service
@@ -72,6 +71,16 @@ public class ChatHeaderService {
 		return list2;
 		
 	}
+	
+	//해당 boardNum의 ott type 가져오기
+	public String getOttType(int boardNum) {
+		System.out.println("otttype 서비스");
+		//Ott ott = dao.findOttType(boardNum);
+		String otttype = dao.findOttType(boardNum);
+		return otttype;
+	}
+	
+
 	
 
 }

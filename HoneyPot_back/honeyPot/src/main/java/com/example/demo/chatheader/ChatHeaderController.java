@@ -89,5 +89,26 @@ public class ChatHeaderController {
 		return map;
 	}
 	
+	//해당 boardNum의 ott type 가져오기
+	@GetMapping("/otttype/{boardNum}")
+	public Map getOttType(@PathVariable("boardNum") int boardNum) {
+		System.out.println("otttype 컨트롤러");
+		boolean flag = true;
+		String otttype = null;
+		try {
+			otttype = service.getOttType(boardNum);
+			System.out.println("otttype : " + otttype);
+			
+		}catch(Exception e) {
+			flag = false;
+		}
+		
+		Map map = new HashMap();
+		map.put("flag", flag);
+		map.put("otttype", otttype);
+		return map;
+		
+	}
+	
 
 }

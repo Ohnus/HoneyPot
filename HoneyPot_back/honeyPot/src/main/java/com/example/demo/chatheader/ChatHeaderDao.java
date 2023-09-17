@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.member.Member;
+import com.example.demo.ott.Ott;
 
 @Repository
 @Transactional(readOnly = true)
@@ -43,6 +44,8 @@ public interface ChatHeaderDao extends JpaRepository<ChatHeader, Integer> {
 	@Query("SELECT pg.userNum FROM PartyGroup pg WHERE pg.boardNum.boardNum = :boardNum AND (pg.startCheck = 1 or pg.startCheck = 2) AND pg.userNum IS NOT NULL")
 	ArrayList<Member> findMembers(int boardNum);
 	
-	
+	//해당 boardNum의 ott type 가져오기
+	@Query("SELECT hb.type.type FROM HostBoard hb WHERE hb.boardNum = :boardNum")
+	String findOttType(@Param("boardNum") int boardNum);
 
 }
