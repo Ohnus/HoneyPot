@@ -125,12 +125,14 @@
         },
     
         methods: {
+            
             getToken() {
                 const self = this;
     
                 self.$axios.post('http://localhost:8988/naver/login/' + self.code + '/' + self.state)
                 .then(function (res) {
                     if (res.status == 200) {
+                        
                         self.form.email = res.data.userinfo.email;
                         self.form.navertoken = res.data.access_token;
 
@@ -139,6 +141,7 @@
                         self.$axios.get('http://localhost:8988/members/naverCheck', { params: { email: self.form.email } })
                         .then(function (res) {
                             if (res.status == 200) {
+                                console.log(res.data)
                                 if (!res.data.flag) {    // 중복된 네이버 아이디 없음
                                     console.log(res.data.flag);
                                 } else if (res.data.flag2) {
@@ -146,10 +149,12 @@
                                     alert ("이미 동일한 네이버 메일로 가입된 이력이 존재합니다.\n고객센터로 문의해주세요.")
                                     window.location.href = "/";
                                 } else if (res.data.flag) {
+                                    console.log("href")
                                     sessionStorage.setItem('token', res.data.token);   
                                     sessionStorage.setItem('loginId', res.data.dto.email);
                                     sessionStorage.setItem('userNum', res.data.dto.userNum);
                                     sessionStorage.setItem('snsType', res.data.dto.snsType);
+                                    console.log("href before")
                                     window.location.href = "/";
                                 }
                             }

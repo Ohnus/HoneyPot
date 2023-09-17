@@ -15,8 +15,7 @@
 
 <div class="row justify-content-center">   
 <div class="col-md-3" style="margin-bottom:10px">
-<router-link to="/NaverLogin">
-<button><img src="../../assets/images/naverJoin.png" style="width:19px; height:19px; margin-right:7px">네이버 계정으로 시작하기</button></router-link>
+<button @click="naverLogin()"><img src="../../assets/images/naverJoin.png" style="width:19px; height:19px; margin-right:7px">네이버 계정으로 시작하기</button>
 </div>
 </div>
 
@@ -61,7 +60,33 @@ export default {
             const uri = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
           
             window.location.replace(uri);
-        }
+        },
+
+        naverLogin() {
+                let client_id = "XUfF5HOL1SVNILfyWR1b";
+                let redirect_uri = encodeURIComponent("http://localhost:8989/NaverJoin", "UTF-8");
+                const state = this.generateRandomState();
+                const apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
+                 + "&client_id=" + client_id
+                 + "&redirect_uri=" + redirect_uri
+                    + "&state=" + state
+                window.location.href = apiURL;
+            },
+    
+            // state 난수 생성
+            generateRandomState() {
+                const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                let state = "";
+          
+                for (let i = 0; i < 16; i++) {
+                    const randomIndex = Math.floor(Math.random() * characters.length);
+                    state += characters.charAt(randomIndex);
+                }
+    
+                return state;
+            }
+
+        
 
 
         // kakaoLogin(){

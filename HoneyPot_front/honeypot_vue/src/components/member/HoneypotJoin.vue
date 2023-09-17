@@ -1,6 +1,6 @@
 <template>
 
-<!-- <div v-if="duplicated1" class="duplicateNotice">
+<div v-if="duplicated1" class="duplicateNotice">
 <div>본인 인증된 정보로 이미 가입된 이력이 존재합니다.</div>
 <br>
 <router-link to="/FindUserId"><button>아이디 찾기</button></router-link>
@@ -12,7 +12,7 @@
 <router-link to=""><button>메인으로</button></router-link>
 </div>
 
-<div v-else-if="certified" class="HoneypotJoinForm">     -->
+<div v-else-if="certified" class="HoneypotJoinForm">    
 
 <br>
 <p style="font-family: AppleSDGothicNeoB; font-size: 20px">회원가입</p>
@@ -146,14 +146,14 @@
 
 
 <button @click="join">허니팟 시작하기</button>
-<!-- </div>
+</div>
 <div v-else class="certificationNotice" style="margin-top:100px">
 <br>
 <div style="font-size:20px">허니팟은 100% 인증을 통해<br>믿을 수 있는 구독 환경을 제공합니다.</div><br>
 <div style="color:#BDBDBD">실명 인증을 진행해주세요.</div><br>
 <button @click="certification">확인</button>
 <br>
-</div> -->
+</div>
 
 </template>
 
