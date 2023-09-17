@@ -2,12 +2,18 @@ package com.example.demo.member;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -185,6 +191,9 @@ public class MemberController {
 		dto.setUserNum(userNum);
 		dto.setBillingKey("0");
 		
+		File dir = new File(path + "/" + userNum);
+		dir.mkdir();
+		
 		MemberDto dto2 = service.save(dto);
 		System.out.println(dto2);
 		
@@ -313,8 +322,33 @@ public class MemberController {
 		return map;
 	}
 	
+	
+	// 프로필사진 파일 가져오기
+	@GetMapping("/imgs/{userNum}") 
+	public ResponseEntity<byte[]> read_img(@PathVariable("userNum") String userNum) {
+		String fname = "";
+		MemberDto dto = service.getByUserNum(userNum);
+		fname = dto.getProfile();
+		System.out.println(fname);
 
+		ResponseEntity<byte[]> result = null; // 선언
 
+		try {
+			if (fname != null && fname.length() != 0) {
+				fname = URLDecoder.decode(fname, "utf-8");
+				File f = new File(fname);
+				HttpHeaders header = new HttpHeaders();
+				header.add("Content-Type", Files.probeContentType(f.toPath()));
+				result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(f), header, HttpStatus.OK);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	
 	// 내 정보 수정: 비밀번호, 이메일(인증), 닉네임, 프로필 이미지
 	@PostMapping("/edit/{userNum}")
 	public Map editInfo(@PathVariable("userNum") String userNum, MultipartFile f, MemberDto updatedDto) {
@@ -326,7 +360,7 @@ public class MemberController {
 		if (f != null && !f.isEmpty()) {
 			fname = f.getOriginalFilename();
 			
-			String newpath = path + "member/" + dto.getUserNum() + "/" + fname;
+			String newpath = path + dto.getUserNum() + "/" + fname;
 			File newfile = new File(newpath);
 			System.out.println("newpath: " + newpath);
 			
@@ -448,6 +482,7 @@ public class MemberController {
 		
 		String userNum = dto.getUserNum();
 		int snsType = dto.getSnsType();
+		String billingKey = dto.getBillingKey();
 		
 		System.out.println(snsType);
 		
@@ -469,6 +504,7 @@ public class MemberController {
 		map.put("email", dto.getEmail());
 		map.put("userNum", userNum);
 		map.put("snsType", snsType);
+		map.put("billingKey", billingKey);
 		
 		return map;
 	}
