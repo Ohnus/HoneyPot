@@ -8,7 +8,7 @@
 <img src="../../assets/images/coin.png" style="width:35px; height:30px">
 <span id="cash">{{ cash }}원</span>
 </div>
-<p style="margin-top:25px;"><router-link to=""><button style="width:135px;">내역보기</button></router-link></p>
+<p style="margin-top:25px;"><router-link to=""><button class="cashDetailButton" style="width:135px;">내역보기</button></router-link></p>
 </div>
 
 <div class="sideMenu">
@@ -102,7 +102,7 @@ export default {
     text-align: left;
 }
 
-button {
+.cashDetailButton {
     padding: 5px 13px;
     text-align: center;
     text-decoration: none;
@@ -121,7 +121,7 @@ button {
 
 }
 
-button:hover {
+.cashDetailButton:hover {
     background-color: white;
     color: #444444;
     font-family: 'AppleSDGothicNeoB';

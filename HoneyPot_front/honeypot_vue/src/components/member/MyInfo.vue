@@ -3,8 +3,8 @@
     <div>
     
     <div style="position: fixed; top:570px; left:800px; z-index: 2;">
-        <button @click="editInfo" style="margin-right: 5px;">수정완료</button>  
-        <button @click="userOut" style="margin-left: 5px;">회원탈퇴</button>
+        <button class="MyinfoButton" @click="editInfo" style="margin-right: 5px;">수정완료</button>  
+        <button class="MyinfoButton" @click="userOut" style="margin-left: 5px;">회원탈퇴</button>
     </div>
     
     
@@ -61,7 +61,7 @@
         </svg>
         </span>
         <input v-model="email" type="email" class="form-control">
-        <button v-if="hnpAccount" @click="sendEmail">메일 변경</button>
+        <button class="MyinfoButton" v-if="hnpAccount" @click="sendEmail">메일 변경</button>
         </div>    
         <span v-if="blank" id="checkMsg" style="color:transparent;">'</span> 
         </div>
@@ -78,8 +78,8 @@
         </svg>
         </span>
         <input v-model="enterCode" type="text" class="form-control" placeholder="인증번호 입력">
-        <button @click="authCodeCheck">확인</button>
-        </div>
+        <button class="MyinfoButton" @click="authCodeCheck">확인</button>
+        </div> 
         </div>
         </div>
         <span v-if="authCodeMsgBlank" id="checkMsg" style="color:transparent;">'</span> 
@@ -126,7 +126,7 @@
         </svg>
         </span>
         <input v-model="nickname" type="text" class="form-control" placeholder="닉네임 입력">
-        <button @click="checkNickname">닉네임 변경</button>
+        <button class="MyinfoButton" @click="checkNickname">닉네임 변경</button>
         </div>
         </div>
         </div>
@@ -247,7 +247,7 @@
                 .then(function (res) {
                     if(res.status == 200) {
                         if (res.data.flag) {
-                            alert("기존 메일과 동일합니다. 새로운 메일 계정을 입력해주세요.")
+                            alert("중복된 메일이 존재합니다. 새로운 메일 계정을 입력해주세요.")
                             self.isSentEmail = false;
                         } else {
                             self.authCode = res.data.authCode;
@@ -336,28 +336,18 @@
                }
             },
     
-    
-            
-            // 마이페이지에서 빈 값, 잘못된 값 등 있는지 체크
-            checkEmpty(value) {
-                if (value == '' || value == null || value == undefined) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
-    
-    
+ 
             editInfo() {
                 const self = this;
     
                 const formdata = new FormData();
     
-                formdata.append('email', self.email);
                 formdata.append('pwd', self.pwd);
                 formdata.append('nickname', self.nickname);
 
-                console.log(self.email + " / " + self.pwd + " / " + self.nickname);
+                if (this.isSentEmail) {
+                    formdata.append('email', self.email);
+                }
     
                 if (document.getElementById('file-input').value !== '') {
                     const file = document.getElementById('file-input').files[0]
@@ -423,6 +413,32 @@
     }
     
     button:hover {
+        background-color: white;
+        color: #444444;
+        font-family: 'AppleSDGothicNeoB';
+    }
+
+
+    .MyinfoButton {
+        padding: 5px 13px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: #Fdd000;
+        color: #444444;
+        border: 2px solid #Fdd000;
+        border-radius: 7px;
+    
+        font-weight: 500; /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */
+        font-size: 14px; /* 지금 버튼 사이즈에는 이게 딱임 */
+        font-family: 'AppleSDGothicNeoB';
+    
+    }
+    
+    .MyinfoButton:hover {
         background-color: white;
         color: #444444;
         font-family: 'AppleSDGothicNeoB';

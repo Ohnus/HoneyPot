@@ -1,37 +1,42 @@
 <template>
   <nav v-if="userNum != null">
-    <span style="font-family: 'AppleSDGothicNeoB';
-    font-size: 34px;  float: left;"> HoneyPot <img :src="require('@/assets/images/honey.png')"
-        style="width: 40px; height: 40px;">
-    </span>
-    <span class="nav-links">
+    <router-link to="/">
+    <span class="nav-word" style="font-family:'GmarketSansTTFBold'; font-size:28px; float:left;"> HoneyPot </span></router-link>
+    <span><img :src="require('@/assets/images/honeypotLogo2.png')" style="width:65px; height:40px; margin-top:-2px; float:left"></span>
+    
+    <span class="nav-links" style="margin-top:0px">
       <router-link to="/HostBoardAdd" class="nav-link" ><span class="nav-word">파티생성</span></router-link>
       <router-link to="/HostBoardList" class="nav-link"><span class="nav-word" >파티찾기</span></router-link>
-      <span class="nav-link" @click="logout" ><span class="nav-word">로그아웃</span></span>
-      <router-link to="MyinfoSidebar" class="nav-link" >여기에 이미지 넣는거 멤버에서 ㅎ ㅐ줘</router-link>
       <router-link to="/ChattingRoomList" class="nav-link" ><span class="nav-word">채팅하기</span></router-link>
+      <span class="nav-link" @click="logout" ><span class="nav-word">로그아웃</span></span>
+      <router-link to="/MyinfoSidebar"><div class="userInfoNav"><img :src="'http://localhost:8988/members/imgs/' + userNum" 
+        style="width: 45px; height: 45px; border-radius:50%; margin-top:-2px"></div></router-link>
     </span>
   </nav>
   <router-view />
 </template>
- <script>
+
+
+<script>
 export default {
-    data() {
-        return {
-        }
-      },
-      created() {
+  data() {
+    return {
+
+    }
+  },
+
+  created() {
     this.userNum = sessionStorage.getItem('userNum')
     console.log(this.userNum);
   },
-methods: {
-  logout() {
-            sessionStorage.clear();
-            window.location.href = "/";
-
-        }
-},
-        }
+    
+  methods: {
+    logout() {
+      sessionStorage.clear();
+      window.location.href = "/";
+    }
+  },
+}
 
 </script>
 <style>
@@ -97,12 +102,30 @@ methods: {
   font-weight: 300;
 }
 
+@font-face {
+  font-family: 'GmarketSansTTFBold';
+  src: url('assets/fonts/GmarketSansTTFBold.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'GmarketSansTTFLight';
+  src: url('assets/fonts/GmarketSansTTFLight.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'GmarketSansTTFMedium';
+  src: url('assets/fonts/GmarketSansTTFMedium.ttf') format('truetype');
+  font-weight: 300;
+}
 
 nav {
   padding: 10px;
   background-color: #Fdd000;
   height : 60px;
 }
+
 .nav-links {
   float: right; 
   display: flex; 
@@ -116,10 +139,17 @@ nav {
   color: #444444;
   margin-right: 20px; 
 }
-.nav-word{
-  font-family: 'AppleSDGothicNeoB';
-  font-size: 18px;
+
+.nav-word {
+  font-family: 'GmarketSansTTFMedium';
+  font-size: 16px;
   color: #444444;
   cursor: pointer;
 }
+
+.userInfoNav {
+  width: 45px;
+  height: 45px;
+}
+
 </style>
