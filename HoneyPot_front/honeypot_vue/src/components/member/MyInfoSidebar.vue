@@ -11,24 +11,6 @@
                         style="width:135px;">내역보기</button></router-link></p>
         </div>
 
-<div class="cashState">
-<p class="cashTitle">허니팟 캐시 현황</p>
-<div style="margin-top:20px;">
-<img src="../../assets/images/coin.png" style="width:35px; height:30px">
-<span id="cash">&nbsp;{{ havingCash }}원</span>
-</div>
-<p style="margin-top:25px;"><button class="cashDetailButton" @click="activeComp='cash-list'" style="width:135px;">내역보기</button></p>
-</div>
-        <!-- 캐시 내역 모달창 -->
-        <div class="modal-wrap-add" v-show="modalCheckAdd" @click="modalCloseAdd" id="modalWrapAdd">
-            <div class="modal-container-add" @click.stop="" id="containerAdd">
-                <div v-for="(item, index) in list" :key="index">
-                    {{ item.addDate }} / {{ item.amount }} / {{ item.msg }}
-                </div>
-            </div>
-        </div>
-
-
         <div class="sideMenu">
             <div style="margin-left: -45px;">
                 <button @click="activeComp = 'my-info'" style="font-size:17px; font-family: AppleSDGothicNeoB;">내 정보
