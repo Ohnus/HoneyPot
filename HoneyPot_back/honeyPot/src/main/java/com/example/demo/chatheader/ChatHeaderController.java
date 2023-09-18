@@ -76,6 +76,7 @@ public class ChatHeaderController {
 	//boardNum채팅방 참여 멤버 목록 가져오기
 	@GetMapping("/getmembers/{boardNum}")
 	public Map getMembers(@PathVariable("boardNum") int boardNum) {
+		System.out.println("채팅 멤버 가져오기");
 		boolean flag = true;
 		ArrayList<MemberDto> members = null;
 		try {

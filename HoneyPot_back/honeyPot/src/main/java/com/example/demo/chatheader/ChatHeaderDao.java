@@ -47,5 +47,8 @@ public interface ChatHeaderDao extends JpaRepository<ChatHeader, Integer> {
 	//해당 boardNum의 ott type 가져오기
 	@Query("SELECT hb.type.type FROM HostBoard hb WHERE hb.boardNum = :boardNum")
 	String findOttType(@Param("boardNum") int boardNum);
+	
+	// 채팅방 호스트 정보 가져오기
+
 
 }
