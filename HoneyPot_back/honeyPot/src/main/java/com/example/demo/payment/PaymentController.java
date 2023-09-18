@@ -106,7 +106,38 @@ public class PaymentController {
 
 		return map;
 	}
-
+	
+	// 빌링키 얻기
+	@PostMapping("/getBillingKey")
+	public Map getBillingKey(String userNum) {
+		Map map = new HashMap<>();
+		
+		MemberDto dto = mservice.getByUserNum(userNum);
+		String billingKey = dto.getBillingKey();
+		
+		map.put("billingKey", billingKey);
+		
+		return map;
+	}
+	
+	// 카드이름 얻기
+	@PostMapping("/getCardName")
+	public Map getCardName(String customerUid) {
+		Map map = new HashMap<>();
+		
+		try {
+			String accessToken = accessTokenAPI.getAccessToken();
+			
+			String cardName = billingKeyAPI.getCardName(accessToken, customerUid);
+			map.put("cardName", cardName);
+			System.out.println(cardName);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+	
 	// 결제수단 삭제: PG사 DB에서 빌링키 삭제 + 회원정보에서 빌링키 삭제
 	@PostMapping("/deleteCards")
 	public Map delBillingKey(String userNum) {
@@ -285,7 +316,7 @@ public class PaymentController {
 					// 파티원 구독료
 					PendingDto monthPriceDto = new PendingDto(0, dto.getBoardNum(), dto.getUserNum(), earningDate,
 							null, monthPrice, 0);
-
+					
 					map.put("paymentStatus", paymentStatus); // paid
 				} else {
 					System.out.println("paid 인식못함");

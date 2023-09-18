@@ -40,4 +40,11 @@ public interface PaymentDao extends JpaRepository<Payment, String> {
 	@Modifying
 	@Query(value="select * from payment where board_num=:boardNum and user_num=:userNum order by pay_installment desc", nativeQuery = true)
 	ArrayList<Payment> findByBoardNumAndUserNum(@Param("boardNum") HostBoard boardNum, @Param("userNum") Member userNum);
+	
+	// 유저넘, 보드번호, 결제회차 -1로 리스트 조회.. 1개겠지만 서비스에서 혹시 모르니 1개로 거르기
+	@Transactional
+	@Modifying
+	@Query(value="select * from payment where board_num=:boardNum and user_num=:userNum and pay_installment=-1", nativeQuery = true)
+	ArrayList<Payment> findByBoardAndUserAndMinus1(@Param("boardNum") HostBoard boardNum, @Param("userNum") Member userNum);
+	
 }

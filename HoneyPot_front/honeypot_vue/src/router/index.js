@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import HostBoardAdd from '../components/hostboard/HostBoardAdd.vue'
-import RegisterTest from '../components/paymenttest/RegisterTest.vue'
+import RegisterCard from '../components/payment/RegisterCard.vue'
 import PartyTest1 from '../components/paymenttest/PartyTest1.vue'
-import PartyTest2 from '../components/paymenttest/PartyTest2.vue'
-import RecurringTest from '../components/paymenttest/RecurringTest.vue'
+import CashList from '../components/cash/CashList.vue'
 import JoinMainpage from '../components/member/JoinMainpage.vue'
 import HoneypotJoin from '../components/member/HoneypotJoin.vue'
 import NaverLogin from '../components/member/NaverLogin.vue'
@@ -80,9 +79,9 @@ const routes = [
   },
 
   {
-    path: '/RegisterTest',
-    name: 'RegisterTest',
-    component: RegisterTest
+    path: '/RegisterCard',
+    name: 'RegisterCard',
+    component: RegisterCard
   },
   {
     path: '/PartyTest1',
@@ -90,14 +89,9 @@ const routes = [
     component: PartyTest1
   },
   {
-    path: '/PartyTest2',
-    name: 'PartyTest2',
-    component: PartyTest2
-  },
-  {
-    path: '/RecurringTest',
-    name: 'RecurringTest',
-    component: RecurringTest
+    path: '/CashList',
+    name: 'CashList',
+    component: CashList
   },
   {
     path: '/JoinMainpage',

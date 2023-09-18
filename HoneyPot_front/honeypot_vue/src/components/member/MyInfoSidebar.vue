@@ -6,7 +6,7 @@
 <p class="cashTitle">허니팟 캐시 현황</p>
 <div style="margin-top:20px;">
 <img src="../../assets/images/coin.png" style="width:35px; height:30px">
-<span id="cash">{{ havingCash }}원</span>
+<span id="cash">&nbsp;{{ havingCash }}원</span>
 </div>
 <p style="margin-top:25px;"><router-link to=""><button @click="activeComp='cash-list'" style="width:135px;">내역보기</button></router-link></p>
 </div>
@@ -52,12 +52,13 @@ export default {
     methods: {
         getMyCash() {
             const self = this;
-            let formdata = new FormData();
-            formdata.append("userNum", self.userNum);
-            self.$axios.post('http://localhost:8988/cashs/getCash', formdata)
+            alert(self.userNum);
+            // let formdata = new FormData();
+            // formdata.append("userNum", self.userNum);
+            self.$axios.get('http://localhost:8988/cashs/getCash/' + self.userNum)
                     .then(function (res) {
                         if (res.status == 200) {
-                            self.havingCash = res.data.havingCash;
+                            self.havingCash = res.data.havingCash.toLocaleString('ko-KR');
                         } else {
                             alert("에러코드: " + res.status);
                         }

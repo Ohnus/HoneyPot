@@ -3,6 +3,7 @@ package com.example.demo.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -47,6 +48,40 @@ public class ImportBillingKey {
 			String msg = "빌링키 발급 실패";
 			return msg;
 		}
+	}
+	
+	// 빌링키 조회해서 카드사 이름 얻기
+	public String getCardName(String accessToken, String customerUid) {
+		
+		RestTemplate restTemplate = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(accessToken);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("customerUid", customerUid);
+		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+		System.out.println("유저빌링키: " + customerUid);
+		System.out.println("토큰: " + accessToken);
+		
+		ResponseEntity<String> response = restTemplate.getForEntity("https://api.iamport.kr/subscribe/customers/" + customerUid + "?_token=" + accessToken, String.class);
+		
+		String responseBody = "";
+		String billingKeyStatus = "";
+		if(response.getStatusCode().is2xxSuccessful()) {
+			responseBody = response.getBody();
+			System.out.println("빌링키 정보 responseBody: " + responseBody);
+			try {
+				JSONObject parseJson = new JSONObject(responseBody);
+				billingKeyStatus = parseJson.getJSONObject("response").getString("card_name");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("결제 성공: " + billingKeyStatus);
+		} else {
+			billingKeyStatus = "등록된 결제수단이 없습니다.";
+		}
+		return billingKeyStatus;
 	}
 	
 	// 빌링키 PG사 데이터에서 삭제

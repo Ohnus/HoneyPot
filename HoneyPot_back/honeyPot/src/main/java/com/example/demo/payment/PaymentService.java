@@ -52,6 +52,16 @@ public class PaymentService {
 		return dtoList.get(0);
 	}
 	
+	// 탈퇴예정자 보증금 캐시로 환불해주기 위한 리스트 불러오기
+	public PaymentDto getByBoardAndUserAndMinus1(HostBoard boardNum, Member userNum) {
+		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByBoardAndUserAndMinus1(boardNum, userNum);
+		ArrayList<PaymentDto> dtoList = new ArrayList<PaymentDto>();
+		for(Payment entity : list) {
+			dtoList.add(new PaymentDto(entity.getOrderNum(), entity.getUserNum(), entity.getBoardNum(), entity.getPayInstallment(), entity.getFinalInstallment(), entity.getRecurringDay(), entity.getPayDate(), entity.getNextDate(), entity.getAgainDate(), entity.getTotalPayment(), entity.getDeposit(), entity.getMonthPrice(), entity.getCommission(), entity.getHistory(), entity.getPaymentStatus(), entity.getOttType()));
+		}
+		return dtoList.get(0);
+	}
+	
 	// RecurringDay 리스트
 	public ArrayList<PaymentDto> getByRcrDay(int recurringDay) {
 		ArrayList<Payment> list = (ArrayList<Payment>) dao.findByRcrDay(recurringDay);
