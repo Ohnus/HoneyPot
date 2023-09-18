@@ -25,7 +25,7 @@ public class CertificationService {
 		System.out.println(impUid);
 		
 		String impKey = "7676232421304273";
-		String impSecret = "KaGIBZUzJdj4rEV1HV40xpZ7JhiKuF82a6BY2VrJjEnfoXKMDsMr2wWE1aHG3qTynOua1wxObgan8aNK";
+		String impSecret = "maTZoWeQAdloFQuUe4PojBTuohwq8F7BEwWWrpct7LreeYyZd9setnpZFHxDooIT2q3jRjOGglZXmy7s";
 		String strUrl = "https://api.iamport.kr/users/getToken";
 		String access_token = "";
 		String name = "";
@@ -129,7 +129,7 @@ public class CertificationService {
 
         HashMap map = new HashMap<>();
 		String impKey = "7676232421304273";
-		String impSecret = "KaGIBZUzJdj4rEV1HV40xpZ7JhiKuF82a6BY2VrJjEnfoXKMDsMr2wWE1aHG3qTynOua1wxObgan8aNK";
+		String impSecret = "maTZoWeQAdloFQuUe4PojBTuohwq8F7BEwWWrpct7LreeYyZd9setnpZFHxDooIT2q3jRjOGglZXmy7s";
         // 토큰 요청 보낼 주소
 		String strUrl = "https://api.iamport.kr/users/getToken"; 
 

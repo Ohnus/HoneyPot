@@ -131,14 +131,78 @@
 <br>
 <p style="font-family: 'AppleSDGothicNeoR'; color:#BDBDBD; font-size:15px">회원가입을 위해 이용약관에 동의해주세요.</p>
 
+<div>
 <label class="container"><span style="color:#Fdd000; font-weight: bold;"> (필수)</span> 이용 약관
   <input type="checkbox" v-model ="serviceAgree">
   <span class="checkmark"></span>
+<button class="termsButton" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="float:right; margin-right:115px"><u>보기</u></button>
 </label>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">이용 약관 동의</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align:left">
+        제1장. 총칙<br><br>
+
+        제1조 (목적)<br>
+        본 약관은 주식회사 더블에이치컴퍼니(이하 “회사”)가 운영하는 구독공유 플랫폼, 허니팟 (이하 “플랫폼”)을 이용함에 있어 “회사”와 “회원”의 권리·의무 및 책임사항을 규정하기 위한 목적입니다.<br><br>
+
+        제2조 (약관의 명시와 설명 및 개정)<br>
+        1. “회사”는 본 약관을 회원 가입 과정과 “플랫폼”의 내부 메뉴에 게시합니다. 다만, 약관의 내용은 “이용자”가 연결화면을 통하여 확인하도록 할 수 있습니다.<br>
+        2. “회사”는 「전자상거래 등에서의 소비자보호에 관한 법률」, 「약관의 규제에 관한 법률」, 「전자문서 및 전자거래기본법」, 「전자금융거래법」, 「전자서명법」, 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」, 「소비자기본법」 등 관련 법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.<br>
+        3. “회사”는 약관을 개정하는 경우, 적용 일자로부터 7일 이전부터 적용일자와 개정 사유를 명시하여 “플랫폼”의 초기 화면에 공지합니다. 다만, “플랫폼”에 대한새로운 기능과 관련된 변경이나 법률적인 사유로 인한 변경은 사전 공지 없이 즉시 개정될 수 있습니다.<br>
+        4. 공지 일자로부터 14일 이내에 “회원”이명시적으로 거부하지 않은 경우, 개정 약관에 동의한 것으로 간주합니다.<br>
+        5. “회원”이 “회사”에 개정에 동의하지 않는다는 의사를 명시적으로 표시한경우, “회원”은 적용 일자부터 “플랫폼”을 이용할 수 없습니다. 다만, 적용 일자 이전에 체결한 공유 건이 있다면 개정 전 약관의 적용을 받아 해당 공유 건의 종료일까지 제한적으로“플랫폼” 이용이 가능합니다.<br>
+        <br>
+        (이하 생략)
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
 <label class="container"><span style="color:#Fdd000; font-weight: bold;"> (필수)</span> 개인정보 수집 및 이용 동의
   <input type="checkbox" v-model="personalInfoAgree">
   <span class="checkmark"></span>
+<button class="termsButton" data-bs-toggle="modal" data-bs-target="#exampleModal2" style="float:right; margin-right:115px"><u>보기</u></button>
 </label>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">개인정보 수집 및 이용 동의</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align:left">
+        주식회사 더블에이치컴퍼니(이하 '회사')은(는) 「개인정보 보호법」 제30조에 따라 정부주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.<br><br>
+        이 개인정보처리방침은 2021년 5월 17부터 적용됩니다.<br><br>
+
+        제1조 (개인정보의 처리 목적)<br>
+        회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.<br><br>
+
+        1. 회사의 서비스 회원가입 및 관리<br>
+        회원 가입의사 확인, 회원제 서비스 제공에 따른 본인 식별·인증, 서비스 부정이용 방지, 고충처리 목적으로 개인정보를 처리합니다.<br><br>
+
+        2. 재화 또는 서비스 제공<br>
+        서비스 제공, 본인인증, 연령인증, 요금결제·정산을 목적으로 개인정보를 처리합니다.<br><br>
+
+        3. 마케팅 및 광고에의 활용<br>
+        신규 서비스(제품) 개발 및 맞춤 서비스 제공, 이벤트 및 광고성 정보 제공 및 참여기회 제공, 인구통계학적 특성에 따른 서비스 제공 및 광고 게재, 접속빈도 파악 또는 회원의 서비스 이용에 대한 통계 등을 목적으로 개인정보를 처리합니다.<br><br>
+
+        (이하 생략)
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 </div>
@@ -398,6 +462,7 @@ export default {
 
 <style scoped>
 
+
 button {
     padding: 5px 13px;
     text-align: center;
@@ -528,5 +593,27 @@ input::-webkit-input-placeholder {
   transform: rotate(45deg);
 }
 
+.termsButton{
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: transparent;
+    color: #bdbdbd;
+    border: 0px solid transparent;
+    border-radius: 0px;
+
+    font-size: 11px; 
+    font-family: 'AppleSDGothicNeoR';
+}
+    
+.termsButton:hover {
+    background-color: transparent;
+    color: #bdbdbd;
+    font-family: 'AppleSDGothicNeoR';
+}
 
 </style>

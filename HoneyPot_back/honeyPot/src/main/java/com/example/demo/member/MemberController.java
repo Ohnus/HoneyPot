@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.JwtTokenProvider;
+import com.example.demo.partygroup.PartyGroupService;
 
 
 @RestController
@@ -37,6 +40,9 @@ public class MemberController {
 	
 	@Autowired
 	private CertificationService certificationService;
+	
+	@Autowired
+	private PartyGroupService partyService;
 	
 	@Autowired
 	private JwtTokenProvider tokenprovider;
@@ -347,8 +353,36 @@ public class MemberController {
 		return result;
 	}
 	
+	// 프로필 사진 삭제하기
+
+	@DeleteMapping("/imgs/{userNum}")
+	public Map removeImg(@PathVariable("userNum") String userNum){
+		Map map = new HashMap();
+		boolean flag = true;
+		try {
+			MemberDto dto = service.getByUserNum(userNum);
+			String oldProfilePath = dto.getProfile();
+			System.out.println(oldProfilePath);
+			if(oldProfilePath != null && !oldProfilePath.isEmpty()) {
+				File oldImgFile = new File(URLDecoder.decode(oldProfilePath, "utf-8"));
+				System.out.println(oldImgFile);
+				oldImgFile.delete();
+				
+				dto.setProfile(null);
+				service.save(dto);
+			}else {
+				flag = false;
+			}
+			
+		}catch(Exception e) {
+			flag = false;
+		}
+		map.put("flag", flag);
+		return map;
+	}
 	
 	
+
 	// 내 정보 수정: 비밀번호, 이메일(인증), 닉네임, 프로필 이미지
 	@PostMapping("/edit/{userNum}")
 	public Map editInfo(@PathVariable("userNum") String userNum, MultipartFile f, MemberDto updatedDto) {
@@ -564,9 +598,51 @@ public class MemberController {
 		return map;
 	}
 	
-	
-	
 	// 회원탈퇴
+	@DeleteMapping("/{userNum}")
+	public Map del(@PathVariable("userNum") String userNum, @RequestHeader(name="token", required=false) String token) {
+	    boolean flag;             		// 탈퇴 요청자가 토큰 소지자와 일치하는지 true면 일치
+	    boolean cashRemain=false;       // 캐시 남아있는지 true면 남아있음. false인 경우에만 탈퇴 가능
+	    boolean partyRemain;      		// 파티 참여중인지 true면 참여중임. false인 경우에만 탈퇴 가능
+
+	    Map map = new HashMap();
+	    
+	    if (token != null) {
+	    	String tokenUserId = tokenprovider.getIdFromToken(token);	// 이메일 값 반환
+	    	
+	    	System.out.println(tokenUserId);
+	    	
+	    	MemberDto dto = service.getByEmail(tokenUserId);			// 이메일로 검색
+	    	String tokenUserNum = dto.getUserNum();	    				// 이메일로 검색한 회원번호
+	    	
+	    	if(tokenUserNum.equals(userNum)) {							// 토큰 기준 회원번호와 세션 기준 회원번호가 일치하면
+	    		flag = true;
+  		
+	    		partyRemain = partyService.outcheck(userNum);			// 파티 중인지 검색
+	    		System.out.println("partyRemain: " + partyRemain);
+	    		
+	    		// 잔액 있는지 검색
+	    		
+	    		map.put("flag", flag);
+	    	    map.put("partyRemain", partyRemain);
+	    	    map.put("cashRemain", cashRemain);
+	    		
+	    		if (flag && !partyRemain && !cashRemain) {				// 토큰-세션 기준 회원번호 일치하고 파티 미참여 중이고 남은 캐시도 없으면 회원 탈퇴 진행   		
+		    		System.out.println("탈퇴 완료");
 	
+	    		} else {
+	    			System.out.println("탈퇴 진행 안함");
+	    		}
+	    	} else {
+	    		flag = false;		// 토큰과 세션 기준 아이디가 일치하지 않음
+	    		map.put("flag", flag);
+	    	} 
+
+	    }
 	
+
+	    return map;
+	}
 }
+	    
+

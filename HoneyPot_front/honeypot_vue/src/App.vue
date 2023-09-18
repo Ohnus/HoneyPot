@@ -9,7 +9,7 @@
       <router-link to="/HostBoardList" class="nav-link"><span class="nav-word" >파티찾기</span></router-link>
       <router-link to="/ChattingRoomList" class="nav-link" ><span class="nav-word">채팅하기</span></router-link>
       <span class="nav-link" @click="logout" ><span class="nav-word">로그아웃</span></span>
-      <router-link to="/MyinfoSidebar"><div class="userInfoNav"><img :src="'http://localhost:8988/members/imgs/' + userNum" 
+      <router-link to="/MyinfoSidebar"><div class="userInfoNav"><img :src="profileImg()"
         style="width: 45px; height: 45px; border-radius:50%; margin-top:-2px"></div></router-link>
     </span>
   </nav>
@@ -27,10 +27,18 @@ export default {
 
   created() {
     this.userNum = sessionStorage.getItem('userNum')
-    console.log(this.userNum);
+    this.profileImg();
   },
     
   methods: {
+    profileImg() {
+      if (this.profile != null) {
+        return 'http://localhost:8988/members/imgs/' + this.userNum;
+      } else {
+        return require('@/assets/images/BasicUserImg.png');
+      }
+    },
+
     logout() {
       sessionStorage.clear();
       window.location.href = "/";
