@@ -66,7 +66,7 @@ public interface PartyGroupDao extends JpaRepository<PartyGroup, Integer> {
 	@Transactional
 	@Modifying
 	@Query(value = "select * from party_group where user_num=:user_num and (start_check=1 or start_check=4)", nativeQuery = true)
-	ArrayList<PartyGroup> findStartCheck(@Param("user_num") Member user_num);
+	ArrayList<PartyGroup> findStartCheck(@Param("user_num") String user_num);
 
 	
 	// statcheck 별로 정렬

@@ -27,7 +27,7 @@
 
 <div v-show="selectEmailCertification" class="inputInfo">
     
-<div style="position: fixed; top:530px; left:730px; z-index: 2;">
+<div style="position: fixed; top:470px; left:730px; z-index: 2;">
 <button class="button" @click="findIdMethod">아이디 찾기</button>
 </div>
 
@@ -324,7 +324,7 @@ export default {
     font-family: 'AppleSDGothicNeoB';
 
     position: absolute;
-    top: 65%;
+    top: 55%;
     left: 44%;
 
 }
@@ -397,13 +397,13 @@ button:hover {
 
 #phoneImg {
   position: absolute;
-  top: 52%;
+  top: 42%;
   left: 36%;
 }
 
 .p1 {
   position: absolute;
-  top: 52%;
+  top: 42%;
   left: 44%;
   color: #444444;
   font-family: 'AppleSDGothicNeoB';
@@ -413,7 +413,7 @@ button:hover {
 
 .p2 {
   position: absolute;
-  top: 58%;
+  top: 48%;
   left: 44%;
   color: #706f6f;
   font-family: 'AppleSDGothicNeoB';
