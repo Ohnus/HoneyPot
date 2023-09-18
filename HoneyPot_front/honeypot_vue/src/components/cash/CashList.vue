@@ -3,16 +3,10 @@
         <p class="menuTitle">캐시 내역</p>
         <hr>
         <p class="menuComment">캐시 적립 내역</p>
-        <div class="modal-wrap-add" v-show="modalCheckAdd" @click="modalCloseAdd" id="modalWrapAdd">
-            <div class="modal-container-add" @click.stop="" id="containerAdd">
-                <div v-for="(item, index) in list" :key="index">
-                    {{ item.addDate }} / {{ item.amount }} / {{ item.msg }}
-                </div>
-            </div>
+        <div v-for="(item, index) in list" :key="index">
+            {{ item.addDate }} / {{ item.amount }} / {{ item.msg }}
         </div>
     </div>
-
-
 </template>
 
 
@@ -22,8 +16,8 @@ export default {
     data() {
         return {
             userNum: sessionStorage.getItem('userNum'),
-            list: '',
-            modalCheckAdd: false
+            list: [],
+            modalCheckAdd: true
         }
     },
     created: function () {
