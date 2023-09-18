@@ -1,32 +1,70 @@
 <template>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
     <div class="hello">
 
-
+        <!-- 
         <div>loginId : {{ id }}</div>
         <div>userNum : {{ userNum }}</div>
         <div>token : {{ token }}</div>
-        <div>snsType : {{ snstype }}</div>
+        <div>snsType : {{ snstype }}</div> -->
     </div>
 
     <div class="body">
         <div class="body-left">
             <div class="myprofile">
-                <!-- <div class="box-profile"><img class="profile" :src="chat.isFromSender.profile" @error="replaceImg"></div> -->
+                <div class="my-box-profile"><img class="profile" :src="'http://localhost:8988/members/imgs/'+ userNum" @error="replaceImg"></div>
+              
+                <div class="myprofile-info">
+                <div class="myprofile-nickname">{{ mynickname }}</div>
                 <div class="myprofile-id">{{ id }}</div>
             </div>
+            </div>
 
-            <div class="chatroom">
+
+            <div v-if="list.length === 0" class="select-room-message">
+                    <img :src="require('@/assets/images/chatting.png')" class="select-room-message-img" />
+                    <p>채팅목록이 없습니다</p>
+                </div>
+
+            <div class="chatroom"  v-if="list.length > 0">
+                
+
+
                 <div class="chatroom-list" v-for="chatroom, index in list" :key="chatroom.chatroomNum">
-                    <div>{{ chatroom.boardNum }}</div>
-                    <div>ott타입 : {{ otttype[index+1] }}</div>
-                    <div class="chatheader" @click="enterchatroom(chatroom.boardNum)">{{ chatroom.subject }}</div>
-                    <div class="chatroom-chatcheck">안읽은 채팅 수 :{{ chatroomchatcheck(chatroom.boardNum) }}</div>
+
+                    <div class="chatroom-object">
+                        <div class="chatroom-object-img">
+                            <div v-if="otttype[index] === 'Wave'"><img :src="require('@/assets/images/wave1.png')" /></div>
+                            <div v-if="otttype[index] === 'Tving'"><img :src="require('@/assets/images/tving.png')" /></div>
+                            <div v-if="otttype[index] === 'Netflix'"><img :src="require('@/assets/images/netflix.png')" />
+                            </div>
+                            <div v-if="otttype[index] === 'Disney+'"><img :src="require('@/assets/images/disney.png')" />
+                            </div>
+                            <div v-if="otttype[index] === 'Watcha'"><img :src="require('@/assets/images/netflix.png')" />
+                            </div>
+                            <div v-if="otttype[index] === 'Apple'"><img :src="require('@/assets/images/apple.png')" /></div>
+                        </div>
+                        <div class="chatroom-details">
+                            <div class="chatheader" @click="enterchatroom(chatroom.boardNum, chatroom.host.nickname)">{{ chatroom.subject }}</div>
+                            <div class="chatroom-chatcheck"><span v-if="chatroomchatcheck(chatroom.boardNum) !== 0"
+                                    class="badge">{{ chatroomchatcheck(chatroom.boardNum) }}</span></div>
+                                    
+                        </div>
+                       
+
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="body-center">
             <div class="chatting" ref="chatContainer">
+                <div v-if="boardNum === ''" class="select-room-message">
+                    <img :src="require('@/assets/images/chatting.png')" class="select-room-message-img" />
+                    <p>채팅방을 선택해주세요</p>
+                </div>
+
                 <div class="chats" v-for="chat in chats" :key="chat.chatNum">
                     <div v-if="userNum !== chat.isFromSender.userNum">
                         <div class="box-profile"><img class="profile" :src="chat.isFromSender.profile" @error="replaceImg">
@@ -87,14 +125,21 @@
 
             </div>
             <div class="send-chat">
-                <textarea class="write-chat" v-model="content" cols="75" rows="3" @keyup.enter="send()"></textarea>
-                <div><button class="write-chat-btn" @click="send()" :disabled=isDisableded>보내기</button></div>
+                <textarea class="write-chat" v-model="content" cols="75" rows="2" @keyup.enter="send()"></textarea>
+                <button class="write-chat-btn" @click="send()" :disabled=isDisableded>보내기</button>
             </div>
         </div>
         <div class="body-right">
-            채팅방 참여 멤버 목록
+            <p>채팅방 참여 멤버</p>
             <div class="members" v-for="member in members" :key="member.index">
-                <div class="member">{{ member.name }} / {{ member.userNum }}</div>
+
+                <div class="member">
+                    <div class="member-box-profile"><img class="profile" :src="member.profile" @error="replaceImg"></div>
+                    <div class="member-info">
+                        <span v-if="host === member.nickname" class="material-symbols-outlined">star</span><div class="member-nickname">{{ member.nickname }}</div>
+                        
+                </div>
+                </div>
             </div>
         </div>
     </div>
@@ -117,18 +162,20 @@ export default {
             userNum: sessionStorage.getItem("userNum"),
             token: sessionStorage.getItem("token"),
             snstype: sessionStorage.getItem("snsType"),
+            mynickname:'',
             boardNum: '',
             members: [],//각 채팅방 별 참여 멤버목록
+            host:'', // 각 채팅방 주인장
 
             count: '', // 각 채팅 별 안읽은 인원
             chatcheckResults: [], //각 채팅 별 안읽은 인원 리스트
             chatroomchatcheckResults: [], //각 채팅방 별 안읽은 채팅 개수
-            otttype:[], // 각 채팅방 otttype 정보
+            otttype: [], // 각 채팅방 otttype 정보
 
             content: '', // 채팅 작성
-            list: [], // db 채팅 내용
-            chats: [], //웹소켓 채팅 내용
-            webchats: [], // 구독 목록
+            list: [], // 채팅방 목록
+            chats: [], //db 채팅 내용
+            webchats: [], // 웹소켓 채팅 내용
             stompClient: null, // 소켓 연결
             dto: null, // 채팅 작성 객체
             subscription: null, // 구독
@@ -153,35 +200,66 @@ export default {
         const self = this;
         console.log("실행")
         console.log(location.origin)
+        console.log("self.otttype first :" + self.otttype)
+
+
+        //내 닉네임 가져오기
+        self.$axios
+                .get("http://localhost:8988/members/" + self.userNum)
+                .then(function (res) {
+                    if (res.status == 200) {
+                        self.mynickname = res.data.nickname;
+                        
+
+                    } else {
+                        alert("에러코드 : " + res.status);
+                    }
+                });
+
+
+
 
         // 채팅 목록
         self.$axios
             .get("http://localhost:8988/chatheader/" + self.userNum)
-            .then(function (res) {
+            .then(async function (res) {
                 if (res.status == 200) {
+                    if(res.data.list.length === 0){
+                        return;
+                    }
                     self.list = res.data.list;
                     console.log("self.list" + self.list[0].boardNum);
-                    for (var i in self.list) {
-                        self.$axios
+
+                    self.otttype = [];
+                    console.log("self.otttype 배열 : " + self.otttype);
+                    for (let i = 0; i < self.list.length; i++) {
+                        
+                        await self.$axios
                             .get("http://localhost:8988/chatheader/otttype/" + self.list[i].boardNum)
                             .then(function (res) {
                                 if (res.status == 200) {
+
                                     self.otttype[i] = res.data.otttype;
+                                    console.log("self.otttype 배열2 : " + self.otttype);
+                                    console.log("res.data.otttype : " + res.data.otttype)
                                     console.log(i)
-                                    console.log("self.otttype : "+ self.otttype[i])
-                                    i++;
+                                    console.log("self.otttype : " + self.otttype[i])
+                                    console.log("self.otttype+1 : " + self.otttype[i + 1])
+                                    console.log("self.otttype2 : " + self.otttype);
+
                                 } else {
                                     alert("에러코드 : " + res.status);
                                 }
                             });
+
                     }
-                    
+
                 } else {
                     alert("에러코드 : " + res.status);
                 }
             });
 
-          
+
 
 
         // 소켓 연결    
@@ -215,9 +293,10 @@ export default {
     methods: {
 
         // 채팅방 들어갈 때 채팅 내용 가져오기, 소켓 연결
-        enterchatroom(boardNum) {
+        enterchatroom(boardNum, host) {
             const self = this;
-
+            self.host = host;
+       
 
             self.greetings = [];
 
@@ -307,6 +386,9 @@ export default {
 
         },
 
+        // 채팅방 호스트 정보 가져오기
+
+
         // 각 채팅방 별 안읽은 채팅 개수 확인
         chatroomchatcheck(boardNum) {
             const self = this;
@@ -351,7 +433,7 @@ export default {
             const self = this;
 
             if (self.boardNum == 0) {
-                alert("채팅방을 선택해 주세요")
+                alert("채팅방을 선택해주세요")
                 self.content = ''
                 return
             }
@@ -498,7 +580,7 @@ export default {
 
 <style scoped>
 .body {
-
+    margin-top: 35px;
     height: 620px;
     display: flex;
     border: 1px;
@@ -514,33 +596,155 @@ export default {
 .body-left {
     flex: 1;
     /* Occupy remaining space */
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    /* padding: 20px; */
     flex-direction: column;
 }
 
 .myprofile {
-    border: 1px solid black;
+    display: flex;
+    border-bottom: 0.5px solid #dedede;
+    background-color: white;
+    margin-bottom: 30px;
+    height: 70px;
+    background-color: rgb(231, 231, 231);
+
+    align-items: center; 
+    
 }
 
+img {
+    height: 50px;
+    width: 50px;
+    border-radius: 17px;
+
+    display: inline;
+
+}
+
+.my-box-profile {
+    margin-left: 10px;
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 70%;
+    overflow: hidden;
+    float: left;
+    align-items: center;
+
+}
+.myprofile-info{
+    margin-left: 10px;
+    display: inline;
+}
+
+.myprofile-nickname{
+    
+    display: block;
+    font-family: 'AppleSDGothicNeoB';
+    font-size: 20px;
+}
+
+.myprofile-id{
+    display: inline-block;
+    font-family: 'AppleSDGothicNeoR';
+    font-size: 16px;
+}
+
+
 .chatroom {
-    border: 1px solid black;
+    border: 0.5px solid #dedede;
+    border-radius: 20px;
     overflow: auto;
+    margin: 20px;
 }
 
 .chatroom-list {
+  
     flex: 1;
-    /* Occupy 1/3 of the chatroom's space */
     overflow-y: auto;
-    /* Enable vertical scrolling if needed */
+
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    transition: background-color 0.2s;
+    /* 배경색 변경 시 부드러운 전환 효과 */
+    border-bottom: 0.5px solid #dedede;
+    ;
+    /* 하단 경계선 설정 */
+
 }
+
+
+
+
+
+
+.chatroom-list:hover {
+    background-color: #fdd62a;
+    /* 마우스 호버 시 배경색 변경 */
+}
+
+.chatroom-object {
+    display: flex;
+}
+
+/* 이미지 컨테이너 스타일 */
+.chatroom-object-img {
+    margin-right: 12px;
+    /* 이미지와 텍스트 사이 간격 조정 */
+}
+
+
+/* 채팅 내용 컨테이너 스타일 */
+.chatroom-details {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* 채팅 헤더 스타일 */
+.chatheader {
+    cursor: pointer;
+    font-family: 'AppleSDGothicNeoB';
+    font-size: 18px;
+    flex-grow: 1;
+    /* 남은 공간을 채우기 위해 확장 */
+}
+
+/* 안읽은 채팅 수 스타일 */
+.chatroom-chatcheck {
+
+    font-family: 'AppleSDGothicNeoB';
+    margin-left: 10px;
+    /* 오른쪽으로 정렬 */
+    color: #888;
+}
+
+.badge {
+    margin-left: 80px;
+    font-family: 'AppleSDGothicNeoB';
+    color: white;
+    background-color: rgb(255, 43, 43);
+    border-radius: 30px;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
 /* body-center */
 .body-center {
-    flex: 2;
+    flex: 2.5;
     /* Occupy more space */
     background-color: #fff;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -550,6 +754,20 @@ export default {
     justify-content: center;
     /* Center items vertically */
     align-items: center;
+}
+
+
+.select-room-message-img {
+
+    margin-top: 140px;
+    height: 120px;
+    width: auto;
+}
+
+p {
+    font-size: 20px;
+    color: #c1c1c1;
+    font-family: 'AppleSDGothicNeoB';
 }
 
 /* 채팅 */
@@ -630,13 +848,6 @@ export default {
 
 }
 
-/* .chat-content {
-    display: flex;
-    justify-content: left;
-    padding-left: 10px;
-    font-size: 18px;
-    font-family: 'AppleSDGothicNeoR';
-} */
 
 .chat-content {
     /* justify-content: left; */
@@ -724,11 +935,38 @@ export default {
 }
 
 .write-chat {
-    width: 100%;
+    width: 80%;
+    float: left;
     outline: none;
     border: none;
     resize: none;
     font-family: 'AppleSDGothicNeoR';
+    margin-right: 60px;
+
+}
+
+.write-chat-btn {
+    padding: 5px 13px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #Fdd000;
+    color: #444444;
+    border: 2px solid #Fdd000;
+    border-radius: 7px;
+    transition-duration: 0.4s;
+    font-weight: 500;
+    /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */
+    font-size: 18px;
+    /* 지금 버튼 사이즈에는 이게 딱임 */
+    font-family: 'AppleSDGothicNeoB';
+    margin-top: 6px;
+}
+
+.write-chat-btn:hover {
+    background-color: white;
+    color: #444444;
+    font-family: 'AppleSDGothicNeoB';
 }
 
 /* 메세지 보내기 버튼 */
@@ -747,13 +985,62 @@ export default {
 
 /* body right */
 .body-right {
-    flex: 1;
+    flex: 0.5;
     /* Occupy remaining space */
-    background-color: #f0f0f0;
+    /* background-color: #fdd62a; */
+    background-color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     flex-direction: column;
+    overflow-y: auto;
 }
 
-/* Add more styles as needed */
-</style>
+.body-right p {
+    font-weight: 500;
+    font-size: 18px;
+    color: #444444;
+    font-family: 'AppleSDGothicNeoB';
+    margin-bottom: 30px;
+}
+
+.member{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    
+}
+
+
+.member-box-profile {
+    
+    align-items: center;
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 70%;
+    overflow: hidden;
+    float: left;
+    align-items: center;
+
+}
+
+.member-info{
+    display:flex;
+}
+.member-nickname{
+    font-weight: 500;
+    font-size: 18px;
+    color: #444444;
+    font-family: 'AppleSDGothicNeoB';
+    margin-top: 10px;
+}
+
+.material-symbols-outlined{
+    margin-top: 10px;
+    margin-right: 5px;
+    color: #Fdd000;
+    fill:1;
+}
+/* Add more styles as needed */</style>

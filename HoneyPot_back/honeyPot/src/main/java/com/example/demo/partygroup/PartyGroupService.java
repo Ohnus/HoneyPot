@@ -10,6 +10,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.chatheader.ChatHeaderDto;
+import com.example.demo.chatheader.ChatHeaderService;
 import com.example.demo.hostboard.HostBoard;
 import com.example.demo.hostboard.HostBoardDto;
 import com.example.demo.hostboard.HostBoardService;
@@ -24,6 +26,9 @@ public class PartyGroupService {
 	@Autowired
 	private HostBoardService HBService;
 
+	@Autowired
+	private ChatHeaderService CHService;
+	
 	// 추가
 	// 1. 참여하기 버튼 누를 때 들어와있음
 	public PartyGroupDto save(PartyGroupDto dto) {
@@ -102,6 +107,13 @@ public class PartyGroupService {
 			HBService.changIngToOne(boardNum);
 			System.out.println("~~~~~~~~~~~~~~~~~성공일껄");
 		}
+		
+		// 파티 시작 된 파티그룹의 채팅방 생성
+		ChatHeaderDto CHdto = new ChatHeaderDto();
+		CHdto.setBoardNum(boardNum);
+		CHdto.setSubject(dto.getType().getType());
+		CHdto.setHost(dto.getUserNum());
+		CHService.add(CHdto);
 
 	}
 
