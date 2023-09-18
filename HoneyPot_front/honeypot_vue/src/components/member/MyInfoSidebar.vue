@@ -7,8 +7,7 @@
                 <img src="../../assets/images/coin.png" style="width:35px; height:30px">
                 <span id="cash">&nbsp;{{ havingCash }}원</span>
             </div>
-            <p style="margin-top:25px;"><router-link to=""><button @click="activeComp = 'cash-list'"
-                        style="width:135px;">내역보기</button></router-link></p>
+            <p style="margin-top:25px;"><button class="cashDetailButton" @click="activeComp='cash-list'" style="width:135px;">내역보기</button></p>
         </div>
 
         <div class="sideMenu">
@@ -185,6 +184,30 @@ button:hover {
     font-family: 'AppleSDGothicNeoB';
 }
 
+.cashDetailButton {
+    padding: 5px 13px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: #Fdd000;
+    color: #444444;
+    border: 2px solid #Fdd000;
+    border-radius: 7px;
+
+    font-weight: 500; /*폰트 굵기 -> 글씨체 적용하면 좀 바뀔 것 같은데 굵은게 예쁠것 같음 */
+    font-size: 14px; /* 지금 버튼 사이즈에는 이게 딱임 */
+    font-family: 'AppleSDGothicNeoB';
+
+}
+
+.cashDetailButton:hover {
+    background-color: white;
+    color: #444444;
+    font-family: 'AppleSDGothicNeoB';
+}
 
 .ul {
     font-family: 'AppleSDGothicNeoB';
