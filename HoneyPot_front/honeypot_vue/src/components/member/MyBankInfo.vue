@@ -127,7 +127,7 @@ export default {
                 if (res.status == 200) {
                     const dto = res.data.dto;
                     console.log(dto);
-                    window.location.href = "/MyBankInfo";
+                    window.location.href = "/MyInfoSidebar";
                 } else {
                     alert ('에러코드' + res.status)
                 }

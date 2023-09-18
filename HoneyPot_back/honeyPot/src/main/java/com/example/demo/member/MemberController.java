@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.JwtTokenProvider;
+import com.example.demo.cash.CashService;
 import com.example.demo.partygroup.PartyGroupService;
+import com.example.demo.withdrawl.WithdrawlService;
 
 
 @RestController
@@ -43,6 +45,12 @@ public class MemberController {
 	
 	@Autowired
 	private PartyGroupService partyService;
+	
+	@Autowired
+	private CashService cashService;
+	
+	@Autowired
+	private WithdrawlService withdrawlService;
 	
 	@Autowired
 	private JwtTokenProvider tokenprovider;
@@ -601,9 +609,9 @@ public class MemberController {
 	// 회원탈퇴
 	@DeleteMapping("/{userNum}")
 	public Map del(@PathVariable("userNum") String userNum, @RequestHeader(name="token", required=false) String token) {
-	    boolean flag;             		// 탈퇴 요청자가 토큰 소지자와 일치하는지 true면 일치
-	    boolean cashRemain=false;       // 캐시 남아있는지 true면 남아있음. false인 경우에만 탈퇴 가능
-	    boolean partyRemain;      		// 파티 참여중인지 true면 참여중임. false인 경우에만 탈퇴 가능
+	    boolean flag = false;             		// 탈퇴 요청자가 토큰 소지자와 일치하는지 true면 일치
+	    boolean cashRemain = true;     // 캐시 남아있는지 true면 남아있음. false인 경우에만 탈퇴 가능
+	    boolean partyRemain = true; 		// 파티 참여중인지 true면 참여중임. false인 경우에만 탈퇴 가능
 
 	    Map map = new HashMap();
 	    
@@ -622,12 +630,41 @@ public class MemberController {
 	    		System.out.println("partyRemain: " + partyRemain);
 	    		
 	    		// 잔액 있는지 검색
+	    		int userMoney = cashService.total(userNum) - withdrawlService.total(userNum);
+	    		System.out.println(userMoney);
 	    		
+	    		
+	    		if (userMoney > 0) {
+	    			cashRemain = true;
+	    			
+	    		} else if (userMoney == 0) {
+	    			cashRemain = false;
+	    		}
+	    		
+	    	    map.put("cashRemain", cashRemain);
+
 	    		map.put("flag", flag);
 	    	    map.put("partyRemain", partyRemain);
-	    	    map.put("cashRemain", cashRemain);
+
 	    		
 	    		if (flag && !partyRemain && !cashRemain) {				// 토큰-세션 기준 회원번호 일치하고 파티 미참여 중이고 남은 캐시도 없으면 회원 탈퇴 진행   		
+	    			service.delUser(userNum);
+	
+	    			 String userProfileFolderPath = path + "/" + userNum;
+
+	    			 // 폴더를 삭제하기 위한 File 객체 생성
+	    			 File userProfileFolder = new File(userProfileFolderPath);
+
+	    			 // 폴더가 존재하면 폴더와 그 안의 파일 모두 삭제
+	    			 if (userProfileFolder.exists() && userProfileFolder.isDirectory()) {
+	    			    File[] files = userProfileFolder.listFiles();
+	    			        if (files != null) {
+	    			            for (File file : files) {
+	    			                file.delete();
+	    			        }
+	    			    }
+	    			    userProfileFolder.delete();
+	    			}
 		    		System.out.println("탈퇴 완료");
 	
 	    		} else {
